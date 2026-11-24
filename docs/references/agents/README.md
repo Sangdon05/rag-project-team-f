@@ -9,10 +9,13 @@
 | --- | --- | --- |
 | [data-engineer](../../../.claude/agents/data-engineer.md) | data-normalize, chunking, vectordb | `pokedex_extra.json`, `chunks.jsonl`, pgvector 컬렉션, manifest |
 | [rag-developer](../../../.claude/agents/rag-developer.md) | tool-calling, langchain-rag | `src/pokedex/` 툴·체인·프롬프트, 트레이스 로그 |
+| [security-reviewer](../../../.claude/agents/security-reviewer.md) | security-check | 보안 점검 보고 (파일 수정 없음) |
 
 벡터 DB는 data-engineer가 맡는다. 청킹이 바뀌면 재인덱싱이 반드시 따라오므로 한 에이전트가 끝까지 맡는 편이 버전 관리가 단순하다. retriever 설정(k, 필터)은 rag-developer가 맡는다.
 
-2차 예정: Eval(rag-eval), QA(testing), Reviewer(보안·계약 점검), Backend(api-server, 필요 시).
+security-reviewer는 읽기 전용이다. 검출은 스크립트가 결정적으로 하고 모델은 WARN 분류만 하므로 haiku + low effort로 둔다. 수정은 오케스트레이터가 담당 에이전트에게 발주한다.
+
+2차 예정: Eval(rag-eval), QA(testing), Reviewer(계약 점검), Backend(api-server, 필요 시).
 
 ## 두 에이전트 사이의 계약
 

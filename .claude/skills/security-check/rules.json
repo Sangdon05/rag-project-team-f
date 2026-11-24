@@ -1,0 +1,77 @@
+{
+  "secret_patterns": [
+    {"id": "openai-key", "regex": "sk-(?:proj-|svcacct-|admin-|ant-)?[A-Za-z0-9_-]{32,}"},
+    {"id": "langsmith-key", "regex": "lsv2_(?:pt|sk)_[A-Za-z0-9_]{20,}"},
+    {"id": "github-token", "regex": "(?:gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{50,})"},
+    {"id": "aws-access-key", "regex": "AKIA[0-9A-Z]{16}"},
+    {"id": "google-api-key", "regex": "AIza[0-9A-Za-z_-]{35}"},
+    {"id": "huggingface-token", "regex": "hf_[A-Za-z0-9]{30,}"},
+    {"id": "slack-token", "regex": "xox[baprs]-[A-Za-z0-9-]{10,}"},
+    {"id": "private-key", "regex": "-----BEGIN [A-Z ]*PRIVATE KEY-----"}
+  ],
+
+  "db_url": {
+    "regex": "\\b(?:postgres(?:ql)?|mysql|mongodb|redis)(?:\\+[a-z0-9]+)?://[^:/\\s@]+:([^@\\s]+)@",
+    "allowed_passwords": ["pokedex", "***", "password", "postgres"],
+    "why": "로컬 docker 기본값 외의 DB 비밀번호"
+  },
+
+  "assignment": {
+    "regex": "(?i)\\b[A-Z0-9_]*(?:API_KEY|SECRET|TOKEN|PASSWORD)\\b[\"']?\\s*[:=]\\s*[\"']?([^\\s\"',#)]{8,})",
+    "ignore_value_prefixes": ["os.", "getenv", "env", "settings.", "config.", "$", "<", "{", "None", "SecretStr", "Field"],
+    "why": "키·비밀번호로 보이는 변수에 리터럴 값 대입"
+  },
+
+  "forbidden_paths": [
+    {"glob": ".env", "why": "비밀 파일"},
+    {"glob": ".env.*", "except": [".env.example"], "why": "비밀 파일"},
+    {"glob": "*.pem", "why": "인증서·키"},
+    {"glob": "*.key", "why": "키 파일"},
+    {"glob": "*.p12", "why": "키 파일"},
+    {"glob": "*id_rsa*", "why": "SSH 키"},
+    {"glob": ".claude/settings.local.json", "why": "개인 Claude Code 설정 (권한·경로가 개인별)"},
+    {"glob": "runs/*", "why": "생성물 (트레이스·manifest, 질문·응답 원문 포함)"},
+    {"glob": "eval/results/*", "why": "생성물"},
+    {"glob": "pgdata/*", "why": "DB 볼륨"},
+    {"glob": "*.sqlite", "why": "DB 파일"},
+    {"glob": "*.db", "why": "DB 파일"},
+    {"glob": "*.dump", "why": "DB 덤프"},
+    {"glob": "datas/*", "why": "개인 작업 폴더"}
+  ],
+
+  "gitignore_probes": [
+    {"path": ".env", "ignored": true},
+    {"path": ".env.local", "ignored": true},
+    {"path": "runs/probe.jsonl", "ignored": true},
+    {"path": "eval/results/probe.json", "ignored": true},
+    {"path": ".claude/settings.local.json", "ignored": true},
+    {"path": ".env.example", "ignored": false}
+  ],
+
+  "code_patterns": [
+    {"id": "eval-exec", "regex": "(?<![\\w.])(?:eval|exec)\\(", "why": "임의 코드 실행"},
+    {"id": "pickle", "regex": "\\b(?:pickle|joblib|dill)\\.loads?\\(", "why": "신뢰할 수 없는 데이터 역직렬화"},
+    {"id": "dangerous-deser", "regex": "allow_dangerous_deserialization\\s*=\\s*True", "why": "LangChain 역직렬화 보호 해제"},
+    {"id": "yaml-load", "regex": "\\byaml\\.load\\((?![^)]*SafeLoader)", "why": "yaml.safe_load 사용"},
+    {"id": "shell", "regex": "shell\\s*=\\s*True|\\bos\\.system\\(", "why": "셸 인젝션"},
+    {"id": "sql-fstring", "regex": "(?:execute|text|sql)\\(\\s*f[\"']", "why": "SQL 문자열 조합 — 파라미터 바인딩 사용"},
+    {"id": "tls-off", "regex": "verify\\s*=\\s*False", "why": "TLS 검증 해제"},
+    {"id": "hardcoded-model", "regex": "[\"'](?:gpt-[\\w.-]+|text-embedding-[\\w-]+|claude-[\\w.-]+)[\"']", "why": "모델명 하드코딩 — 환경 변수로 읽는다 (가드레일)"},
+    {"id": "hardcoded-db", "regex": "localhost:5432|postgres(?:ql)?(?:\\+\\w+)?://", "why": "DB 접속 정보 하드코딩 — DATABASE_URL로 읽는다 (가드레일)"},
+    {"id": "secret-logging", "regex": "(?:print|log\\w*|logger\\.\\w+)\\(.*(?:api_key|API_KEY|password|PASSWORD|secret)", "why": "비밀 값 출력"}
+  ],
+  "code_globs": ["*.py", "*.ipynb"],
+  "code_skip": ["tests/*", ".claude/skills/security-check/*"],
+
+  "claude_config": {
+    "globs": [".claude/settings.json", ".claude/agents/*.md", ".claude/skills/*/SKILL.md", ".mcp.json"],
+    "patterns": [
+      {"id": "bypass", "regex": "bypassPermissions|dangerously-skip-permissions|dangerouslySkipPermissions", "why": "팀원 환경에서 권한 확인 없이 실행됨"},
+      {"id": "hooks", "regex": "\"hooks\"\\s*:|^hooks:", "why": "팀원 PC에서 자동 실행되는 셸 명령 — 내용 검토"},
+      {"id": "mcp", "regex": "\"mcpServers\"\\s*:|^mcpServers:", "why": "외부 MCP 서버 연결 — 출처·권한 검토"}
+    ]
+  },
+
+  "max_file_mb": 10,
+  "allow_marker": "security: allow"
+}

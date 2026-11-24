@@ -14,6 +14,7 @@
 | 스킬 개요, 설계 원칙, 데이터 현황        | [docs/references/skills/README.md](docs/references/skills/README.md)                                                    |
 | 개발 환경 (Python, uv, .env, PostgreSQL) | [docs/references/environment.md](docs/references/environment.md)                                                        |
 | 문서 동기화 규칙, 검사 스크립트          | [.claude/skills/doc-sync/SKILL.md](.claude/skills/doc-sync/SKILL.md)                                                    |
+| PR 전 보안 점검 규칙, 검사 스크립트      | [.claude/skills/security-check/SKILL.md](.claude/skills/security-check/SKILL.md)                                        |
 | 포켓몬 번호·이름·타입 참조표             | [docs/references/pokemon-gen1-reference.md](docs/references/pokemon-gen1-reference.md)                                  |
 | 기준 데이터 (해시 고정)                  | [data/processed/](data/processed/), 검증 [scripts/gen1_battle/data_integrity.py](scripts/gen1_battle/data_integrity.py) |
 | 상성 계산 (툴로 재사용)                  | [scripts/gen1_battle/gen1_battle_rules.py](scripts/gen1_battle/gen1_battle_rules.py)                                    |
@@ -28,6 +29,7 @@
 | ------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------- |
 | [data-engineer](.claude/agents/data-engineer.md) | 정규화 보강, 청킹, 임베딩, 인덱스 sync                       | data-normalize, chunking, vectordb |
 | [rag-developer](.claude/agents/rag-developer.md) | 런타임 툴, 에이전트 체인, 프롬프트, retriever 설정, 트레이스 | tool-calling, langchain-rag        |
+| [security-reviewer](.claude/agents/security-reviewer.md) | PR 전 보안 점검 실행·분류 보고 (읽기 전용)          | security-check                     |
 
 2차 예정: eval, qa, reviewer, backend(필요 시). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
 
@@ -39,12 +41,13 @@
 4. 실험 규칙을 정하고 채택·기각을 판정한다.
 5. 가드레일 위반을 막는다.
 6. 문서 동기화를 책임진다. 스킬 [doc-sync](.claude/skills/doc-sync/SKILL.md)를 따른다.
+7. PR 전 보안 점검을 [security-reviewer](.claude/agents/security-reviewer.md)에게 발주하고, 보고를 보고 수정 발주와 PR 진행을 판정한다.
 
 ### 발주 양식
 
 ```
 task: 한 문장 목표
-agent: data-engineer | rag-developer
+agent: data-engineer | rag-developer | security-reviewer
 inputs: 경로 + schema_version / index_version
 outputs: 기대 산출물 경로
 done_when: 확인 가능한 완료 조건
@@ -58,13 +61,14 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 3. manifest에 해당 run이 기록됐는지 확인한다.
 4. `downstream_impact`에 따라 후속 작업을 발주한다.
 5. doc-sync 검사를 실행해 관련 문서가 함께 갱신됐는지 확인한다.
+6. 코드·설정·`.claude/`가 바뀌었으면 security-reviewer에게 점검을 발주한다.
 
 하나라도 확인되지 않으면 완료로 처리하지 않는다.
 
 ## 개발 루프
 
 ```
-발주 → 구현 → 자체 검증 → 평가 → 실패 분석 → 재현 → 수정 → 재평가 → 채택 판정 → 리뷰 → 문서 동기화 → PR
+발주 → 구현 → 자체 검증 → 평가 → 실패 분석 → 재현 → 수정 → 재평가 → 채택 판정 → 리뷰 → 문서 동기화 → 보안 점검 → PR
 ```
 
 | 단계    | 담당           | 게이트                                                |
@@ -76,6 +80,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 채택    | 오케스트레이터 | 아래 실험 규칙 충족                                   |
 | 리뷰    | reviewer (2차) | 가드레일·계약 위반 없음                               |
 | 문서    | 오케스트레이터 | doc-sync 검사 ERROR 0, WARN 처리                      |
+| 보안    | security-reviewer | security-check 검사 ERROR 0, WARN 분류·처리        |
 
 ### 평가셋 (Eval 정의 전 기준)
 
@@ -129,6 +134,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 - 런타임 질문 라우터를 따로 만들지 않는다. 툴 선택은 툴 docstring과 시스템 프롬프트로 해결한다.
 - 집계·정렬·top-N을 벡터 검색으로 풀지 않는다.
 - PR 전에 doc-sync 검사(`--strict`)를 통과시킨다. WARN을 남기면 PR 본문에 사유를 쓴다.
+- PR 전과 PR 브랜치 push 전에 security-check 검사를 통과시킨다. ERROR가 있으면 PR을 만들지 않는다. push된 키는 지우는 것으로 끝내지 않고 폐기한다.
 - main에 직접 push하지 않는다. 브랜치 → PR → 리뷰 → 머지. 커밋 메시지는 `type: 요약` (feat, fix, docs, chore).
 - 작업 시작 전 `git fetch`로 main 변경을 확인한다. 팀원이 머지한 데이터·코드를 먼저 반영한다.
 - 문서 파일 이름을 `agents.md`로 짓지 않는다. 대소문자 구분이 없는 파일시스템에서 `AGENTS.md`로 인식된다.

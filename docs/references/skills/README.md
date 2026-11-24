@@ -19,6 +19,7 @@
 | [tool-calling](../../../.claude/skills/tool-calling/SKILL.md) | rag-developer | 런타임 툴 8개, 작성 규칙, 결정적 테스트 |
 | [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | 에이전트 체인, 프롬프트 규칙, 트레이스 로깅 |
 | [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도, 원본 문서 규칙, 동기화 검사 스크립트 |
+| [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |
 
 2차 예정: rag-eval(Eval), testing(QA), api-server(Backend, 필요 시).
 

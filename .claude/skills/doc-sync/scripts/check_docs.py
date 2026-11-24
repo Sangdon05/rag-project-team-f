@@ -239,7 +239,7 @@ def check_forbidden(files: list[str], cfg: dict) -> None:
     for rule in cfg["forbidden"]:
         for f in files:
             if match_any(f, rule["in"]) and f.endswith((".md", ".json", ".yml", ".yaml", ".py")) \
-                    and not f.startswith(".claude/skills/doc-sync/"):
+                    and not f.startswith(".claude/skills/doc-sync/") and not match_any(f, rule.get("skip", [])):
                 for i, line in enumerate(read(f).splitlines(), 1):
                     if rule["pattern"] in line:
                         errors.append(f"[forbidden] {f}:{i}: '{rule['pattern']}' — {rule['why']}")

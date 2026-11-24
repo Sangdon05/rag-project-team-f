@@ -9,6 +9,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+.claude/settings.local.json
 
 # 생성물
 runs/

@@ -34,6 +34,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 | 툴 목록 | tool-calling 스킬 | langchain-rag 스킬, skills README |
 | 기준 데이터 | `data/processed/`, `data_integrity.py` | data-normalize 스킬, skills README |
 | 개발 루프·가드레일 | `AGENTS.md` | 에이전트 파일은 링크만 |
+| 커밋 금지 파일·필수 무시 규칙 | `.gitignore` | security-check `rules.json` (`forbidden_paths`, `gitignore_probes`) |
 
 ## 언제 실행하는가
 
@@ -77,6 +78,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 - 새 참조 문서: `docs/references/` 아래 작성 → 허브 링크 → 다른 문서가 의존하면 `coupling` 추가
 - 새 환경 변수: `.env.example` → environment.md, README 표 (검사가 강제)
 - 문서끼리 같은 값을 쓰게 되면: `mirrors`에 등록
+- 금지어를 의도적으로 담아야 하는 파일(예: security-check `rules.json`의 금지 경로 목록)은 해당 규칙의 `skip`에 등록한다
 - 규칙을 추가·삭제하면 이 SKILL.md의 원본 문서 표도 갱신한다
 
 ## 검사의 한계
