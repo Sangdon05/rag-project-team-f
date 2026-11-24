@@ -8,7 +8,7 @@
 | 패키지 | `pyproject.toml` + `uv.lock` (커밋 대상) |
 | LLM | OpenAI `gpt-6-luna` |
 | 임베딩 | OpenAI `text-embedding-3-small` (1536차원) |
-| 벡터 DB | PostgreSQL 17 + pgvector 0.8 (`docker-compose.yml`, 이미지 `pgvector/pgvector:pg17`, 호스트 포트 5434) |
+| 벡터 DB | PostgreSQL 17 + pgvector 0.8 (`docker-compose.yml`, 이미지 `pgvector/pgvector:pg17`, 호스트 포트 5432) |
 | 설정 | `.env` (커밋 금지), 템플릿 `.env.example` |
 
 ## 최초 설정
@@ -61,7 +61,7 @@ docker compose exec postgres psql -U pokedex -d pokedex -c "select extversion fr
 
 ## 포트
 
-호스트 포트 기본값은 5434다. 5432/5433은 다른 로컬 Postgres 컨테이너가 쓰는 경우가 있다. 바꾸려면 `.env`의 `POSTGRES_PORT`와 `DATABASE_URL`을 함께 바꾼다.
+호스트 포트는 운영 환경과 같은 5432로 고정한다. 다른 로컬 Postgres가 5432를 쓰고 있으면 그쪽을 멈추고 띄운다 (`docker ps`로 확인). 포트를 바꾸지 않는다.
 
 ## PGVector 컬렉션
 
