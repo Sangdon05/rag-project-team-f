@@ -20,6 +20,7 @@
 | [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | 에이전트 체인, A/B/C 검색 비교 설정과 트레이스 로깅 |
 | [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도, 원본 문서 규칙, 동기화 검사 스크립트 |
 | [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |
+| [rag-eval](../../../.claude/skills/rag-eval/SKILL.md) | eval | 사용자 평가셋 검증·의견서, 실행 기록, 발제 지표, 사람 채점 집계, 실패 분석, 비교 보고서 |
 
 2차 예정: rag-eval(Eval), testing(QA), api-server(Backend, 필요 시).
 

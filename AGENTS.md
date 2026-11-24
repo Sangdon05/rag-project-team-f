@@ -30,6 +30,7 @@
 | [data-engineer](.claude/agents/data-engineer.md) | 정규화·Markdown, 청킹, 임베딩, 인덱스 sync                   | data-normalize, chunking, vectordb |
 | [rag-developer](.claude/agents/rag-developer.md) | 런타임 툴·체인, 검색 방식 설정, 프롬프트, 트레이스          | tool-calling, langchain-rag        |
 | [security-reviewer](.claude/agents/security-reviewer.md) | PR 전 보안 점검 실행·분류 보고 (읽기 전용)          | security-check                     |
+| [eval](.claude/agents/eval.md)                   | 평가 실행·기록·실패 분석·비교 보고서, 평가셋 의견서          | rag-eval                           |
 
 2차 예정: eval, qa, reviewer, backend(필요 시). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
 
