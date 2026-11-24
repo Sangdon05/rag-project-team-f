@@ -1,0 +1,4 @@
+# data/ 아래 JSON·Markdown은 OS·core.autocrlf 설정과 관계없이 LF로 체크아웃한다.
+# 고정 해시(scripts/gen1_battle/data_integrity.py HASHES, data/source_manifest.json)는 LF 바이트 기준이다.
+data/**/*.json text eol=lf
+data/**/*.md text eol=lf
