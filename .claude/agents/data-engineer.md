@@ -2,7 +2,8 @@
 name: data-engineer
 description: Owns the data → chunk → vector index chain. Use for normalized data changes, species/extra fields, chunking, embedding, and index sync.
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: inherit
+model: sonnet
+effort: medium
 skills:
   - data-normalize
   - chunking

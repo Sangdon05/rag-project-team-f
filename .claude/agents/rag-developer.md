@@ -2,7 +2,8 @@
 name: rag-developer
 description: Owns runtime tools, the LangChain QA agent chain, prompts, and retriever settings. Use for tool, chain, prompt, or trace logging changes.
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: inherit
+model: opus
+effort: high
 skills:
   - tool-calling
   - langchain-rag
