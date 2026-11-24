@@ -35,6 +35,11 @@ eval 작업에서는 아래 항목을 직접 고치지 않는다(예외: #4, 사
 | 16 | agents README | 미반영 | 계약 다이어그램에 rag-developer → eval(트레이스), 사용자 ↔ eval(평가셋·의견서·채점), "2차 예정"에서 Eval 제거 |
 | 17 | skills README | 미반영 | "2차 예정"에서 rag-eval 제거, query-rewrite 추가 |
 | 18 | `doc-sync` 지도 | 미반영 | coupling 추가: `eval/README.md` → rag-eval / rag-eval `records.md` ↔ langchain-rag / `evalset_lock.py` → eval README·rag-eval·eval 에이전트 / chunking 규칙에 `eval/README.md` |
+| 19 | `langchain-rag` 트레이스 (A 구성 후보) | 미반영 (시뮬레이션 발견) | A 구성은 `pre_rerank = null`이라 검색 누락과 순위 실패를 구분할 수 없다. A에서도 최종 k 이전의 vector 후보 목록을 기록 |
+| 20 | 평가 실행 인터페이스 (holdout) | 미반영 (시뮬레이션 발견) | 현재 트레이스에 `qid`가 있어 체인이 평가셋 문항 ID를 받는 구조. 실행기(eval 소유)가 질문만 체인에 넘기고 `qid`는 eval 쪽에서 붙이도록 인터페이스 합의. #8의 `eval/` 읽기 금지와 함께 반영 |
+| 21 | `langchain-rag` 인용 검증 | 미반영 (시뮬레이션 발견) | 검색 결과 밖의 청크를 인용해도 답이 맞으면 사람 채점은 통과하고 근거 적합만 0이 되는 사례 확인. 체인에서 인용 ⊆ `retrieval.final`을 검증 |
+
+시뮬레이션(에이전트 3개)에서 #1·#11의 AGENTS.md 충돌을 세 에이전트 모두 지적했다. 매번 "더 구체적인 eval 규칙을 따른다"고 판단해야 했으므로 #1·#11을 먼저 반영하는 것을 권한다. #3의 상태 필드가 없으면 호출 성공률·오류 수·실패 분류 1단계가 모두 `unknown`이 된다.
 
 ## #1 교체안 (AGENTS.md "평가셋" 섹션)
 

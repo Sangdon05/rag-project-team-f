@@ -16,7 +16,7 @@
 - 평가셋을 확정하면 잠근다. 평가 실행기는 잠금과 해시가 다르면 실행하지 않는다.
 
   ```bash
-  uv run python scripts/eval/evalset_lock.py lock --split dev --label dev-v1 --chunks data/chunks/chunks.jsonl
+  uv run python scripts/eval/evalset_lock.py lock --split dev --chunks data/chunks/chunks.jsonl   # label = 파일의 version
   uv run python scripts/eval/evalset_lock.py verify --split dev --chunks data/chunks/chunks.jsonl
   ```
 
@@ -25,7 +25,7 @@
 
 ## 문항 스키마
 
-파일 형식: `{"version": "dev-v1", "items": [ ... ]}`
+파일 형식: `{"version": "dev-v1", "items": [ ... ]}`. `version`이 평가셋 버전의 유일한 값이며, 잠금 label도 이 값을 쓴다. 내용을 바꾸면 version도 올린다.
 
 | 필드 | 필수 | 설명 |
 | --- | --- | --- |

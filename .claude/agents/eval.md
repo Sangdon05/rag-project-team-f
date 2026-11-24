@@ -37,13 +37,16 @@ skills:
 ## 보고 형식
 
 ```yaml
-status: done | blocked | scoring_pending
+status: done | reviewed | blocked | scoring_pending   # reviewed = 평가셋 검토만 하고 실행은 발주되지 않음
 evalset: {split: dev|test, label: ..., sha256: <앞 12자>}
 runs: [{run_id: ..., kind: dev|final|rewrite|retry|extra, config: A|B|C|C+RW}]
-auto_metrics: {hit5: "x/17", citation_in_results: "x/17", call_success: "x/y", latency_mean_ms: 0, latency_median_ms: 0, n: 0, errors: 0, timeouts: 0}
-human_metrics: {answer_ok: "x/17 | pending", support_ok: "x/17 | pending", refusal_ok: "x/3 | pending"}
+# 분모는 split 기준: test는 답변 가능 17 / 근거 없음 3, dev는 8 / 2. 모르는 값은 unknown
+auto_metrics: {hit5: "x/n", citation_in_results: "x/n", retrieval_not_called: "x/n", call_success: "x/y | unknown", latency_mean_ms: 0, latency_median_ms: 0, latency_basis: success | all_attempts, n: 0, errors: "0 | unknown", timeouts: "0 | unknown"}
+human_metrics: {answer_ok: "x/n | pending", support_ok: "x/n | pending", refusal_ok: "x/m | pending"}
 failures: [{qid: ..., config: ..., type: ..., owner: data-engineer|rag-developer|사용자}]
 feedback: eval/feedback/<file> | null
+feedback_summary: {blocking: 0, advisory: 0}
+invalid_runs: [run_id, ...]
 report: results/reports/<file> | null
 reproduce: <재실행 명령>
 ```

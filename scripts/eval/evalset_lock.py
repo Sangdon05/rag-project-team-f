@@ -4,9 +4,9 @@
 평가셋(eval/dev.json, eval/test.json)은 사용자만 작성·수정한다.
 사용자가 평가셋을 확정하면 lock으로 해시를 기록하고, 평가 실행 전에는 항상 verify로 확인한다.
 
-    # 사용자 전용: 평가셋 확정
-    uv run python scripts/eval/evalset_lock.py lock --split dev --label dev-v1
-    uv run python scripts/eval/evalset_lock.py lock --split test --label test-v1 --chunks data/chunks/chunks.jsonl
+    # 사용자 전용: 평가셋 확정 (label은 평가셋 파일의 "version" 값을 쓴다)
+    uv run python scripts/eval/evalset_lock.py lock --split dev --chunks data/chunks/chunks.jsonl
+    uv run python scripts/eval/evalset_lock.py lock --split test --chunks data/chunks/chunks.jsonl
 
     # 누구나: 실행 전 확인 (불일치 시 exit 1)
     uv run python scripts/eval/evalset_lock.py verify --split dev
@@ -49,17 +49,28 @@ def cmd_lock(args) -> int:
         if not f.exists():
             print(f"ERROR {f.relative_to(ROOT)} 없음")
             return 1
+        try:
+            version = json.loads(f.read_text(encoding="utf-8")).get("version")
+        except (json.JSONDecodeError, AttributeError):
+            print(f"ERROR {f.relative_to(ROOT)}: JSON 객체가 아니다 (형식: {{\"version\": ..., \"items\": [...]}})")
+            return 1
+        if not version:
+            print(f"ERROR {f.relative_to(ROOT)}: \"version\" 값이 없다. 평가셋 파일에 버전을 적은 뒤 잠근다")
+            return 1
+        if args.label and args.label != version:
+            print(f"ERROR --label {args.label} 이 파일의 version {version} 과 다르다. 평가셋 버전은 파일의 version 하나만 쓴다")
+            return 1
         entry = {
             "file": f"eval/{s}.json",
             "sha256": sha256(f),
-            "label": args.label,
+            "label": version,
             "locked_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
         if args.chunks:
             c = ROOT / args.chunks
             entry["chunks"] = {"file": args.chunks, "sha256": sha256(c)}
         lock[s] = entry
-        print(f"locked {entry['file']} {entry['sha256'][:12]} label={args.label}")
+        print(f"locked {entry['file']} {entry['sha256'][:12]} label={version}")
     LOCK.write_text(json.dumps(lock, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return 0
 
@@ -107,7 +118,7 @@ def main() -> int:
         p.add_argument("--split", choices=["dev", "test", "all"], required=True)
         p.add_argument("--chunks", help="청크 파일 경로 (근거 매핑 기준)")
         if name == "lock":
-            p.add_argument("--label", required=True, help="평가셋 버전 이름 (예: dev-v1)")
+            p.add_argument("--label", help="생략 가능. 주면 평가셋 파일의 version과 같아야 한다")
     args = ap.parse_args()
     return cmd_lock(args) if args.cmd == "lock" else cmd_verify(args)
 
