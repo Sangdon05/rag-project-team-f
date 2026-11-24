@@ -28,9 +28,11 @@ description: Use when preparing or verifying normalized Red/Blue data and source
 | 파일 | 내용과 검증 시 주의 |
 | --- | --- |
 | `evolutions_red_blue.json` | 포켓몬별 진화 관계·조건 |
+| `evolution_items_red_blue.json` | 아이템 진화에 쓰이는 돌의 PokeAPI 영어·현재 한국어 이름과 사용처 진화 관계. 한국어 이름은 영문 원판의 역사적 번역이 아니며 원본 응답 스냅샷은 보존하지 않는다 |
 | `encounters_red_blue.json` | 포켓몬별 Red/Blue 등장·획득 기록. 빈 기록은 획득 불가의 증거가 아니다 |
 | `machines_red_blue.json` | TM/HM 번호와 기술 매핑 |
 | `machine_acquisition_red_blue.json` | 머신의 확인된 획득 경로. 전체 경로·조건의 완전성은 별도 검증한다 |
+| `location_names_ko_red_blue.json` | 위 두 파일의 장소 식별자(location·location_area·`map_id_raw`)와 한국어판 공식 장소명 대응표. Red·Blue 한국어판이 없어 칸토가 나오는 한국어판 게임 명칭을 위키 고정 판으로 확인했고, 층·방·구역 수식어는 팀이 붙인 `composed`다. 사용자가 168항목 전체를 승인했고(`approved`, 홍련섬/홍련마을은 '홍련섬'으로 결정, 파일 `review` 메타), `confidence`는 출처 확신도라 승인과 별개로 유지한다. 확인하지 못한 이름은 `null` |
 
 `data/source_manifest.json`은 공유 정제 데이터의 파일 해시·출처·레코드 식별을 기록한다. 파일을 변경하면 실제 크기·해시와 레코드 연결을 대조하고 매니페스트의 적용 여부를 확인한다. 매니페스트나 라이브 API 링크만으로 과거 원본 보존이나 동일 재생성이 보장되지는 않는다. 원본 스냅샷이 없는 부분과 수집 시각을 모르는 부분은 명시한다.
 
@@ -49,12 +51,14 @@ description: Use when preparing or verifying normalized Red/Blue data and source
 - 단위 변환은 여기서 끝낸다. 하위 단계와 LLM은 변환하지 않는다.
 - 답변 기준은 영문 Red·Blue다. 버전별 값과 현재 값을 구분하고 현재 값을 Red·Blue 값으로 대체하지 않는다.
 - 실행 시각 등 가변 값을 출력에 넣지 않는다.
+- 해시는 LF 바이트 기준이다. `data/` 아래 JSON·Markdown은 루트 `.gitattributes`(`text eol=lf`)로 줄바꿈을 고정하므로 LF로 저장하고, CRLF 사본의 해시를 `HASHES`나 매니페스트에 기록하지 않는다.
 - 저장소에 커밋되지 않은 개인 로컬 파일에 의존하지 않는다. 입력은 공유되는 저장소 파일과 PokeAPI로 제한한다.
+- `pokemon.json` learnset의 `red-blue` 기록에는 게임 밖 method가 1건 있다 (25번 피카츄 `stadium-surfing-pikachu` 파도타기). Red·Blue 게임 안 습득은 `level-up`·`machine`만 다룬다 (`chunking` 스킬).
 - 알 수 없는 장소명·습득·진화 조건을 추측하거나 미확인을 불가능으로 바꾸지 않는다. 외부 데이터와 Pokémon 콘텐츠의 사용·재배포 조건을 별도로 확인한다.
 
 ## 검증
 
 - `verify_bundle()` 통과
 - 전체 대상 작업 시 포켓몬 ID 151종·기술 ID 165종을 정제 데이터와 대조한다. 진화·획득 기록은 포켓몬 ID 집합, 머신 매핑·획득 기록은 TM/HM 55개 번호의 중복·누락을 확인한다. 개수 일치만으로 모든 사실이나 경로가 완전하다고 판단하지 않는다.
-- 기술별 Red·Blue 타입, 레벨업·머신 습득, 진화·획득처는 해당 소스와 연결해 표본 및 작업 범위 전체를 대조한다. `verify_bundle()`이 네 가지 별도 정제 파일의 출처나 내용을 검증한다고 주장하지 않는다.
+- 기술별 Red·Blue 타입, 레벨업·머신 습득, 진화·획득처는 해당 소스와 연결해 표본 및 작업 범위 전체를 대조한다. `verify_bundle()`이 다섯 가지 별도 정제 파일의 출처나 내용을 검증한다고 주장하지 않는다.
 - 보강 산출물이 있으면 해당 스키마와 누락 상태를 검증하고, 같은 고정 입력으로 재실행해 결과 해시를 비교한다. 선택적 원본이 없으면 원본 대조·재생성 미검증으로 보고한다.
