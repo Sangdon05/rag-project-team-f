@@ -26,6 +26,6 @@
 ## 데이터 현황 (설계 근거)
 
 - PokeAPI `/pokemon` 응답은 대부분 moves·sprites이고 핵심 필드는 약 0.4%다. 필요한 필드만 뽑아 쓴다.
-- 정규화: `data/processed/`의 해시 고정 파일과 별도 진화·획득처·머신 데이터. 파일별 범위와 검증은 [data-normalize 스킬](../../../.claude/skills/data-normalize/SKILL.md)을 따른다.
+- 정규화: `data/processed/`의 해시 고정 파일과 별도 진화·진화 아이템 이름·획득처·머신 데이터. 파일별 범위와 검증은 [data-normalize 스킬](../../../.claude/skills/data-normalize/SKILL.md)을 따른다.
 - 상성 계산: `scripts/gen1_battle/gen1_battle_rules.py` — 툴로 재사용.
 - 추가 데이터가 필요하면 현재 문서·질문 범위와 출처를 먼저 확인한다. 포켓몬별 Markdown과 청크는 [chunking 스킬](../../../.claude/skills/chunking/SKILL.md)을 따른다.
