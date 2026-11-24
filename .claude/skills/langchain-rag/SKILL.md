@@ -23,7 +23,7 @@ description: Use when building or changing the LangChain QA agent chain, system 
 
 ## 재현성
 
-- temperature 0, 모델명·버전 고정
+- LLM `OPENAI_CHAT_MODEL`(= `gpt-6-luna`), temperature 0. 모델명은 환경 변수로 읽고, 실행 기록에 남긴다
 - 실행마다 config 스냅샷 해시와 사용한 `index_version`을 기록
 
 ## 트레이스 로깅 (필수)

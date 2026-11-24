@@ -16,7 +16,7 @@ skills:
 
 - 정규화 데이터 보강 (`data/processed/pokedex_extra.json`)
 - 청크 생성 (`data/chunks/chunks.jsonl`)
-- 임베딩, 컬렉션 빌드·증분 sync (`vectorstore/`)
+- 임베딩, 컬렉션 빌드·증분 sync (PostgreSQL + pgvector)
 - 위 단계의 `runs/manifest.jsonl` 기록
 
 ## 하지 않는 것

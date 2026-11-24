@@ -7,7 +7,7 @@
 
 | 에이전트 | 스킬 | 산출물 |
 | --- | --- | --- |
-| [data-engineer](../../../.claude/agents/data-engineer.md) | data-normalize, chunking, vectordb | `pokedex_extra.json`, `chunks.jsonl`, `vectorstore/`, manifest |
+| [data-engineer](../../../.claude/agents/data-engineer.md) | data-normalize, chunking, vectordb | `pokedex_extra.json`, `chunks.jsonl`, pgvector 컬렉션, manifest |
 | [rag-developer](../../../.claude/agents/rag-developer.md) | tool-calling, langchain-rag | `src/pokedex/` 툴·체인·프롬프트, 트레이스 로그 |
 
 벡터 DB는 data-engineer가 맡는다. 청킹이 바뀌면 재인덱싱이 반드시 따라오므로 한 에이전트가 끝까지 맡는 편이 버전 관리가 단순하다. retriever 설정(k, 필터)은 rag-developer가 맡는다.
@@ -22,7 +22,7 @@ data-engineer                                rag-developer
   data/processed/pokedex_extra.json
   scripts/gen1_battle/          ─────────▶   type_effectiveness 툴 (재사용)
   data/chunks/chunks.jsonl
-  vectorstore/{index_version}   ─────────▶   search_pokedex 툴
+  pgvector 컬렉션 {index_version} ──────▶   search_pokedex 툴
   runs/manifest.jsonl           ─────────▶   사용 버전 확인
 ```
 

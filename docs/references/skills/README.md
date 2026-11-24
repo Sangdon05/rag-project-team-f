@@ -15,7 +15,7 @@
 | --- | --- | --- |
 | [data-normalize](../../../.claude/skills/data-normalize/SKILL.md) | data-engineer | 해시 고정 데이터는 그대로 두고 `pokedex_extra.json`으로 보강 |
 | [chunking](../../../.claude/skills/chunking/SKILL.md) | data-engineer | 포켓몬 × 5섹션 + 기술 165개, 청크 ID·메타데이터 규칙 |
-| [vectordb](../../../.claude/skills/vectordb/SKILL.md) | data-engineer | Chroma, index_version, 해시 2개 기반 증분 sync |
+| [vectordb](../../../.claude/skills/vectordb/SKILL.md) | data-engineer | PostgreSQL + pgvector, index_version, 해시 2개 기반 증분 sync |
 | [tool-calling](../../../.claude/skills/tool-calling/SKILL.md) | rag-developer | 런타임 툴 8개, 작성 규칙, 결정적 테스트 |
 | [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | 에이전트 체인, 프롬프트 규칙, 트레이스 로깅 |
 

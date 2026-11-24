@@ -59,7 +59,7 @@ description: Use when creating or changing chunks, chunk text templates, chunk I
 | meta_hash | str | sha256(정렬된 메타데이터) |
 | schema_version | str | |
 
-- 메타데이터 값은 스칼라만 쓴다. `"fire,flying"` 같은 문자열은 where 절로 필터할 수 없으므로 타입별 불리언 플래그를 쓴다.
+- 메타데이터 값은 스칼라만 쓴다 (pgvector JSONB 필터 기준). `"fire,flying"` 같은 문자열은 정확히 필터하기 어려우므로 타입별 불리언 플래그를 쓴다.
 - 타입 enum은 `types.json`의 15개, 소문자 영문으로 고정한다. 표기가 섞이면 필터가 조용히 0건을 반환한다.
 - 한글명·별칭은 필터가 아니라 텍스트와 `resolve_name` 툴에서 처리한다.
 

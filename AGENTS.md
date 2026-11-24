@@ -12,6 +12,7 @@
 | 스킬 정의 (Claude Code 스킬)             | [.claude/skills/](.claude/skills/)                                                                                      |
 | 에이전트 개요, 에이전트 간 계약          | [docs/references/agents/README.md](docs/references/agents/README.md)                                                    |
 | 스킬 개요, 설계 원칙, 데이터 현황        | [docs/references/skills/README.md](docs/references/skills/README.md)                                                    |
+| 개발 환경 (Python, uv, .env, PostgreSQL) | [docs/references/environment.md](docs/references/environment.md)                                                        |
 | 포켓몬 번호·이름·타입 참조표             | [docs/references/pokemon-gen1-reference.md](docs/references/pokemon-gen1-reference.md)                                  |
 | 기준 데이터 (해시 고정)                  | [data/processed/](data/processed/), 검증 [scripts/gen1_battle/data_integrity.py](scripts/gen1_battle/data_integrity.py) |
 | 상성 계산 (툴로 재사용)                  | [scripts/gen1_battle/gen1_battle_rules.py](scripts/gen1_battle/gen1_battle_rules.py)                                    |
@@ -117,7 +118,8 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 - 입력은 저장소에 커밋된 파일과 PokeAPI만 쓴다. 팀원과 공유되지 않는 개인 로컬 파일에 의존하지 않는다.
 - 평가셋 정답을 프롬프트, 코드, few-shot 예시에 넣지 않는다.
 - API 키·`.env`·비밀을 커밋하지 않는다. 키는 환경 변수로만 읽는다.
-- `vectorstore/` 같은 대용량·생성물을 커밋하지 않는다.
+- 대용량·생성물(`runs/`, DB 볼륨)을 커밋하지 않는다.
+- 패키지는 `uv add` / `uv remove`로만 관리한다. 모델명·DB 접속 정보는 환경 변수로 읽고 하드코딩하지 않는다.
 - 런타임 질문 라우터를 따로 만들지 않는다. 툴 선택은 툴 docstring과 시스템 프롬프트로 해결한다.
 - 집계·정렬·top-N을 벡터 검색으로 풀지 않는다.
 - main에 직접 push하지 않는다. 브랜치 → PR → 리뷰 → 머지. 커밋 메시지는 `type: 요약` (feat, fix, docs, chore).
@@ -129,6 +131,5 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 항목                         | 기본값(제안)                 |
 | ---------------------------- | ---------------------------- |
 | `/pokemon-species` 수집 추가 | 추가                         |
-| LLM·임베딩 제공자            | 팀 결정                      |
 | 답변 기준 세대               | 1세대 Red/Blue, 현재 값 병기 |
 | 메타데이터 관리              | 계약 파일                    |
