@@ -13,6 +13,7 @@
 | 에이전트 개요, 에이전트 간 계약          | [docs/references/agents/README.md](docs/references/agents/README.md)                                                    |
 | 스킬 개요, 설계 원칙, 데이터 현황        | [docs/references/skills/README.md](docs/references/skills/README.md)                                                    |
 | 개발 환경 (Python, uv, .env, PostgreSQL) | [docs/references/environment.md](docs/references/environment.md)                                                        |
+| 문서 동기화 규칙, 검사 스크립트          | [.claude/skills/doc-sync/SKILL.md](.claude/skills/doc-sync/SKILL.md)                                                    |
 | 포켓몬 번호·이름·타입 참조표             | [docs/references/pokemon-gen1-reference.md](docs/references/pokemon-gen1-reference.md)                                  |
 | 기준 데이터 (해시 고정)                  | [data/processed/](data/processed/), 검증 [scripts/gen1_battle/data_integrity.py](scripts/gen1_battle/data_integrity.py) |
 | 상성 계산 (툴로 재사용)                  | [scripts/gen1_battle/gen1_battle_rules.py](scripts/gen1_battle/gen1_battle_rules.py)                                    |
@@ -37,6 +38,7 @@
 3. 버전을 파일로 관리한다 (`runs/manifest.jsonl`). 대화나 메모리에 의존하지 않는다.
 4. 실험 규칙을 정하고 채택·기각을 판정한다.
 5. 가드레일 위반을 막는다.
+6. 문서 동기화를 책임진다. 스킬 [doc-sync](.claude/skills/doc-sync/SKILL.md)를 따른다.
 
 ### 발주 양식
 
@@ -54,12 +56,15 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 1. 보고서의 `changed_files`를 `git diff --stat`과 대조한다.
 2. `checks`의 evidence 명령을 직접 다시 실행한다 (예: `verify_bundle()`, 테스트, 청크 수).
 3. manifest에 해당 run이 기록됐는지 확인한다.
-4. `downstream_impact`에 따라 후속 작업을 발주한다. 하나라도 확인되지 않으면 완료로 처리하지 않는다.
+4. `downstream_impact`에 따라 후속 작업을 발주한다.
+5. doc-sync 검사를 실행해 관련 문서가 함께 갱신됐는지 확인한다.
+
+하나라도 확인되지 않으면 완료로 처리하지 않는다.
 
 ## 개발 루프
 
 ```
-발주 → 구현 → 자체 검증 → 평가 → 실패 분석 → 재현 → 수정 → 재평가 → 채택 판정 → 리뷰 → PR
+발주 → 구현 → 자체 검증 → 평가 → 실패 분석 → 재현 → 수정 → 재평가 → 채택 판정 → 리뷰 → 문서 동기화 → PR
 ```
 
 | 단계    | 담당           | 게이트                                                |
@@ -70,6 +75,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 평가    | eval (2차)     | 평가셋 전체 실행, run 결과 저장                       |
 | 채택    | 오케스트레이터 | 아래 실험 규칙 충족                                   |
 | 리뷰    | reviewer (2차) | 가드레일·계약 위반 없음                               |
+| 문서    | 오케스트레이터 | doc-sync 검사 ERROR 0, WARN 처리                      |
 
 ### 평가셋 (Eval 정의 전 기준)
 
@@ -122,6 +128,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 - 패키지는 `uv add` / `uv remove`로만 관리한다. 모델명·DB 접속 정보는 환경 변수로 읽고 하드코딩하지 않는다.
 - 런타임 질문 라우터를 따로 만들지 않는다. 툴 선택은 툴 docstring과 시스템 프롬프트로 해결한다.
 - 집계·정렬·top-N을 벡터 검색으로 풀지 않는다.
+- PR 전에 doc-sync 검사(`--strict`)를 통과시킨다. WARN을 남기면 PR 본문에 사유를 쓴다.
 - main에 직접 push하지 않는다. 브랜치 → PR → 리뷰 → 머지. 커밋 메시지는 `type: 요약` (feat, fix, docs, chore).
 - 작업 시작 전 `git fetch`로 main 변경을 확인한다. 팀원이 머지한 데이터·코드를 먼저 반영한다.
 - 문서 파일 이름을 `agents.md`로 짓지 않는다. 대소문자 구분이 없는 파일시스템에서 `AGENTS.md`로 인식된다.

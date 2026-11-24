@@ -18,6 +18,7 @@
 | [vectordb](../../../.claude/skills/vectordb/SKILL.md) | data-engineer | PostgreSQL + pgvector, index_version, 해시 2개 기반 증분 sync |
 | [tool-calling](../../../.claude/skills/tool-calling/SKILL.md) | rag-developer | 런타임 툴 8개, 작성 규칙, 결정적 테스트 |
 | [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | 에이전트 체인, 프롬프트 규칙, 트레이스 로깅 |
+| [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도, 원본 문서 규칙, 동기화 검사 스크립트 |
 
 2차 예정: rag-eval(Eval), testing(QA), api-server(Backend, 필요 시).
 

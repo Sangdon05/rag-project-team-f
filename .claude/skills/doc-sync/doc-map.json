@@ -1,0 +1,68 @@
+{
+  "hubs": ["AGENTS.md", "README.md"],
+  "orphan_scope": ["docs/*.md", ".claude/*.md"],
+
+  "registries": {
+    "skills_readme": "docs/references/skills/README.md",
+    "agents_readme": "docs/references/agents/README.md",
+    "agents_hub": "AGENTS.md",
+    "orchestrator_skills": ["doc-sync"]
+  },
+
+  "mirrors": [
+    {"source": {"file": ".env.example", "key": "OPENAI_CHAT_MODEL"},
+     "in": ["README.md", "docs/references/environment.md", ".claude/skills/langchain-rag/SKILL.md"]},
+    {"source": {"file": ".env.example", "key": "OPENAI_EMBEDDING_MODEL"},
+     "in": ["README.md", "docs/references/environment.md", ".claude/skills/vectordb/SKILL.md"]},
+    {"source": {"file": ".env.example", "key": "POSTGRES_PORT"},
+     "in": ["README.md", "docs/references/environment.md"]},
+    {"source": {"file": ".python-version"},
+     "in": ["README.md", "docs/references/environment.md"]}
+  ],
+
+  "env_docs": {
+    "source": ".env.example",
+    "in": ["docs/references/environment.md", "README.md"]
+  },
+
+  "deps_docs": {
+    "source": "pyproject.toml",
+    "in": ["docs/references/environment.md"]
+  },
+
+  "forbidden": [
+    {"pattern": "datas/",
+     "in": [".claude/*", "AGENTS.md", "README.md", "docs/references/skills/*", "docs/references/agents/*", "docs/references/environment.md"],
+     "why": "개인 작업 폴더. 팀원과 공유되지 않으므로 문서·스킬·에이전트에 의존을 남기지 않는다"}
+  ],
+
+  "coupling": [
+    {"when": [".claude/skills/*/SKILL.md"],
+     "review": ["docs/references/skills/README.md"],
+     "why": "스킬 목록·요약·사용 에이전트"},
+    {"when": [".claude/agents/*.md"],
+     "review": ["docs/references/agents/README.md", "AGENTS.md"],
+     "why": "에이전트 표, 담당, 에이전트 간 계약"},
+    {"when": [".claude/skills/chunking/SKILL.md"],
+     "review": [".claude/skills/vectordb/SKILL.md", ".claude/skills/tool-calling/SKILL.md", ".claude/skills/langchain-rag/SKILL.md", "docs/references/agents/README.md"],
+     "why": "청크 ID·섹션·메타데이터 키는 sync, 검색 툴 인자, 출처 표기에 쓰인다"},
+    {"when": [".claude/skills/tool-calling/SKILL.md"],
+     "review": [".claude/skills/langchain-rag/SKILL.md", "docs/references/skills/README.md"],
+     "why": "툴 이름·개수·권장 흐름"},
+    {"when": [".env.example", "docker-compose.yml", "docker/*", "pyproject.toml", ".python-version"],
+     "review": ["docs/references/environment.md", "README.md"],
+     "why": "개발 환경 설명"},
+    {"when": ["data/processed/*", "scripts/gen1_battle/data_integrity.py"],
+     "review": [".claude/skills/data-normalize/SKILL.md", "docs/references/skills/README.md"],
+     "why": "기준 데이터 목록·개수·해시 고정 규칙"},
+    {"when": ["scripts/gen1_battle/gen1_battle_rules.py"],
+     "review": [".claude/skills/tool-calling/SKILL.md"],
+     "why": "type_effectiveness 툴이 래핑하는 함수"},
+    {"when": ["contracts/*"],
+     "review": [".claude/skills/chunking/SKILL.md", ".claude/skills/tool-calling/SKILL.md"],
+     "why": "메타데이터 계약과 툴 enum"},
+    {"when": [".claude/skills/doc-sync/doc-map.json"],
+     "review": [".claude/skills/doc-sync/SKILL.md"],
+     "why": "규칙 변경 시 스킬 설명"}
+  ]
+}
