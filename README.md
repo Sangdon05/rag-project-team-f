@@ -71,15 +71,18 @@ uv run python -m unittest discover -s tests            # 테스트
 | 진화 결과 | `data/processed/evolutions_red_blue.json` |
 | 서식환경·등장/획득 장소 결과 | `data/processed/encounters_red_blue.json` |
 | 기술머신·비전머신 결과 | `data/processed/machines_red_blue.json` |
+| 머신 획득 장소·방법 결과 | `data/processed/machine_acquisition_red_blue.json` |
 | 진화 추출 스크립트 | `pokeapi/tools/data_prep/extract_evolutions_red_blue.py` |
 | 서식지 추출 스크립트 | `pokeapi/tools/data_prep/extract_encounters_red_blue.py` |
 | 머신 추출 스크립트 | `pokeapi/tools/data_prep/extract_machines_red_blue.py` |
+| 머신 획득 정보 추출 스크립트 | `pokeapi/tools/data_prep/extract_machine_acquisition_red_blue.py` |
+| 머신 획득 정보 설명 | `pokeapi/tools/data_prep/MACHINE_ACQUISITION_README.md` |
 | 머신 상세 설명 | `pokeapi/tools/data_prep/MACHINES_README.md` |
 | 상세 설명 | `pokeapi/tools/data_prep/EVOLUTION_README.md`, `pokeapi/tools/data_prep/ENCOUNTERS_README.md` |
 | 수집 원본·매니페스트 | `pokeapi/sources/evolution_red_blue/`, `pokeapi/sources/encounters_red_blue/` |
 | 데이터 검증 테스트 | `pokeapi/tests/test_evolutions_red_blue.py`, `pokeapi/tests/test_encounters_red_blue.py` |
 
-진화는 PokéAPI의 고정 정적 데이터와 영문 Red·Blue 게임의 커뮤니티 디스어셈블리 진화표를 비교한 결과입니다. 실제 게임 실행 검증은 하지 않았습니다. 서식환경은 종의 일반 분류이며, 게임 버전별 등장·획득 장소와 다릅니다. API 기록이 없는 포켓몬은 획득 불가가 아니라 **API에 기록이 없는 상태**로 표시합니다. API가 제공하지 않은 한국어 장소명은 `null`입니다. 데이터와 Pokémon 관련 권리의 이용·재배포 조건은 별도로 확인해야 합니다.
+진화는 PokéAPI의 고정 정적 데이터와 영문 Red·Blue 게임의 커뮤니티 디스어셈블리 진화표를 비교한 결과입니다. 실제 게임 실행 검증은 하지 않았습니다. 서식환경은 종의 일반 분류이며, 게임 버전별 등장·획득 장소와 다릅니다. API 기록이 없는 포켓몬은 획득 불가가 아니라 **API에 기록이 없는 상태**로 표시합니다. API가 제공하지 않은 한국어 장소명은 `null`입니다. 머신 획득 장소는 55개 각각에 최소 한 경로를 기록했으나 모든 가능한 경로·접근 조건을 전부 검증한 것은 아닙니다. 데이터와 Pokémon 관련 권리의 이용·재배포 조건은 별도로 확인해야 합니다.
 
 ## 팀원이 실행할 수 있는 계산 테스트
 
@@ -99,6 +102,7 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 python -m unittest discover -s pokeapi/tests -p 'test_evolutions_red_blue.py' -v
 python -m unittest discover -s pokeapi/tests -p 'test_encounters_red_blue.py' -v
 python -m unittest discover -s pokeapi/tests -p 'test_machines_red_blue.py' -v
+python -m unittest discover -s pokeapi/tests -p 'test_machine_acquisition_red_blue.py' -v
 ```
 
 진화 스크립트는 기본적으로 보존된 스냅샷에서 결과를 재생성합니다. 서식지 스크립트는 네트워크로 새로 수집하며 기존 산출물을 덮어쓰지 않습니다. 실행 전 각 상세 설명의 경로와 재수집 조건을 확인하세요.
