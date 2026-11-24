@@ -64,14 +64,17 @@ uv run python -m unittest discover -s tests            # 테스트
 - [AGENTS.md](AGENTS.md) — 개발 에이전트 오케스트레이션, 개발 루프, 가드레일
 - [docs/references/](docs/references/) — 환경, 에이전트·스킬 개요, 포켓몬 참조표
 
-## 영문 Red·Blue 진화 및 서식지 데이터
+## 영문 Red·Blue 진화·서식지·머신 데이터
 
 | 구분 | 파일 |
 |---|---|
 | 진화 결과 | `data/processed/evolutions_red_blue.json` |
 | 서식환경·등장/획득 장소 결과 | `data/processed/encounters_red_blue.json` |
+| 기술머신·비전머신 결과 | `data/processed/machines_red_blue.json` |
 | 진화 추출 스크립트 | `pokeapi/tools/data_prep/extract_evolutions_red_blue.py` |
 | 서식지 추출 스크립트 | `pokeapi/tools/data_prep/extract_encounters_red_blue.py` |
+| 머신 추출 스크립트 | `pokeapi/tools/data_prep/extract_machines_red_blue.py` |
+| 머신 상세 설명 | `pokeapi/tools/data_prep/MACHINES_README.md` |
 | 상세 설명 | `pokeapi/tools/data_prep/EVOLUTION_README.md`, `pokeapi/tools/data_prep/ENCOUNTERS_README.md` |
 | 수집 원본·매니페스트 | `pokeapi/sources/evolution_red_blue/`, `pokeapi/sources/encounters_red_blue/` |
 | 데이터 검증 테스트 | `pokeapi/tests/test_evolutions_red_blue.py`, `pokeapi/tests/test_encounters_red_blue.py` |
@@ -86,7 +89,7 @@ uv run python -m unittest discover -s tests            # 테스트
 python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-이 테스트는 배틀 계산을 검증하며 진화·서식지 데이터의 원본 대조는 포함하지 않습니다. 선택적 `pokeapi/tools/compat`이 없으면 해당 호환 테스트는 건너뜁니다.
+이 테스트는 배틀 계산을 검증하며 진화·서식지·머신 데이터의 원본 대조는 포함하지 않습니다. 선택적 `pokeapi/tools/compat`이 없으면 해당 호환 테스트는 건너뜁니다.
 
 ## 로컬 원본이 있을 때 데이터 검증
 
@@ -95,6 +98,7 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 ```sh
 python -m unittest discover -s pokeapi/tests -p 'test_evolutions_red_blue.py' -v
 python -m unittest discover -s pokeapi/tests -p 'test_encounters_red_blue.py' -v
+python -m unittest discover -s pokeapi/tests -p 'test_machines_red_blue.py' -v
 ```
 
 진화 스크립트는 기본적으로 보존된 스냅샷에서 결과를 재생성합니다. 서식지 스크립트는 네트워크로 새로 수집하며 기존 산출물을 덮어쓰지 않습니다. 실행 전 각 상세 설명의 경로와 재수집 조건을 확인하세요.
