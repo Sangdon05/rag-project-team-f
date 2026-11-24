@@ -46,9 +46,13 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 1. 검사를 실행한다.
 
    ```bash
-   uv run python .claude/skills/doc-sync/scripts/check_docs.py            # base = origin/main
-   uv run python .claude/skills/doc-sync/scripts/check_docs.py --strict   # PR 직전: WARN도 실패
+   # 작업 단위 (커밋 전): 이번 작업에서 바꾼 파일만 기준으로 연동 확인
+   uv run python .claude/skills/doc-sync/scripts/check_docs.py --base HEAD
+   # PR 직전: 브랜치 전체 기준, WARN도 실패
+   uv run python .claude/skills/doc-sync/scripts/check_docs.py --strict
    ```
+
+   브랜치가 길면 `origin/main` 기준으로는 대부분의 문서가 이미 "변경됨"이라 WARN이 잘 안 뜬다. 연동 누락은 작업 단위(`--base HEAD`)에서 잡는다.
 
 2. **ERROR**는 모두 고친다. 구조가 깨진 상태다.
 
@@ -74,6 +78,12 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 - 새 환경 변수: `.env.example` → environment.md, README 표 (검사가 강제)
 - 문서끼리 같은 값을 쓰게 되면: `mirrors`에 등록
 - 규칙을 추가·삭제하면 이 SKILL.md의 원본 문서 표도 갱신한다
+
+## 검사의 한계
+
+- WARN은 "같이 바뀌지 않았다"만 알려준다. 내용이 맞는지는 사람(오케스트레이터)이 읽고 판단한다. 예: 청크 ID 형식 변경은 WARN만 뜨고, vectordb·langchain-rag 스킬의 예시 ID는 직접 고쳐야 한다.
+- mirror 검사는 새 값이 문서에 있는지만 본다. 예전 값이 함께 남아 있으면 잡지 못하므로 값을 바꿀 때 예전 값을 `grep`으로 찾아 지운다.
+- 디렉터리 링크(`.claude/skills/`)는 도달성 계산에 넣지 않는다. 파일마다 링크가 있어야 한다.
 
 ## 하지 않는 것
 
