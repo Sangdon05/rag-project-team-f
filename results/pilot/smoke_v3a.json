@@ -1,0 +1,1219 @@
+{
+ "kind": "pilot_vector_search_raw",
+ "collection": "test-pilot-v3a-te3s-tpl3a",
+ "embed_model": "text-embedding-3-small",
+ "k": 5,
+ "filter": null,
+ "distance": "cosine (pgvector <=>)",
+ "query_file": {
+  "path": "eval/pilot_smoke_queries.json",
+  "sha256": "f5145a486494d141a6743600c9835316dbc72792aeef55ba178ef23c38aa31ae"
+ },
+ "chunk_file": {
+  "path": "data/synthetic/pilot/v3a/bulbasaur_red_blue.json",
+  "sha256": "4d87a6e0966cc8b5d7dea9dee7ec4649b48e44c30e0e32d1b8c1eadc639f4ac5"
+ },
+ "collection_rows": 10,
+ "started_at_utc": "2026-11-24T13:04:59.007044+00:00",
+ "manifest_run_id": "none",
+ "scoring": null,
+ "note": "테스트 전용 원본 검색 결과. 채점·비교 없음. 질의 파일의 기대 정답 필드는 읽지 않았다.",
+ "n_queries": 27,
+ "n_errors": 0,
+ "api": {
+  "embed_requests": 27,
+  "embed_texts": 27,
+  "embed_tokens_estimate": 528,
+  "token_count_method": "tiktoken encoding_for_model 추정"
+ },
+ "results": [
+  {
+   "qid": "s01",
+   "query": "이상해씨 종족치 알려줘",
+   "seconds": 0.869,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.535313
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.644887
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.675398
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.677134
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.708129
+    }
+   ]
+  },
+  {
+   "qid": "s02",
+   "query": "이상해씨는 몇 레벨에 진화해?",
+   "seconds": 0.225,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.340008
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.490726
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.571346
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.594689
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.595499
+    }
+   ]
+  },
+  {
+   "qid": "s03",
+   "query": "이상해꽃은 언제 진화해?",
+   "seconds": 0.17,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.478138
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.632067
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.689711
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.755435
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.779028
+    }
+   ]
+  },
+  {
+   "qid": "s04",
+   "query": "이상해씨가 레벨업으로 배우는 기술",
+   "seconds": 0.204,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.381829
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.508819
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.550663
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.580899
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.601144
+    }
+   ]
+  },
+  {
+   "qid": "s05",
+   "query": "이상해씨한테 쓸 수 있는 기술머신",
+   "seconds": 0.185,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.416868
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.584085
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.624626
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.632587
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.660514
+    }
+   ]
+  },
+  {
+   "qid": "s06",
+   "query": "TM22 어디서 구해?",
+   "seconds": 0.191,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.613883
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.693844
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.745174
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.747094
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.749737
+    }
+   ]
+  },
+  {
+   "qid": "s07",
+   "query": "이상해씨 약점 타입은?",
+   "seconds": 0.195,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.487453
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.539422
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.563438
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.572247
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.620937
+    }
+   ]
+  },
+  {
+   "qid": "s08",
+   "query": "풀 타입 기술은 어떤 타입에 효과가 좋아?",
+   "seconds": 0.216,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.510031
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.610613
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.651047
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.685698
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.695412
+    }
+   ]
+  },
+  {
+   "qid": "s09",
+   "query": "이상해씨 자속 보정",
+   "seconds": 0.197,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.466449
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.616435
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.638645
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.699769
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.712056
+    }
+   ]
+  },
+  {
+   "qid": "s10",
+   "query": "이상해씨 어디서 잡아?",
+   "seconds": 0.18,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.537324
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.566682
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.589731
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.62494
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.627093
+    }
+   ]
+  },
+  {
+   "qid": "s11",
+   "query": "이상해씨는 어떤 포켓몬이야?",
+   "seconds": 0.199,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.513829
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.633722
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.635086
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.645049
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.680817
+    }
+   ]
+  },
+  {
+   "qid": "s12",
+   "query": "피카츄는 몇 레벨에 진화해?",
+   "seconds": 0.212,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.689756
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.733274
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.747124
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.752053
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.806702
+    }
+   ]
+  },
+  {
+   "qid": "s13",
+   "query": "이상해씨 강점은?",
+   "seconds": 0.18,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.637362
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.646649
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.654614
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.661346
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.681277
+    }
+   ]
+  },
+  {
+   "qid": "s14",
+   "query": "태초마을에서 받을 수 있는 포켓몬",
+   "seconds": 0.193,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.76763
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.769044
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.836269
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.850528
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.914952
+    }
+   ]
+  },
+  {
+   "qid": "s15",
+   "query": "실프주식회사에서 얻는 기술머신",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.573775
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.687855
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.705786
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.759526
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.797899
+    }
+   ]
+  },
+  {
+   "qid": "s16",
+   "query": "이상해씨 상성 알려줘",
+   "seconds": 0.21,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.610091
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.619119
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.619185
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.634751
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.635979
+    }
+   ]
+  },
+  {
+   "qid": "s17",
+   "query": "이상해씨 약점이 뭐야?",
+   "seconds": 0.177,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.568692
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.604165
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.613058
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.637129
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.656558
+    }
+   ]
+  },
+  {
+   "qid": "s18",
+   "query": "이상해씨한테 효과가 굉장한 타입은 뭐야?",
+   "seconds": 0.183,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.419906
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.529591
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.557831
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.564082
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.583685
+    }
+   ]
+  },
+  {
+   "qid": "s19",
+   "query": "이상해씨를 상대할 때 어떤 타입 기술을 쓰면 좋아?",
+   "seconds": 0.186,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.448848
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.523493
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.572744
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.58778
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.620213
+    }
+   ]
+  },
+  {
+   "qid": "s20",
+   "query": "이상해씨가 잘 버티는 타입은?",
+   "seconds": 0.204,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.579718
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.586431
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.597017
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.600416
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.607934
+    }
+   ]
+  },
+  {
+   "qid": "s21",
+   "query": "이상해씨 풀 기술은 어떤 포켓몬한테 잘 먹혀?",
+   "seconds": 0.187,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.630865
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.651279
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.692289
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.701867
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.708177
+    }
+   ]
+  },
+  {
+   "qid": "s22",
+   "query": "이상해씨 같은 타입 기술 쓰면 위력 올라가?",
+   "seconds": 0.196,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": "공격 상성 (이상해씨와 같은 타입 기술이 잘 통하는 타입)",
+     "distance": 0.452083
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.465948
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": "방어 상성 (약점과 저항)",
+     "distance": 0.544103
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.57536
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.580105
+    }
+   ]
+  },
+  {
+   "qid": "s23",
+   "query": "무지개 백화점에서 살 수 있는 기술머신",
+   "seconds": 0.183,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.558629
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.692104
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.747185
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.806652
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.808397
+    }
+   ]
+  },
+  {
+   "qid": "s24",
+   "query": "상트앙느호에서 얻는 비전머신",
+   "seconds": 0.196,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.680216
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.680743
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.773292
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.800125
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.802509
+    }
+   ]
+  },
+  {
+   "qid": "s25",
+   "query": "로켓단 아지트에서 주울 수 있는 기술머신",
+   "seconds": 0.185,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.575509
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.712527
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.745662
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.804878
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.813558
+    }
+   ]
+  },
+  {
+   "qid": "s26",
+   "query": "이상해씨는 어디서 받을 수 있어?",
+   "seconds": 0.191,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.512796
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.560248
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": "진화",
+     "distance": 0.572126
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": "자속 보정 (같은 타입 기술 1.5배)",
+     "distance": 0.604328
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": "종족치",
+     "distance": 0.630506
+    }
+   ]
+  },
+  {
+   "qid": "s27",
+   "query": "꼬부기는 어디서 얻어?",
+   "seconds": 0.192,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": "머신은 어디서 얻나요?",
+     "distance": 0.703331
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": "획득처",
+     "distance": 0.787109
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": "레벨업으로 배우는 기술",
+     "distance": 0.861278
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": "기술머신·비전머신으로 배우는 기술",
+     "distance": 0.910898
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": "기본 정보",
+     "distance": 0.912457
+    }
+   ]
+  }
+ ]
+}

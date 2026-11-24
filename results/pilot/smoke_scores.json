@@ -1,0 +1,271 @@
+{
+  "set_id": "pilot-smoke-bulbasaur",
+  "query_file": "eval/pilot_smoke_queries.json",
+  "k": 5,
+  "scored_by": "orchestrator",
+  "note": "이상해씨 파일럿 10청크 smoke. 발제 공식 평가 아님. 채택: tpl3a, 기각: tpl3b.",
+  "versions": {
+    "v1": {
+      "collection": "test-pilot-v1-te3s-tpl1",
+      "raw": "results/pilot/smoke_v1.json",
+      "n": 25,
+      "hit@1": 11,
+      "hit@3": 20,
+      "hit@5": 23,
+      "mrr": 0.623
+    },
+    "v2": {
+      "collection": "test-pilot-v2-te3s-tpl2",
+      "raw": "results/pilot/smoke_v2.json",
+      "n": 25,
+      "hit@1": 15,
+      "hit@3": 23,
+      "hit@5": 25,
+      "mrr": 0.747
+    },
+    "v3a": {
+      "collection": "test-pilot-v3a-te3s-tpl3a",
+      "raw": "results/pilot/smoke_v3a.json",
+      "n": 25,
+      "hit@1": 16,
+      "hit@3": 23,
+      "hit@5": 25,
+      "mrr": 0.765
+    },
+    "v3b": {
+      "collection": "test-pilot-v3b-te3s-tpl3b",
+      "raw": "results/pilot/smoke_v3b.json",
+      "n": 25,
+      "hit@1": 16,
+      "hit@3": 23,
+      "hit@5": 24,
+      "mrr": 0.755
+    }
+  },
+  "per_query": [
+    {
+      "qid": "s01",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s02",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s03",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s04",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s05",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s06",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s07",
+      "tag": "matchup",
+      "v1": 3,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s08",
+      "tag": "matchup",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s09",
+      "tag": "matchup",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s10",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 2,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s11",
+      "tag": "baseline",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s12",
+      "tag": "out_of_scope",
+      "v1": null,
+      "v1_top1_distance": 0.666724,
+      "v2": null,
+      "v2_top1_distance": 0.690519,
+      "v3a": null,
+      "v3a_top1_distance": 0.689756,
+      "v3b": null,
+      "v3b_top1_distance": 0.689851
+    },
+    {
+      "qid": "s13",
+      "tag": "matchup_ambiguous",
+      "v1": null,
+      "v2": 4,
+      "v3a": 5,
+      "v3b": null
+    },
+    {
+      "qid": "s14",
+      "tag": "place",
+      "v1": 2,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s15",
+      "tag": "place",
+      "v1": 3,
+      "v2": 3,
+      "v3a": 3,
+      "v3b": 3
+    },
+    {
+      "qid": "s16",
+      "tag": "matchup",
+      "v1": 4,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s17",
+      "tag": "matchup",
+      "v1": null,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s18",
+      "tag": "matchup",
+      "v1": 3,
+      "v2": 3,
+      "v3a": 3,
+      "v3b": 3
+    },
+    {
+      "qid": "s19",
+      "tag": "matchup",
+      "v1": 2,
+      "v2": 3,
+      "v3a": 3,
+      "v3b": 3
+    },
+    {
+      "qid": "s20",
+      "tag": "matchup",
+      "v1": 4,
+      "v2": 4,
+      "v3a": 4,
+      "v3b": 5
+    },
+    {
+      "qid": "s21",
+      "tag": "matchup",
+      "v1": 4,
+      "v2": 3,
+      "v3a": 3,
+      "v3b": 3
+    },
+    {
+      "qid": "s22",
+      "tag": "matchup",
+      "v1": 3,
+      "v2": 2,
+      "v3a": 2,
+      "v3b": 2
+    },
+    {
+      "qid": "s23",
+      "tag": "place",
+      "v1": 2,
+      "v2": 2,
+      "v3a": 2,
+      "v3b": 2
+    },
+    {
+      "qid": "s24",
+      "tag": "place",
+      "v1": 2,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s25",
+      "tag": "place",
+      "v1": 2,
+      "v2": 3,
+      "v3a": 3,
+      "v3b": 3
+    },
+    {
+      "qid": "s26",
+      "tag": "place",
+      "v1": 1,
+      "v2": 1,
+      "v3a": 1,
+      "v3b": 1
+    },
+    {
+      "qid": "s27",
+      "tag": "out_of_scope",
+      "v1": null,
+      "v1_top1_distance": 0.742025,
+      "v2": null,
+      "v2_top1_distance": 0.703331,
+      "v3a": null,
+      "v3a_top1_distance": 0.703331,
+      "v3b": null,
+      "v3b_top1_distance": 0.703331
+    }
+  ]
+}
