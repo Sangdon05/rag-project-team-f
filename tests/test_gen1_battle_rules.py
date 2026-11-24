@@ -86,7 +86,7 @@ class BattleRulesTest(unittest.TestCase):
         self.assertEqual(DATA, ROOT / 'data/processed')
         self.assertEqual(self.rules.moves['135']['values_by_version_group']['red-blue']['pp'], 10)
 
-    @unittest.skipUnless((ROOT / 'pokeapi/tools').exists(), 'optional pokeapi/tools absent; compatibility entry point unavailable')
+    @unittest.skipUnless((ROOT / 'pokeapi/tools/compat').exists(), 'optional pokeapi/tools/compat absent; compatibility entry point unavailable')
     def test_relocated_compatibility_entry_point(self):
         cmd = [sys.executable, str(ROOT / 'pokeapi/tools/compat/gen1_battle_rules.py'), '--version', 'red-blue', '--user', '25', '--target', '130', '--move', '85']
         result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding='utf-8', env=dict(os.environ, PYTHONIOENCODING='utf-8'))
