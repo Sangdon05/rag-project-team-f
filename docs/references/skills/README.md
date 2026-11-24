@@ -23,7 +23,7 @@
 
 ## 데이터 현황 (설계 근거)
 
-- 원본: `datas/pokeapi/*.json` 151개, 약 73MB (git 제외). 핵심 필드는 전체의 0.4%.
+- PokeAPI `/pokemon` 응답은 대부분 moves·sprites이고 핵심 필드는 약 0.4%다. 필요한 필드만 뽑아 쓴다.
 - 정규화(PR #3): `data/processed/` — pokemon(151), moves(165), types(15), type_chart, 기술 분류. 1세대 Red/Blue 기준, SHA-256 고정.
 - 상성 계산: `scripts/gen1_battle/gen1_battle_rules.py` — 툴로 재사용.
-- 부족한 것: 키/몸무게(원본에 있음), 분류·도감 설명·진화(`/pokemon-species` 수집 필요), 별칭.
+- 부족한 것: 키/몸무게(`/pokemon`), 분류·도감 설명·진화(`/pokemon-species`), 별칭. `pokedex_extra.json`으로 보강한다.
