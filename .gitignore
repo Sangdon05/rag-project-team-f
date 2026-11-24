@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# 비밀 (예시 파일만 커밋)
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+
+# 생성물
+runs/
+eval/results/
+
+# OS / 에디터
+.DS_Store
+.idea/
+.vscode/
