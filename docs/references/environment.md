@@ -28,6 +28,8 @@ docker compose ps            # STATUS가 healthy인지 확인
 | --- | --- |
 | langchain, langchain-core, langchain-classic | 에이전트 체인, 툴, 프롬프트 |
 | langchain-openai | `ChatOpenAI`, `OpenAIEmbeddings` |
+| langchain-postgres | `PGVector` 벡터 스토어 |
+| psycopg[binary,pool] | PostgreSQL 드라이버 (psycopg 3), 증분 sync용 직접 SQL |
 | langchain-community | 기타 통합 (sunset 예정 경고 있음, 새 코드에서는 가급적 쓰지 않는다) |
 | ragas, datasets | 평가 |
 | pydantic | 툴 인자 스키마 |
