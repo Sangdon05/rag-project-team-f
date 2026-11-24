@@ -7,6 +7,7 @@ description: Use when building, syncing, or checking the vector index (OpenAI em
 
 청크를 임베딩해 PostgreSQL(pgvector)에 저장하고, 데이터가 바뀌면 바뀐 청크만 다시 임베딩한다.
 환경 설정은 `docs/references/environment.md`를 따른다.
+입력은 `chunking` 스킬에 따라 승인된 Markdown에서 생성한 청크다. 문서 변경 시 청크 본문과 근거 연결을 먼저 갱신·검증한다.
 
 ## 구성
 
@@ -66,5 +67,5 @@ description: Use when building, syncing, or checking the vector index (OpenAI em
 ## 검증
 
 - 컬렉션 레코드 수 = chunks.jsonl 청크 수, 누락 id 0, `"langchain"` 기본 컬렉션 0건
-- smoke test: 151마리, 165개 기술 이름으로 검색 시 해당 id가 top-1
+- smoke test: 인덱싱된 포켓몬 이름으로 검색 시 해당 id가 top-1. 별도 기술 청크를 인덱싱한 경우 기술 이름도 검증한다.
 - 변경 없이 sync 재실행 시 embedded = 0

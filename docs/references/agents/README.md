@@ -5,13 +5,18 @@
 
 ## 1차 에이전트
 
+아래 산출물은 담당 범위와 예정된 결과를 나타내며, 실제 구현·생성 여부는 파일과 실행 기록으로 확인한다.
+
 | 에이전트 | 스킬 | 산출물 |
 | --- | --- | --- |
-| [data-engineer](../../../.claude/agents/data-engineer.md) | data-normalize, chunking, vectordb | `pokedex_extra.json`, `chunks.jsonl`, pgvector 컬렉션, manifest |
-| [rag-developer](../../../.claude/agents/rag-developer.md) | tool-calling, langchain-rag | `src/pokedex/` 툴·체인·프롬프트, 트레이스 로그 |
+| [data-engineer](../../../.claude/agents/data-engineer.md) | data-normalize, chunking, vectordb | 정제 데이터·포켓몬별 Markdown, 청크·근거 연결, pgvector 컬렉션, manifest |
+| [rag-developer](../../../.claude/agents/rag-developer.md) | tool-calling, langchain-rag | `src/pokedex/` 툴·체인·프롬프트, 검색 비교 설정과 트레이스 로그 |
 | [security-reviewer](../../../.claude/agents/security-reviewer.md) | security-check | 보안 점검 보고 (파일 수정 없음) |
 
 벡터 DB는 data-engineer가 맡는다. 청킹이 바뀌면 재인덱싱이 반드시 따라오므로 한 에이전트가 끝까지 맡는 편이 버전 관리가 단순하다. retriever 설정(k, 필터)은 rag-developer가 맡는다.
+청크는 승인된 포켓몬별 Markdown을 주제별로 나누고 원본 근거를 연결한다. 구체적인 섹션과 계약은 [chunking 스킬](../../../.claude/skills/chunking/SKILL.md)을 따른다.
+검색 방식별 비교 설정·기록은 [langchain-rag 스킬](../../../.claude/skills/langchain-rag/SKILL.md)을 따르며, 결과의 품질·채택은 구현자가 아닌 독립 평가와 오케스트레이터가 판정한다.
+BM25 인덱스의 생성·동기화 담당과 출력 계약은 구현 착수 전 발주에서 명확히 정한다.
 
 security-reviewer는 읽기 전용이다. 검출은 스크립트가 결정적으로 하고 모델은 WARN 분류만 하므로 haiku + low effort로 둔다. 수정은 오케스트레이터가 담당 에이전트에게 발주한다.
 
@@ -22,7 +27,7 @@ security-reviewer는 읽기 전용이다. 검출은 스크립트가 결정적으
 ```
 data-engineer                                rag-developer
   data/processed/*.json         ─────────▶   resolve / get / learnset / filter / compare 툴
-  data/processed/pokedex_extra.json
+  포켓몬별 Markdown + 출처 연결  ─────────▶   승인 후 주제별 청킹
   scripts/gen1_battle/          ─────────▶   type_effectiveness 툴 (재사용)
   data/chunks/chunks.jsonl
   pgvector 컬렉션 {index_version} ──────▶   search_pokedex 툴

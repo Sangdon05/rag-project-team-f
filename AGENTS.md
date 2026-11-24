@@ -1,6 +1,6 @@
 # AGENTS.md — 포켓몬 도감 RAG 오케스트레이터
 
-1세대(Red/Blue) 포켓몬 151마리 도감을 대상으로 하는 RAG 프로젝트다.
+영문 Red·Blue 플레이어를 대상으로 포켓몬 151마리 도감을 다루는 RAG 프로젝트다. 답변은 Red·Blue 기준으로 하며 다른 세대 값을 병기하지 않는다.
 이 문서는 오케스트레이터의 역할, 개발 루프, 가드레일을 정의하고 세부 문서로 가는 링크를 모아 둔다.
 세부 절차는 이 문서에 쓰지 않고 링크된 스킬·에이전트 문서에 둔다.
 
@@ -18,7 +18,7 @@
 | 포켓몬 번호·이름·타입 참조표             | [docs/references/pokemon-gen1-reference.md](docs/references/pokemon-gen1-reference.md)                                  |
 | 기준 데이터 (해시 고정)                  | [data/processed/](data/processed/), 검증 [scripts/gen1_battle/data_integrity.py](scripts/gen1_battle/data_integrity.py) |
 | 상성 계산 (툴로 재사용)                  | [scripts/gen1_battle/gen1_battle_rules.py](scripts/gen1_battle/gen1_battle_rules.py)                                    |
-| 보강 데이터 생성 (PokeAPI)               | `scripts/helper/build_pokedex_extra.py` (예정)                                                                          |
+| 정제 데이터와 출처 관리                  | [.claude/skills/data-normalize/SKILL.md](.claude/skills/data-normalize/SKILL.md), `data/source_manifest.json`            |
 | 청크 메타데이터 계약                     | `contracts/chunk_schema.json` (예정, 초안은 chunking 스킬)                                                              |
 | 버전·실행 기록                           | `runs/manifest.jsonl` (예정)                                                                                            |
 | 평가셋·평가 결과·실패 분석               | `eval/` (예정, 2차 Eval 에이전트)                                                                                       |
@@ -27,8 +27,8 @@
 
 | 에이전트                                         | 맡기는 일                                                    | 스킬                               |
 | ------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------- |
-| [data-engineer](.claude/agents/data-engineer.md) | 정규화 보강, 청킹, 임베딩, 인덱스 sync                       | data-normalize, chunking, vectordb |
-| [rag-developer](.claude/agents/rag-developer.md) | 런타임 툴, 에이전트 체인, 프롬프트, retriever 설정, 트레이스 | tool-calling, langchain-rag        |
+| [data-engineer](.claude/agents/data-engineer.md) | 정규화·Markdown, 청킹, 임베딩, 인덱스 sync                   | data-normalize, chunking, vectordb |
+| [rag-developer](.claude/agents/rag-developer.md) | 런타임 툴·체인, 검색 방식 설정, 프롬프트, 트레이스          | tool-calling, langchain-rag        |
 | [security-reviewer](.claude/agents/security-reviewer.md) | PR 전 보안 점검 실행·분류 보고 (읽기 전용)          | security-check                     |
 
 2차 예정: eval, qa, reviewer, backend(필요 시). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
@@ -73,7 +73,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 
 | 단계    | 담당           | 게이트                                                |
 | ------- | -------------- | ----------------------------------------------------- |
-| 데이터  | data-engineer  | `verify_bundle()` 통과, extra 151/151, 스키마 검증    |
+| 데이터  | data-engineer  | `verify_bundle()` 통과, 대상 ID·출처 검증, 문서 검토 상태 확인 |
 | 인덱스  | data-engineer  | 청크 누락 0, 이름 smoke test, sync 결과 manifest 기록 |
 | 툴·체인 | rag-developer  | 툴 단위 테스트 통과, 출처 포함 답변, 트레이스 생성    |
 | 평가    | eval (2차)     | 평가셋 전체 실행, run 결과 저장                       |
@@ -86,7 +86,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 
 - 유형: 단일 사실, 이름 해석(한글·별칭·오타), 수치·단위, 기술·습득, 상성, 비교, 집계·필터, 세대 구분, 서술형, 답할 수 없는 질문
 - 사실형 정답은 `data/processed/`에서 자동 생성한다. 서술형은 사람이 검수한다.
-- 문항마다 qid, 유형, 정답, 정답 출처 id를 기록한다.
+- 문항마다 qid, 유형, 정답, 정답 출처 id를 기록한다. 검색 평가 대상은 허용 근거 청크 ID를 별도로 연결한다.
 
 ### 실패 분석
 
@@ -104,7 +104,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 
 - temperature 0, 모델·임베딩 버전, index_version, config 해시를 고정한다.
 - 실패 qid 목록으로 해당 문항만 다시 돌릴 수 있게 한다.
-- 나중에 도입: dev/holdout 분리, 3회 반복으로 불안정 실패 구분.
+- 개발셋과 최종 평가셋은 분리한다. 3회 반복으로 불안정 실패를 구분하는 방식은 나중에 도입한다.
 
 ### 실험 규칙 (채택 판정)
 
@@ -144,5 +144,4 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 항목                         | 기본값(제안)                 |
 | ---------------------------- | ---------------------------- |
 | `/pokemon-species` 수집 추가 | 추가                         |
-| 답변 기준 세대               | 1세대 Red/Blue, 현재 값 병기 |
 | 메타데이터 관리              | 계약 파일                    |

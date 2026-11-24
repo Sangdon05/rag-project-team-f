@@ -22,6 +22,12 @@ class BattleRulesTest(unittest.TestCase):
 
     def test_four_times_and_stab(self):
         result = self.calc()
+        self.assertEqual(result['version'], 'red-blue')
+        self.assertEqual(result['calculation'], 'basic_type_and_stab')
+        self.assertEqual((result['user']['id'], result['user']['types']), (25, ['electric']))
+        self.assertEqual((result['target']['id'], result['target']['types']), (130, ['water', 'flying']))
+        self.assertEqual((result['move']['id'], result['move']['type'], result['move']['classification']),
+                         (85, 'electric', 'regular_damage'))
         self.assertEqual((result['type_effectiveness'], result['stab'], result['combined_factor']), (4, 1.5, 6))
         self.assertEqual([x['factor'] for x in result['per_type_effectiveness']], [2, 2])
 
@@ -43,8 +49,19 @@ class BattleRulesTest(unittest.TestCase):
                 result = self.calc(move=move)
                 self.assertEqual(result['move']['classification'], kind)
                 self.assertEqual(result['calculation'], 'unsupported')
-                self.assertIsNone(result['combined_factor'])
-                self.assertIsNone(result['type_immunity'])
+                for key in ('stab', 'type_effectiveness', 'combined_factor', 'type_immunity', 'per_type_effectiveness'):
+                    self.assertIsNone(result[key])
+
+    def test_type_calculation_does_not_validate_learnability(self):
+        bulbasaur = self.rules.pokemon['bulbasaur']
+        self.assertFalse(any(
+            entry['move'] == 'poison-sting' and entry['version_group'] == 'red-blue'
+            for entry in bulbasaur['learnset']
+        ))
+        result = self.calc(user='bulbasaur', target='oddish', move='poison-sting')
+        self.assertEqual(result['version'], 'red-blue')
+        self.assertEqual(result['calculation'], 'basic_type_and_stab')
+        self.assertIn('not actual damage, move ownership', result['notice'])
 
     def test_type_overrides_korean_and_id(self):
         result = self.calc(user=25, target='130', move='85', user_types=['노말'], target_types=[5, '비행'])
@@ -86,7 +103,7 @@ class BattleRulesTest(unittest.TestCase):
         self.assertEqual(DATA, ROOT / 'data/processed')
         self.assertEqual(self.rules.moves['135']['values_by_version_group']['red-blue']['pp'], 10)
 
-    @unittest.skipUnless((ROOT / 'pokeapi/tools').exists(), 'optional pokeapi/tools absent; compatibility entry point unavailable')
+    @unittest.skipUnless((ROOT / 'pokeapi/tools/compat').exists(), 'optional pokeapi/tools/compat absent; compatibility entry point unavailable')
     def test_relocated_compatibility_entry_point(self):
         cmd = [sys.executable, str(ROOT / 'pokeapi/tools/compat/gen1_battle_rules.py'), '--version', 'red-blue', '--user', '25', '--target', '130', '--move', '85']
         result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding='utf-8', env=dict(os.environ, PYTHONIOENCODING='utf-8'))
