@@ -8,7 +8,7 @@
 | 패키지 | `pyproject.toml` + `uv.lock` (커밋 대상) |
 | LLM | OpenAI `gpt-6-luna` |
 | 임베딩 | OpenAI `text-embedding-3-small` (1536차원) |
-| 벡터 DB | PostgreSQL 17 + pgvector (`docker-compose.yml`, 이미지 `pgvector/pgvector:pg17`) |
+| 벡터 DB | PostgreSQL 17 + pgvector 0.8 (`docker-compose.yml`, 이미지 `pgvector/pgvector:pg17`, 호스트 포트 5434) |
 | 설정 | `.env` (커밋 금지), 템플릿 `.env.example` |
 
 ## 최초 설정
@@ -45,7 +45,7 @@ docker compose ps            # STATUS가 healthy인지 확인
 | `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` / `POSTGRES_HOST` / `POSTGRES_PORT` | docker compose와 앱이 함께 사용 |
 | `DATABASE_URL` | `postgresql+psycopg://…` (psycopg 3 드라이버) |
-| `PGVECTOR_COLLECTION` | 사용할 컬렉션 = index_version |
+| `PGVECTOR_COLLECTION` | 필수. 사용할 컬렉션 = index_version. 미지정 시 기본 컬렉션 `langchain`에 섞인다 |
 
 코드는 모델명과 접속 정보를 하드코딩하지 않고 환경 변수로 읽는다. 진입점에서 `load_dotenv()`를 한 번 호출한다.
 
@@ -56,3 +56,12 @@ uv run python -V                                  # 3.13.x
 uv run python -c "import langchain_openai, ragas" # import 확인
 docker compose exec postgres psql -U pokedex -d pokedex -c "select extversion from pg_extension where extname='vector';"
 ```
+
+## 포트
+
+호스트 포트 기본값은 5434다. 5432/5433은 다른 로컬 Postgres 컨테이너가 쓰는 경우가 있다. 바꾸려면 `.env`의 `POSTGRES_PORT`와 `DATABASE_URL`을 함께 바꾼다.
+
+## PGVector 컬렉션
+
+- 컬렉션은 테이블이 아니라 `langchain_pg_collection`의 한 행이다. 모든 벡터는 `langchain_pg_embedding` 한 테이블에 있다.
+- 레코드 id는 컬렉션과 무관한 전역 PK다. 여러 index_version을 같은 DB에 둘 때 id에 index_version을 붙인다 (vectordb 스킬).
