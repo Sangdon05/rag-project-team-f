@@ -35,7 +35,7 @@
 | `subtype` | | `variation`일 때 `paraphrase`(표현 변형) / `confusable`(유사 조건 구분) |
 | `question` | O | 질문 원문 |
 | `key_facts` | 답변 가능 | 정답 충족 채점 단위. 모두 맞고 모순이 없어야 정답 |
-| `allowed_evidence` | 답변 가능 | 허용 근거 목록: `{"doc_id", "chunk_id", "source_loc"}`. 하나라도 상위 5개에 있으면 Hit |
+| `allowed_evidence` | 답변 가능 | 허용 근거 목록: `{"document_id", "chunk_id", "source_loc"}` (청크 메타데이터와 같은 이름, chunking 스킬). 하나라도 상위 5개에 있으면 Hit |
 | `confusable_with` | | 혼동되기 쉬운 근거 (chunk_id 목록). `confusable` 문항에는 권장 |
 | `no_evidence_reason` | 근거 없음 | 근거가 없다고 판단한 이유. 이 문항은 `allowed_evidence`를 비운다 |
 | `note` | | 작성자 메모 |
@@ -49,10 +49,10 @@
   "qid": "D01",
   "split": "dev",
   "type": "answerable",
-  "question": "피카츄의 1세대 스피드 종족값은?",
-  "key_facts": ["스피드 90"],
+  "question": "이상해씨의 스피드 종족치는?",
+  "key_facts": ["스피드 45"],
   "allowed_evidence": [
-    {"doc_id": "pokemon:25", "chunk_id": "pokemon:25#stats", "source_loc": "data/processed/pokemon.json[id=25].stats_gen1"}
+    {"document_id": "pokemon:1", "chunk_id": "pokemon:1#stats", "source_loc": "data/synthetic/pilot/bulbasaur_red_blue_plain.md#종족치"}
   ],
   "confusable_with": []
 }

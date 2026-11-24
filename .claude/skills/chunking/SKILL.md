@@ -76,10 +76,12 @@ Markdown 문서 하나를 주제별로 나눈다. 아래는 현재 문서와 질
 | name_en, section | 이름과 청크 주제 |
 | game_version | 영문 Red·Blue 기준 구분 |
 | review_status | 사람의 검토·승인 상태 |
+| source_loc | 원문 위치: Markdown 문서 경로와 절 (예: `data/synthetic/pilot/bulbasaur_red_blue_plain.md#종족치`). 필요하면 행 범위를 덧붙인다. 검색 결과·답변 출처·평가셋 허용 근거에서 바로 확인하는 값 |
 | source_ref_id | 상세 문서 위치·정제 레코드·계산 근거 연결 식별자 |
 | type_{normal, fire, …} | 타입별 필터가 필요할 때 사용하는 불리언 |
 | content_hash, meta_hash, schema_version | 변경 감지와 계약 버전 |
 
+- `chunk_id`, `document_id`, `source_loc`은 발제 필수 항목(청크 ID, 문서 ID, 원문 위치)이므로 모든 청크에 둔다. Markdown 절이나 행이 바뀌면 `source_loc`도 다시 생성한다.
 - 검색 필터에 필요한 메타데이터는 스칼라 값으로 둔다. 상세 출처가 여러 개인 경우 별도 근거 연결 기록을 `source_ref_id`로 조회한다. 구체적인 저장 형식은 계약에서 확정한다.
 - 타입 enum은 `types.json`의 15개 소문자 영문을 기준으로 한다. 한글명·별칭은 텍스트와 `resolve_name` 툴에서 처리한다.
 - `content_hash`와 `meta_hash`는 `vectordb` 스킬의 규칙을 따른다. 청크 템플릿·섹션이나 임베딩 모델이 바뀌면 새 `index_version`으로 전체 빌드하고 평가한다.
