@@ -61,6 +61,10 @@ uv run python -m unittest discover -s tests            # 테스트
 
 ## 문서
 
+- [문제와 성공 기준](docs/problem.md) — 세 페르소나, 싱글 배틀 준비 여정, 질문 9개·답변·근거·검증 및 평가 운영 기준
+- [페르소나별 질문 생성기 예시](docs/persona-question-generator.md) — 같은 정보 요구의 자연어 표현 변형 예시
+- [질문 설계 에이전트 사용·공유 안내](docs/references/question-design.md) — 세 페르소나의 질문 후보 제안, 실행·검증과 팀원 전달 절차
+
 - [AGENTS.md](AGENTS.md) — 개발 에이전트 오케스트레이션, 개발 루프, 가드레일
 - [docs/references/](docs/references/) — 환경, 에이전트·스킬 개요, 포켓몬 참조표
 

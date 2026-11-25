@@ -13,6 +13,7 @@
 | [rag-developer](../../../.claude/agents/rag-developer.md) | tool-calling, langchain-rag | `src/pokedex/` 툴·체인·프롬프트, 검색 비교 설정과 트레이스 로그 |
 | [security-reviewer](../../../.claude/agents/security-reviewer.md) | security-check | 보안 점검 보고 (파일 수정 없음) |
 | [eval](../../../.claude/agents/eval.md) | rag-eval | `results/` 실행 기록·채점표·비교 보고서, `eval/feedback/` 의견서 |
+| [question-designer](../../../.claude/agents/question-designer.md) | question-design | 질문 전용 패킷을 바탕으로 한 `draft` 질문 후보 JSON (응답으로 반환) |
 
 벡터 DB는 data-engineer가 맡는다. 청킹이 바뀌면 재인덱싱이 반드시 따라오므로 한 에이전트가 끝까지 맡는 편이 버전 관리가 단순하다. retriever 설정(k, 필터)은 rag-developer가 맡는다.
 청크는 승인된 포켓몬별 Markdown을 주제별로 나누고 원본 근거를 연결한다. 구체적인 섹션과 계약은 [chunking 스킬](../../../.claude/skills/chunking/SKILL.md)을 따른다.
@@ -24,6 +25,8 @@ security-reviewer는 읽기 전용이다. 검출은 스크립트가 결정적으
 2차 예정: Eval(rag-eval), QA(testing), Reviewer(계약 점검), Backend(api-server, 필요 시).
 
 ## 두 에이전트 사이의 계약
+
+질문 설계는 별도 준비 경로다: `오케스트레이터의 허용 필드 추출 → question-designer 후보 제안 → 독립 검토·팀원 채택 → 팀원의 평가셋 작성·잠금 → Eval 실행`. v2 패킷은 세 인물의 연령·성별과 검색 입력 방식을 포함하며, '쎄?' 같은 구어체를 사용해도 원질문의 정보 요구를 보존한다. 생성 담당은 정답·근거·평가 파일을 읽거나 쓰지 않으며 런타임 질문을 바꾸지 않는다. [실행·공유 안내](../question-design.md)에서 도구 명령과 사람 검토 경계를 확인한다.
 
 ```
 data-engineer                                rag-developer

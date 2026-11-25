@@ -34,6 +34,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 | 툴 목록 | tool-calling 스킬 | langchain-rag 스킬, skills README |
 | 기준 데이터 | `data/processed/`, `data_integrity.py` | data-normalize 스킬, skills README |
 | 개발 루프·가드레일 | `AGENTS.md` | 에이전트 파일은 링크만 |
+| 페르소나·상황·질문 원문 | `docs/problem.md` | persona-question-generator 예시, question-design의 질문 전용 입력 패킷 |
 | 커밋 금지 파일·필수 무시 규칙 | `.gitignore` | security-check `rules.json` (`forbidden_paths`, `gitignore_probes`) |
 
 ## 언제 실행하는가

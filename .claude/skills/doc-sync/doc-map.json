@@ -38,6 +38,12 @@
   ],
 
   "coupling": [
+    {"when": ["docs/problem.md"],
+     "review": ["docs/persona-question-generator.md", ".claude/skills/question-design/SKILL.md"],
+     "why": "페르소나·상황·질문이 바뀌면 생성 예시와 질문 입력 추출 규칙을 검토"},
+    {"when": ["docs/persona-question-generator.md", ".claude/agents/question-designer.md", ".claude/skills/question-design/*", ".claude/skills/question-design/scripts/*"],
+     "review": ["docs/persona-question-generator.md", "docs/references/question-design.md", ".claude/agents/question-designer.md", ".claude/skills/question-design/SKILL.md"],
+     "why": "질문 후보 생성의 권한·입출력·실행·검증 안내"},
     {"when": [".claude/skills/*/SKILL.md"],
      "review": ["docs/references/skills/README.md"],
      "why": "스킬 목록·요약·사용 에이전트"},
