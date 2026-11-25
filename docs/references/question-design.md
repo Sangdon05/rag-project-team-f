@@ -19,7 +19,7 @@
 저장소 루트에서 실행한다. 다른 패키지·모델·DB가 필요하지 않다.
 
 ```bash
-uv run python .claude/skills/question-design/scripts/question_packets.py prepare --output runs/question-design/demo-001/input.json
+uv run python .claude/skills/question-design/scripts/question_packets.py prepare --output runs/question-design/demo-v2-001/input.json
 ```
 
 - 출력은 `runs/question-design/` 아래만 허용하고 기존 파일을 덮어쓰지 않는다. 재실행은 새 배치 이름을 쓴다.
@@ -34,7 +34,7 @@ uv run python .claude/skills/question-design/scripts/question_packets.py prepare
 ```text
 task: 세 페르소나의 원질문을 같은 뜻의 자연스러운 표현으로 하나씩 바꿔 질문 후보 3개를 제안한다.
 agent: question-designer
-inputs: runs/question-design/demo-001/input.json (schema_version=question-design-v2)
+inputs: runs/question-design/demo-v2-001/input.json (schema_version=question-design-v2)
 targets: P1-01, P2-01, P3-01
 relation: paraphrase
 outputs: 출력 계약에 맞는 JSON 한 개를 응답으로 반환
@@ -46,10 +46,10 @@ Claude Code에서는 저장소의 `.claude/agents/` 역할로 호출할 수 있�
 
 ## 3. 결과 저장·검사 — 오케스트레이터
 
-후보 JSON을 `runs/question-design/demo-001/candidates.json`에 저장한 뒤 검사한다.
+후보 JSON을 `runs/question-design/demo-v2-001/candidates.json`에 저장한 뒤 검사한다.
 
 ```bash
-uv run python .claude/skills/question-design/scripts/question_packets.py check --input runs/question-design/demo-001/input.json --candidates runs/question-design/demo-001/candidates.json
+uv run python .claude/skills/question-design/scripts/question_packets.py check --input runs/question-design/demo-v2-001/input.json --candidates runs/question-design/demo-v2-001/candidates.json
 ```
 
 검사 결과의 `structural_check=pass`는 구조 통과만 뜻한다. 원본이 바뀌었거나 입력 패킷이 변조되면 거부한다. 잘못된 페르소나·상황 연결, 비초안 상태, 정답·근거 등 미등록 필드, 조건 변경의 표시 누락, 같은 문자열의 중복도 거부한다. 문장 속 정답 유출이나 의미 변화까지 완전히 검출하지는 않는다.
@@ -78,9 +78,9 @@ PR 외에도 다음 내용을 한 묶음으로 설명하면 다음 담당자가 
 
 생성 파일과 원문 트레이스는 `runs/`에 두고 커밋하지 않는다. 공유용 예시는 공개 범위를 검토해 이 문서나 PR에 별도로 선정한다. 잠금이 끝나면 기존 Eval이 검증·실행·사람 채점표 준비·집계를 맡는다. 생성 에이전트는 최종 평가 파일을 받지 않는다.
 
-## 5. 세 페르소나의 생성 동작 확인 예시
+## 5. 이전 v1의 생성 동작 확인 예시
 
-2026-11-25에 정답 문서와 대화 이력을 전달받지 않은 독립 Codex 작업자에게 역할 정의·절차·질문 전용 패킷만 제공해 아래 후보 3개를 생성했다. Claude Code/Hermes 실행기에서의 호출 성공을 대신하는 검증은 아니다. 후보의 공식 채택과 팀원의 의미 검수는 대기 상태다.
+v1 당시 2026-11-25에 정답 문서와 대화 이력을 전달받지 않은 독립 Codex 작업자에게 역할 정의·절차·질문 전용 패킷만 제공해 아래 후보 3개를 생성했다. Claude Code/Hermes 실행기에서의 호출 성공을 대신하는 검증은 아니다. 후보의 공식 채택과 팀원의 의미 검수는 대기 상태다.
 
 | 후보 | 원질문 연결 | 반환한 질문 |
 | --- | --- | --- |
@@ -90,7 +90,31 @@ PR 외에도 다음 내용을 한 묶음으로 설명하면 다음 담당자가 
 
 각 후보는 `paraphrase`, `draft`로 반환됐고 구조 검사는 통과했다. 답변 가능성·자연스러움·의미 보존은 사람 검토 전이며 RAG 평가 수치로 보고하지 않는다.
 
-## 6. 재현 가능한 검사와 완료 범위
+## 6. v2 캐릭터를 적용한 Hermes 실제 생성 9개
+
+2026-11-25에 Hermes CLI의 새 one-shot 실행에 수정된 역할 본문·question-design 절차·v2 질문 전용 패킷만 명시적으로 전달했다. 자동 규칙 주입은 끄고, 원본 답변·근거·평가셋은 전달하지 않았다. 별도 작업 디렉터리에서 실행했으며 실행 기록의 모델 도구 호출은 0건, 종료 코드는 0이었다. 이는 Hermes에 역할 지침을 명시해서 실행한 결과이며 `.claude/agents/`의 자동 발견·등록을 확인한 결과는 아니다.
+
+입력 소스 커밋은 `da9e3645dc2974cf49351867f24809d7bede6b5b`, 출력 계약은 `question-design-v2`다. `연령·성별`과 `검색 입력 방식`을 필수로 추출하므로 v1 입력은 다시 준비한다. 구조 검사 결과는 9개·P1/P2/P3 각 3개 통과이며, 독립 작업자의 의미 대조에서 누락·조건 변경·새 정답 힌트는 발견되지 않았다. 이는 사람의 공식 채택·RAG 채점·실제 사용자 말투 검증을 대신하지 않는다.
+
+아래 문장은 Hermes가 반환한 원문이다. 각 질문은 `problem.md`의 연결된 S01 또는 S01-B 조건과 함께 사용하며, 별도의 새 정보 요구 9개로 세지 않는다.
+
+| 원질문 연결 | Hermes 생성 질문 |
+| --- | --- |
+| P1-01 | 전기쇼크랑 전광석화 중에 롱스톤한테 더 잘 먹히는 거 뭐야? |
+| P1-02 | 몸통박치기랑 물대포 중에 뭐 쓰는 게 더 나아? 기술이 얼마나 센지(위력)랑 얼마나 잘 맞는지(명중률)도 같이 알려줘. |
+| P1-03 | 피카츄한테 지금 10만볼트 없잖아. 레벨 올리면 배울 수 있어? |
+| P2-01 | 아는 건 피카츄 하나뿐인데 롱스톤이랑 붙어야 해. 처음에 뭘 확인해야 돼? |
+| P2-02 | 물대포 옆에 적힌 PP는 무슨 뜻이야? 그 기술 계속 쓸 수는 없는 거야? |
+| P2-03 | 세 마리 중에 누굴 내보내? 공격은 뭘 쓰면 되고? 이유는 하나만 알려줘. |
+| P3-01 | 롱스톤 상대로 꼬부기 물대포 박으면 타입 배율이랑 자속 보정 따로따로 어떻게 됨? |
+| P3-02 | 꼬부기 물대포 빠진 조건이면 아까 추천 그대로 가도 됨? |
+| P3-03 | 물대포 배율이 4라고 치면 실제 데미지나 승률까지 계산 가능함? |
+
+P1-02는 쉬운 표현 뒤에 위력·명중률을 병기하여 두 요청을 모두 보존했다. P3-02는 물대포가 현재 기술에 없는 조건이고, P3-03의 숫자 4는 원질문의 전제다. 출력은 모두 `paraphrase`, `draft`이며 의미·답변 가능성의 팀원 검수와 공식 채택은 대기 상태다. 자동 회귀 검사는 이 실행 기준 32개가 통과했다.
+
+Hermes에서 재현할 때도 오케스트레이터가 역할 본문·절차·패킷·대상 9개를 합친 질문을 명시적으로 전달한다. 실행기의 권한·지원 옵션을 확인하며, 지원되지 않는 옵션 때문에 사용자 전역 설정이나 정책을 바꾸지 않는다.
+
+## 7. 재현 가능한 검사와 완료 범위
 
 ```bash
 uv run python -m unittest discover -s tests -p "test_question_design.py" -v
