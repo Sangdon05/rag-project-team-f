@@ -34,7 +34,7 @@ uv run python .claude/skills/question-design/scripts/question_packets.py prepare
 ```text
 task: 세 페르소나의 원질문을 같은 뜻의 자연스러운 표현으로 하나씩 바꿔 질문 후보 3개를 제안한다.
 agent: question-designer
-inputs: runs/question-design/demo-001/input.json (schema_version=question-design-v1)
+inputs: runs/question-design/demo-001/input.json (schema_version=question-design-v2)
 targets: P1-01, P2-01, P3-01
 relation: paraphrase
 outputs: 출력 계약에 맞는 JSON 한 개를 응답으로 반환

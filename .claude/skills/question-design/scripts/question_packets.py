@@ -9,9 +9,9 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]
-VERSION = "question-design-v1"
+VERSION = "question-design-v2"
 SEED_IDS = tuple(f"P{persona}-{n:02}" for persona in range(1, 4) for n in range(1, 4))
-PROFILE_ROWS = ("포켓몬과의 접점", "게임 경험", "이미 아는 것", "어려운 것", "이용 동기", "필요한 도움", "답변 방식", "도달 목표")
+PROFILE_ROWS = ("연령·성별", "포켓몬과의 접점", "게임 경험", "이미 아는 것", "어려운 것", "이용 동기", "검색 입력 방식", "필요한 도움", "답변 방식", "도달 목표")
 SCENARIO_ROWS = ("게임·장면", "상대", "내 후보·현재 기술", "공통 상태", "추가 조건", "비교 기준")
 CANDIDATE_FIELDS = {"candidate_id", "seed_id", "persona_id", "scenario_id", "information_need_id", "relation", "question", "changed_conditions", "missing_inputs", "review_status"}
 

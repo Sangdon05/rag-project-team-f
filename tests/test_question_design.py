@@ -50,6 +50,57 @@ class QuestionPacketSourceTests(unittest.TestCase):
         for seed in packet["seeds"]:
             self.assertEqual(set(seed), {"seed_id", "persona_id", "scenario_id", "question"})
 
+    def profile_row(self, label):
+        pattern = rf"(?m)^\| {re.escape(label)} \| (.*?) \| (.*?) \| (.*?) \|$"
+        match = re.search(pattern, self.source)
+        self.assertIsNotNone(match, f"Required source profile row missing: {label}")
+        return match
+
+    def replace_profile_cell(self, label, persona_index, value):
+        match = self.profile_row(label)
+        values = list(match.groups())
+        values[persona_index] = value
+        replacement = f"| {label} | " + " | ".join(values) + " |"
+        return self.source[:match.start()] + replacement + self.source[match.end():]
+
+    def test_v2_extended_persona_fields_are_preserved_from_source(self):
+        self.assertEqual(self.packet["schema_version"], "question-design-v2")
+        for label in ("연령·성별", "검색 입력 방식"):
+            source_values = self.profile_row(label).groups()
+            for index, persona in enumerate(self.packet["personas"]):
+                with self.subTest(field=label, persona=persona["persona_id"]):
+                    self.assertTrue(source_values[index].strip())
+                    self.assertEqual(persona["profile"][label], source_values[index].strip())
+
+    def test_style_source_cell_changes_are_reflected_without_other_payload_changes(self):
+        label = "검색 입력 방식"
+        for index, persona in enumerate(self.packet["personas"]):
+            with self.subTest(persona=persona["persona_id"]):
+                marker = f"STYLE_INPUT_CANARY_{persona['persona_id']}"
+                mutated = self.replace_profile_cell(label, index, marker)
+                actual = self.mod.build_packet(mutated)
+                expected = copy.deepcopy(self.packet)
+                expected["personas"][index]["profile"][label] = marker
+                expected["source_sha256"] = hashlib.sha256(mutated.encode("utf-8")).hexdigest()
+                self.assertNotEqual(actual["source_sha256"], self.packet["source_sha256"])
+                self.assertEqual(actual, expected)
+
+    def test_missing_extended_profile_row_fails_closed(self):
+        for label in ("연령·성별", "검색 입력 방식"):
+            with self.subTest(field=label):
+                match = self.profile_row(label)
+                mutated = self.source[:match.start()] + self.source[match.end():]
+                with self.assertRaises(ValueError):
+                    self.mod.build_packet(mutated)
+
+    def test_empty_extended_profile_cell_fails_closed(self):
+        for label in ("연령·성별", "검색 입력 방식"):
+            for index in range(3):
+                with self.subTest(field=label, persona=index + 1):
+                    mutated = self.replace_profile_cell(label, index, " \t ")
+                    with self.assertRaises(ValueError):
+                        self.mod.build_packet(mutated)
+
     def test_answer_fact_evidence_and_plan_canaries_are_not_extracted(self):
         # Change each forbidden row class in the real document independently.
         # Only provenance may change; no canary or adjacent answer table may leak.
@@ -202,13 +253,32 @@ class QuestionCandidateContractTests(unittest.TestCase):
         self.assertIs(result["official_evalset"], False)
 
     def test_original_numeric_question_premise_is_allowed(self):
-        seed = self.seeds["P3-03"]
+        # A numeric premise supplied by a user is opaque input, even if the live
+        # planning question is later rewritten without that particular number.
+        source_with_numeric_premise, replacements = re.subn(
+            r"(?m)^(### P3-03\n(?:[^\n]*\n)*?)> [^\n]+$",
+            lambda match: match.group(1) + "> 입력 조건 값이 4일 때도 같은 질문을 할 수 있나요?",
+            self.source,
+            count=1,
+        )
+        self.assertEqual(replacements, 1)
+        packet = self.mod.build_packet(source_with_numeric_premise)
+        seed = next(s for s in packet["seeds"] if s["seed_id"] == "P3-03")
         self.assertRegex(seed["question"], r"\d")
         item = self.candidate("P3-03")
+        item["question"] = "조건을 유지해 묻습니다: " + seed["question"]
         self.assertIn(seed["question"], item["question"])
+        output = self.output(item)
+        output["source_sha256"] = packet["source_sha256"]
         self.assertEqual(
-            self.mod.check_candidates(self.packet, self.output(item))["structural_check"], "pass"
+            self.mod.check_candidates(packet, output)["structural_check"], "pass"
         )
+
+    def test_version_one_output_is_rejected_for_v2_packet(self):
+        output = self.output()
+        output["schema_version"] = "question-design-v1"
+        with self.assertRaises(ValueError):
+            self.mod.check_candidates(self.packet, output)
 
     def test_answer_or_evidence_fields_are_rejected_at_both_levels(self):
         for field in ("answer", "expected_answer", "key_facts", "allowed_evidence", "no_evidence_reason"):
