@@ -21,7 +21,7 @@
 | [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도, 원본 문서 규칙, 동기화 검사 스크립트 |
 | [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |
 | [rag-eval](../../../.claude/skills/rag-eval/SKILL.md) | eval | 사용자 평가셋 검증·의견서, 실행 기록, 발제 지표, 사람 채점 집계, 실패 분석, 비교 보고서 |
-| [question-design](../../../.claude/skills/question-design/SKILL.md) | question-designer | 세 페르소나의 발화 프로필을 포함한 v2 질문 후보 제안, 답변 없는 입력 추출·출력 구조 검사, 사람 채택으로 전달 |
+| [question-design](../../../.claude/skills/question-design/SKILL.md) | question-designer | '쎄?' 등 원표현과 세 인물의 v2 발화 프로필·질문 의도를 보존한 후보 제안, 답변 없는 입력 추출·출력 구조 검사, 사람 채택으로 전달 |
 
 2차 예정: rag-eval(Eval), testing(QA), api-server(Backend, 필요 시).
 
