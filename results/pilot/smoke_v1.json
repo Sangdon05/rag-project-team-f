@@ -1,0 +1,1219 @@
+{
+ "kind": "pilot_vector_search_raw",
+ "collection": "test-pilot-v1-te3s-tpl1",
+ "embed_model": "text-embedding-3-small",
+ "k": 5,
+ "filter": null,
+ "distance": "cosine (pgvector <=>)",
+ "query_file": {
+  "path": "eval/pilot_smoke_queries.json",
+  "sha256": "f5145a486494d141a6743600c9835316dbc72792aeef55ba178ef23c38aa31ae"
+ },
+ "chunk_file": {
+  "path": "data/synthetic/pilot/v1/bulbasaur_red_blue.json",
+  "sha256": "24797e23223f5bba21df07e6a5d9b17df738ce5e7e6167a5075ee36f909503ce"
+ },
+ "collection_rows": 10,
+ "started_at_utc": "2026-11-24T12:39:04.618062+00:00",
+ "manifest_run_id": "none",
+ "scoring": null,
+ "note": "테스트 전용 원본 검색 결과. 채점·비교 없음. 질의 파일의 기대 정답 필드는 읽지 않았다.",
+ "n_queries": 27,
+ "n_errors": 0,
+ "api": {
+  "embed_requests": 27,
+  "embed_texts": 27,
+  "embed_tokens_estimate": 528,
+  "token_count_method": "tiktoken encoding_for_model 추정"
+ },
+ "results": [
+  {
+   "qid": "s01",
+   "query": "이상해씨 종족치 알려줘",
+   "seconds": 0.347,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.525425
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.607371
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.641739
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.663395
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.680643
+    }
+   ]
+  },
+  {
+   "qid": "s02",
+   "query": "이상해씨는 몇 레벨에 진화해?",
+   "seconds": 0.57,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.331213
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.518541
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.545022
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.566652
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.580278
+    }
+   ]
+  },
+  {
+   "qid": "s03",
+   "query": "이상해꽃은 언제 진화해?",
+   "seconds": 0.192,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.449423
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.646624
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.673123
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.710281
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.729311
+    }
+   ]
+  },
+  {
+   "qid": "s04",
+   "query": "이상해씨가 레벨업으로 배우는 기술",
+   "seconds": 0.192,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.420234
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.558304
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.561816
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.596665
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.600117
+    }
+   ]
+  },
+  {
+   "qid": "s05",
+   "query": "이상해씨한테 쓸 수 있는 기술머신",
+   "seconds": 0.264,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.430763
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.55777
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.62276
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.635099
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.647654
+    }
+   ]
+  },
+  {
+   "qid": "s06",
+   "query": "TM22 어디서 구해?",
+   "seconds": 0.18,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.583935
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.72317
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.743395
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.74828
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.752639
+    }
+   ]
+  },
+  {
+   "qid": "s07",
+   "query": "이상해씨 약점 타입은?",
+   "seconds": 0.2,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.520102
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.538729
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.54108
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.565237
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.617397
+    }
+   ]
+  },
+  {
+   "qid": "s08",
+   "query": "풀 타입 기술은 어떤 타입에 효과가 좋아?",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.496568
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.601003
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.6347
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.674621
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.689383
+    }
+   ]
+  },
+  {
+   "qid": "s09",
+   "query": "이상해씨 자속 보정",
+   "seconds": 0.184,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.503007
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.594258
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.647009
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.680883
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.691918
+    }
+   ]
+  },
+  {
+   "qid": "s10",
+   "query": "이상해씨 어디서 잡아?",
+   "seconds": 0.176,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.521004
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.552951
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.568938
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.578087
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.581937
+    }
+   ]
+  },
+  {
+   "qid": "s11",
+   "query": "이상해씨는 어떤 포켓몬이야?",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.535105
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.597656
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.613032
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.623768
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.639047
+    }
+   ]
+  },
+  {
+   "qid": "s12",
+   "query": "피카츄는 몇 레벨에 진화해?",
+   "seconds": 0.196,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.666724
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.741379
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.756424
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.769374
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.813368
+    }
+   ]
+  },
+  {
+   "qid": "s13",
+   "query": "이상해씨 강점은?",
+   "seconds": 0.2,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.618804
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.635124
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.643925
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.65036
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.658063
+    }
+   ]
+  },
+  {
+   "qid": "s14",
+   "query": "태초마을에서 받을 수 있는 포켓몬",
+   "seconds": 0.184,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.771606
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.828458
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.835939
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.842491
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.907317
+    }
+   ]
+  },
+  {
+   "qid": "s15",
+   "query": "실프주식회사에서 얻는 기술머신",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.591432
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.671967
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.690458
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.788651
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.818234
+    }
+   ]
+  },
+  {
+   "qid": "s16",
+   "query": "이상해씨 상성 알려줘",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.550773
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.576451
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.613176
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.617417
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.620223
+    }
+   ]
+  },
+  {
+   "qid": "s17",
+   "query": "이상해씨 약점이 뭐야?",
+   "seconds": 0.192,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.610545
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.615693
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.61777
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.624232
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.647251
+    }
+   ]
+  },
+  {
+   "qid": "s18",
+   "query": "이상해씨한테 효과가 굉장한 타입은 뭐야?",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.421801
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.49701
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.551654
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.594004
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.60654
+    }
+   ]
+  },
+  {
+   "qid": "s19",
+   "query": "이상해씨를 상대할 때 어떤 타입 기술을 쓰면 좋아?",
+   "seconds": 0.176,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.463374
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.520821
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.527411
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.570089
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.599757
+    }
+   ]
+  },
+  {
+   "qid": "s20",
+   "query": "이상해씨가 잘 버티는 타입은?",
+   "seconds": 0.192,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.547254
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.576525
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.599555
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.605973
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.610584
+    }
+   ]
+  },
+  {
+   "qid": "s21",
+   "query": "이상해씨 풀 기술은 어떤 포켓몬한테 잘 먹혀?",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.649082
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.651062
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.683963
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.717684
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.720639
+    }
+   ]
+  },
+  {
+   "qid": "s22",
+   "query": "이상해씨 같은 타입 기술 쓰면 위력 올라가?",
+   "seconds": 0.18,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#attack_matchup",
+     "section": "attack_matchup",
+     "heading": null,
+     "distance": 0.471316
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#defense_matchup",
+     "section": "defense_matchup",
+     "heading": null,
+     "distance": 0.487357
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.496134
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.552166
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.568309
+    }
+   ]
+  },
+  {
+   "qid": "s23",
+   "query": "무지개 백화점에서 살 수 있는 기술머신",
+   "seconds": 0.193,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.566749
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.672101
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.711031
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.821537
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.830932
+    }
+   ]
+  },
+  {
+   "qid": "s24",
+   "query": "상트앙느호에서 얻는 비전머신",
+   "seconds": 0.187,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.683158
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.709222
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.770037
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.778875
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.791093
+    }
+   ]
+  },
+  {
+   "qid": "s25",
+   "query": "로켓단 아지트에서 주울 수 있는 기술머신",
+   "seconds": 0.332,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.586765
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.671845
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.691089
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.821339
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.842123
+    }
+   ]
+  },
+  {
+   "qid": "s26",
+   "query": "이상해씨는 어디서 받을 수 있어?",
+   "seconds": 0.184,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.494406
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#stab",
+     "section": "stab",
+     "heading": null,
+     "distance": 0.532877
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#evolution",
+     "section": "evolution",
+     "heading": null,
+     "distance": 0.569858
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.57445
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#profile",
+     "section": "profile",
+     "heading": null,
+     "distance": 0.586283
+    }
+   ]
+  },
+  {
+   "qid": "s27",
+   "query": "꼬부기는 어디서 얻어?",
+   "seconds": 0.188,
+   "error": null,
+   "n_results": 5,
+   "results": [
+    {
+     "rank": 1,
+     "chunk_id": "pokemon:1#machine_acquisition",
+     "section": "machine_acquisition",
+     "heading": null,
+     "distance": 0.742025
+    },
+    {
+     "rank": 2,
+     "chunk_id": "pokemon:1#encounter",
+     "section": "encounter",
+     "heading": null,
+     "distance": 0.836066
+    },
+    {
+     "rank": 3,
+     "chunk_id": "pokemon:1#learnset_level",
+     "section": "learnset_level",
+     "heading": null,
+     "distance": 0.844308
+    },
+    {
+     "rank": 4,
+     "chunk_id": "pokemon:1#learnset_machine",
+     "section": "learnset_machine",
+     "heading": null,
+     "distance": 0.884984
+    },
+    {
+     "rank": 5,
+     "chunk_id": "pokemon:1#stats",
+     "section": "stats",
+     "heading": null,
+     "distance": 0.887995
+    }
+   ]
+  }
+ ]
+}

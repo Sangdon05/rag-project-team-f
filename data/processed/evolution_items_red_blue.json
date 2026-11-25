@@ -1,0 +1,171 @@
+{
+  "scope": "English Pokémon Red and Blue, Generation I",
+  "version_group": "red-blue",
+  "description": "evolutions_red_blue.json의 use-item 진화에 쓰이는 아이템의 PokeAPI id와 영어·한국어 이름, 사용처.",
+  "input": "data/processed/evolutions_red_blue.json",
+  "selection": "records[].evolves_to[] 중 trigger가 use-item인 관계의 item",
+  "source": "https://pokeapi.co/api/v2/item/{name}/",
+  "name_note": "name_en·name_ko는 PokeAPI names의 en·ko 값 그대로다. 현재 API 이름이며 영문 원판의 역사적 번역이 아니다. 값이 없으면 null.",
+  "snapshot_note": "원본 API 응답은 보존하지 않는다. 같은 입력이라도 API 값이 바뀌면 재생성 결과가 달라질 수 있다.",
+  "item_count": 5,
+  "usage_count": 16,
+  "items": [
+    {
+      "id": 81,
+      "name": "moon-stone",
+      "name_en": "Moon Stone",
+      "name_ko": "달의돌",
+      "source_url": "https://pokeapi.co/api/v2/item/moon-stone/",
+      "used_in": [
+        {
+          "from_id": 30,
+          "from_name": "nidorina",
+          "to_id": 31,
+          "to_name": "nidoqueen",
+          "evolution_pointer": "/records/29/evolves_to/0"
+        },
+        {
+          "from_id": 33,
+          "from_name": "nidorino",
+          "to_id": 34,
+          "to_name": "nidoking",
+          "evolution_pointer": "/records/32/evolves_to/0"
+        },
+        {
+          "from_id": 35,
+          "from_name": "clefairy",
+          "to_id": 36,
+          "to_name": "clefable",
+          "evolution_pointer": "/records/34/evolves_to/0"
+        },
+        {
+          "from_id": 39,
+          "from_name": "jigglypuff",
+          "to_id": 40,
+          "to_name": "wigglytuff",
+          "evolution_pointer": "/records/38/evolves_to/0"
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "name": "fire-stone",
+      "name_en": "Fire Stone",
+      "name_ko": "불꽃의돌",
+      "source_url": "https://pokeapi.co/api/v2/item/fire-stone/",
+      "used_in": [
+        {
+          "from_id": 37,
+          "from_name": "vulpix",
+          "to_id": 38,
+          "to_name": "ninetales",
+          "evolution_pointer": "/records/36/evolves_to/0"
+        },
+        {
+          "from_id": 58,
+          "from_name": "growlithe",
+          "to_id": 59,
+          "to_name": "arcanine",
+          "evolution_pointer": "/records/57/evolves_to/0"
+        },
+        {
+          "from_id": 133,
+          "from_name": "eevee",
+          "to_id": 136,
+          "to_name": "flareon",
+          "evolution_pointer": "/records/132/evolves_to/0"
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "name": "thunder-stone",
+      "name_en": "Thunder Stone",
+      "name_ko": "천둥의돌",
+      "source_url": "https://pokeapi.co/api/v2/item/thunder-stone/",
+      "used_in": [
+        {
+          "from_id": 25,
+          "from_name": "pikachu",
+          "to_id": 26,
+          "to_name": "raichu",
+          "evolution_pointer": "/records/24/evolves_to/0"
+        },
+        {
+          "from_id": 133,
+          "from_name": "eevee",
+          "to_id": 135,
+          "to_name": "jolteon",
+          "evolution_pointer": "/records/132/evolves_to/1"
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "name": "water-stone",
+      "name_en": "Water Stone",
+      "name_ko": "물의돌",
+      "source_url": "https://pokeapi.co/api/v2/item/water-stone/",
+      "used_in": [
+        {
+          "from_id": 61,
+          "from_name": "poliwhirl",
+          "to_id": 62,
+          "to_name": "poliwrath",
+          "evolution_pointer": "/records/60/evolves_to/0"
+        },
+        {
+          "from_id": 90,
+          "from_name": "shellder",
+          "to_id": 91,
+          "to_name": "cloyster",
+          "evolution_pointer": "/records/89/evolves_to/0"
+        },
+        {
+          "from_id": 120,
+          "from_name": "staryu",
+          "to_id": 121,
+          "to_name": "starmie",
+          "evolution_pointer": "/records/119/evolves_to/0"
+        },
+        {
+          "from_id": 133,
+          "from_name": "eevee",
+          "to_id": 134,
+          "to_name": "vaporeon",
+          "evolution_pointer": "/records/132/evolves_to/2"
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "name": "leaf-stone",
+      "name_en": "Leaf Stone",
+      "name_ko": "리프의돌",
+      "source_url": "https://pokeapi.co/api/v2/item/leaf-stone/",
+      "used_in": [
+        {
+          "from_id": 44,
+          "from_name": "gloom",
+          "to_id": 45,
+          "to_name": "vileplume",
+          "evolution_pointer": "/records/43/evolves_to/0"
+        },
+        {
+          "from_id": 70,
+          "from_name": "weepinbell",
+          "to_id": 71,
+          "to_name": "victreebel",
+          "evolution_pointer": "/records/69/evolves_to/0"
+        },
+        {
+          "from_id": 102,
+          "from_name": "exeggcute",
+          "to_id": 103,
+          "to_name": "exeggutor",
+          "evolution_pointer": "/records/101/evolves_to/0"
+        }
+      ]
+    }
+  ]
+}

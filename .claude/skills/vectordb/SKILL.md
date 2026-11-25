@@ -69,3 +69,16 @@ description: Use when building, syncing, or checking the vector index (OpenAI em
 - 컬렉션 레코드 수 = chunks.jsonl 청크 수, 누락 id 0, `"langchain"` 기본 컬렉션 0건
 - smoke test: 인덱싱된 포켓몬 이름으로 검색 시 해당 id가 top-1. 별도 기술 청크를 인덱싱한 경우 기술 이름도 검증한다.
 - 변경 없이 sync 재실행 시 embedded = 0
+
+## 파일럿 테스트 컬렉션 스크립트
+
+`scripts/helper/pilot_vector_index.py` (테스트 `tests/test_pilot_vector_index.py`). `test-`로 시작하는 컬렉션에만 쓰고, 컬렉션 이름의 `-tplN`·기존 행의 schema·template 버전이 청크 파일과 다르면 sync를 거부한다. 임베딩 본문은 청크 `content` 그대로이며 `cmetadata.heading`(한글 제목, 표시용)을 더한다. 검색은 필터 없이 SQL 코사인 거리로 하고 채점하지 않는다. 테스트 컬렉션은 템플릿마다 하나다: `test-pilot-v1-te3s-tpl1`(v1/), `test-pilot-v2-te3s-tpl2`(v2/), `test-pilot-v3a-te3s-tpl3a`(v3a/, 채택 템플릿 tpl3a), `test-pilot-v3b-te3s-tpl3b`(v3b/, 기각된 실험 tpl3b의 비교 기록). 청크 파일은 버전 폴더의 JSON을 쓴다 (최신본 `data/synthetic/pilot/bulbasaur_red_blue.json`은 v3a 사본). 기존 컬렉션에 새 템플릿을 쓰지 않는지는 `--sync` 대신 `check_sync_compatibility` 단위 테스트로 확인한다.
+
+```bash
+S=scripts/helper/pilot_vector_index.py; C=test-pilot-v3a-te3s-tpl3a; J=data/synthetic/pilot/v3a/bulbasaur_red_blue.json
+uv run python $S --sync --chunks $J --collection $C            # 증분 sync (embedded/meta_only/deleted/unchanged)
+uv run python $S --query "질문" -k 5 --collection $C           # chunk_id·section·heading·distance
+uv run python $S --queries eval/pilot_smoke_queries.json -k 5 --collection $C --chunks $J --out <결과.json>  # 원본 결과만
+uv run python $S --verify --collection $C --chunks $J          # SQL 검증 (API 호출 없음)
+uv run python $S --drop --collection $C --yes                  # test- 컬렉션만
+```
