@@ -117,7 +117,7 @@ class SettingsTest(unittest.TestCase):
         s = self.from_env()
         self.assertEqual(
             (s.answer_backend, s.cors_origins, s.max_messages, s.documents_dir),
-            ("mock", [], 20, "data/synthetic/pilot"),
+            ("mock", [], 20, "solar_handoff/documents"),
         )
 
     def test_reads_values_and_splits_origins(self):

@@ -10,7 +10,7 @@ SETTINGS = Settings(
     answer_backend="mock",
     cors_origins=[CORS_ORIGIN],
     max_messages=20,
-    documents_dir="data/synthetic/pilot",
+    documents_dir="solar_handoff/documents",
 )
 
 

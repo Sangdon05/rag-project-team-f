@@ -5,19 +5,19 @@ from dataclasses import dataclass
 
 from api.documents.domain.exceptions import InvalidSourceRefIdError
 
-# \w 대신 문자 클래스를 직접 써서 유니코드 문자·숫자를 받지 않는다.
-_SOURCE_REF_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]+")
+# \d 대신 [0-9]를 써서 유니코드 숫자(아랍 숫자 등)를 받지 않는다.
+_SOURCE_REF_ID_PATTERN = re.compile(r"[0-9]{3}")
 
 
 @dataclass(frozen=True)
 class SourceRefId:
-    """원문 Markdown 파일명(확장자 제외). 경로 탈출을 막는 유일한 방어선이다."""
+    """도감번호 3자리(예: 001). 경로 탈출을 막는 유일한 방어선이다."""
 
     value: str
 
     @classmethod
     def create(cls, raw: str) -> "SourceRefId":
-        """허용 문자 밖이 하나라도 있으면 InvalidSourceRefIdError. 변환(strip, 대소문자)하지 않는다."""
+        """[0-9]{3}이 아니면 InvalidSourceRefIdError. 변환(0 채우기, strip)하지 않는다."""
         # fullmatch라서 끝의 줄바꿈도 거부한다.
         if not isinstance(raw, str) or _SOURCE_REF_ID_PATTERN.fullmatch(raw) is None:
             raise InvalidSourceRefIdError()

@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 
 DEFAULT_ANSWER_BACKEND = "mock"
 DEFAULT_MAX_MESSAGES = 20
-DEFAULT_DOCUMENTS_DIR = "data/synthetic/pilot"
+DEFAULT_DOCUMENTS_DIR = "solar_handoff/documents"
 
 
 def _parse_origins(raw: str) -> list[str]:

@@ -37,7 +37,7 @@ base_commit: f758951
 | T-8 | T-7 독립 리뷰·smoke | api-reviewer | T-7 | | AC-5 | done |
 | T-9 | `source_ref_id` 도감번호 3자리로 계약·설계안·smoke 갱신 | 오케스트레이터 | T-8 | `docs/design/api/documents.md`, `docs/references/api-rag-integration.md`, `.claude/skills/api-invariants/SKILL.md` | 지원: doc-sync ERROR 0 | done |
 | T-10 | documents를 `<번호>_*.md` 조회로 바꾸고 기본 폴더를 `solar_handoff/documents`로 | api-implementer | T-9 | `api/documents/`, `api/tests/documents/`, `api/shared/settings.py`, `.env.example` | AC-1, AC-4 | todo |
-| T-11 | 파일럿 청크 `source_ref_id`를 도감번호 3자리로 | data-engineer | - | `scripts/helper/pilot_vector_index.py`, `tests/test_pilot_vector_index.py`, `.claude/skills/chunking/SKILL.md` | AC-6 | todo |
+| T-11 | 파일럿 청크 `source_ref_id`를 도감번호 3자리로 | data-engineer | - | `scripts/helper/pilot_vector_index.py`, `tests/test_pilot_vector_index.py`, `.claude/skills/chunking/SKILL.md` | AC-6 | done |
 | T-12 | 최종 변경 독립 리뷰·smoke (`DOC_ID=001`) | api-reviewer | T-10 | | AC-2, AC-5 | todo |
 | T-13 | PR 전 보안 점검 (두 브랜치) | security-reviewer | T-10, T-11 | | AC-8 | todo |
 | T-14 | 문서 동기화 검사 | 오케스트레이터 | T-10, T-11 | | AC-7 | todo |
@@ -140,6 +140,7 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | 2026-11-26 | T-7 | documents·보완 3건·role 수정·`reasoning_effort`, 게이트 통과(api 88 OK), security ERROR 0·WARN 0 | `feat/api-documents` a38df67, 500dd5a, 925d38d |
 | 2026-11-26 | T-8 | api-reviewer APPROVE, smoke 14항목 PASS | 리뷰 보고 |
 | 2026-11-26 | T-9 | documents·chat·health 설계안, 연결 가이드, api-invariants §10·smoke(`DOC_ID=001`, 없는 번호 999), 스킬 표를 도감번호 3자리로 갱신. 후속 G8 추가. doc-sync ERROR 0 | `feat/api-documents` |
+| 2026-11-26 | T-11 | 파일럿 5판 10청크 `source_ref_id` 모두 `001`, `tests.test_pilot_vector_index` 14 OK, tests 127 OK(skipped=1), doc-sync ERROR 0, security ERROR 0. 이전 파일명 방식 커밋과 합쳐 한 커밋으로 정리 | `feat/source-ref-id` f479d1b |
 | 2026-11-26 | - | origin/main(f758951) 기준 rebase(`--update-refs`), 충돌 README·environment.md 해결 | `git log origin/main..feat/api-documents` |
 
 ## 8. 결정 기록
