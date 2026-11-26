@@ -39,6 +39,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 | 커밋 금지 파일·필수 무시 규칙 | `.gitignore` | security-check `rules.json` (`forbidden_paths`, `gitignore_probes`) |
 | 4계층·FSD 공통 원칙 | layered-architecture·fsd-architecture 스킬 (서비스 규칙을 담지 않음) | 서비스 적용 문서(api-architecture), layer-check 고정 규칙 |
 | API 규칙(R번호)·완료 게이트·주입값(프로파일, smoke, 실행 정보) | api-invariants 스킬 | api-architecture·api-implementation 스킬, api-* 에이전트, AGENTS.md 개발 루프 |
+| 스펙·계획 문서 상태·연결 | 각 문서 frontmatter (`docs/specs/`, `docs/plans/`, `docs/archives/`) | 목록 README 3개 (spec-plan `workdocs.py index`가 생성) |
 | 답변 생성기 계약 (API ↔ RAG) | `docs/references/api-rag-integration.md` | api-architecture·api-implementation 스킬 |
 
 ## 언제 실행하는가

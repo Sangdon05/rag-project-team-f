@@ -14,6 +14,8 @@
 | 스킬 개요, 설계 원칙, 데이터 현황        | [docs/references/skills/README.md](docs/references/skills/README.md)                                                    |
 | 개발 환경 (Python, uv, .env, PostgreSQL) | [docs/references/environment.md](docs/references/environment.md)                                                        |
 | 문서 동기화 규칙, 검사 스크립트          | [.claude/skills/doc-sync/SKILL.md](.claude/skills/doc-sync/SKILL.md)                                                    |
+| 업무 스펙·계획 작성·승인·보관 규칙       | [.claude/skills/spec-plan/SKILL.md](.claude/skills/spec-plan/SKILL.md)                                                  |
+| 활성 스펙·계획, 보관 문서 목록           | [docs/specs/README.md](docs/specs/README.md), [docs/plans/README.md](docs/plans/README.md), [docs/archives/README.md](docs/archives/README.md) |
 | PR 전 보안 점검 규칙, 검사 스크립트      | [.claude/skills/security-check/SKILL.md](.claude/skills/security-check/SKILL.md)                                        |
 | 포켓몬 번호·이름·타입 참조표             | [docs/references/pokemon-gen1-reference.md](docs/references/pokemon-gen1-reference.md)                                  |
 | 기준 데이터 (해시 고정)                  | [data/processed/](data/processed/), 검증 [scripts/gen1_battle/data_integrity.py](scripts/gen1_battle/data_integrity.py) |
@@ -50,7 +52,7 @@ API 에이전트 세 개는 저장소 루트 `api/` 패키지(루트 `pyproject.
 
 ## 오케스트레이터의 역할
 
-1. 요청을 작업 단위로 나누고 담당 에이전트에게 발주한다.
+1. 요청을 작업 단위로 나누고 담당 에이전트에게 발주한다. 여러 에이전트·PR에 걸치거나 모호한 요청은 [spec-plan](.claude/skills/spec-plan/SKILL.md)에 따라 스펙을 쓰고 사용자 승인을 받은 뒤 계획을 세워 발주하고, 완료 기준을 충족하면 보관한다.
 2. 하위 에이전트의 보고를 검토한다. 보고는 자기 주장이므로 산출물을 직접 확인한다.
 3. 버전을 파일로 관리한다 (`runs/manifest.jsonl`). 대화나 메모리에 의존하지 않는다.
 4. 실험 규칙을 정하고 채택·기각을 판정한다.
