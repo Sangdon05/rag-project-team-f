@@ -1,7 +1,8 @@
 /** NEO-RETRO free conversation with a transparent chat overlay. */
 import { TEAM_API } from './neo-config.mjs?v=20261126-team-api1';
-import { createTeamApiClient } from './neo-team-client.mjs?v=20261126-team-api1';
-import { createConversationStore, buildApiMessages } from './neo-conversation.mjs?v=20261126-reset1';
+import { createTeamApiClient } from './neo-team-client.mjs?v=20261126-embedding1';
+import { createConversationStore, buildApiMessages } from './neo-conversation.mjs?v=20261126-embedding1';
+import { renderEmbeddingStatus } from './neo-embedding.mjs';
 import { renderCitedAnswer, renderMarkdown, createOverlayScroll } from './neo-chat-render.mjs';
 import { MATE_PROFILES, getMateProfile } from './mate-content.mjs';
 import { guideOf } from './neo-dex-view.mjs';
@@ -179,7 +180,7 @@ function renderThread(animateId = null) {
   const bubble = el('div', 'nx-chat-bubble'); bubble.append(el('p', 'nx-chat-text', p.greeting)); body.append(bubble); greeting.append(face(p.id, 'nx-chat-avatar'), body); list.append(greeting);
   }
   for (const m of messages(p.id)) {
-    const key = `${m.request_status}|${m.content}|${m.error_message ?? ''}`;
+    const key = `${m.request_status}|${m.content}|${m.error_message ?? ''}|${m.mode ?? ''}|${JSON.stringify(m.embedding ?? null)}`;
     const previous = rows.get(m.message_id);
     if (previous?.dataset.renderKey === key) continue;
     const li = el('li', 'nx-chat-message'); li.dataset.role = m.role; li.dataset.messageId = m.message_id;
@@ -193,7 +194,7 @@ function renderThread(animateId = null) {
         const a = typeDialogue(text, m.content, { onComplete: () => { reveal(); state.animations.delete(a); scroll.schedule(); } }); state.animations.add(a);
         box.append(button('답변 전체 보기', () => a.finish(), 'nx-link-button nx-chat-finish'));
       } else reveal();
-      box.append(el('p', 'nx-chat-status', m.mode === 'rag' ? 'rag · 서버가 반환한 검색 기반 답변' : m.mode === 'llm' ? 'llm · 검색 근거를 보장하지 않는 생성 답변' : 'mock · 서버가 반환한 예시 답변'));
+      const status = el('p', 'nx-chat-status'); renderEmbeddingStatus(status, m); box.append(status);
       const sources = el('ol', `nx-chat-sources${animateId === m.message_id ? ' is-revealing' : ''}`);
       const seen = new Set();
       for (const s of m.sources) {
@@ -258,7 +259,8 @@ async function submitQuestion(value, retry = null) {
     const result = await api.ask(payload, { signal: controller.signal });
     if (!await requestIsCurrent(id, controller)) return;
     const user = { ...record, request_status: 'completed' };
-    const answer = { ...newRecord('assistant', result.answer, p), reply_to: record.message_id, request_status: 'completed', mode: result.mode, sources: result.sources };
+    const answer = { ...newRecord('assistant', result.answer, p), reply_to: record.message_id, request_status: 'completed', mode: result.mode, sources: result.sources,
+      ...(result.embedding ? { embedding: result.embedding } : {}) };
     try { await db.saveMany([user, answer]); } catch {
       if (!await requestIsCurrent(id, controller)) return;
       // Keep the received answer visible, but never claim it was saved.

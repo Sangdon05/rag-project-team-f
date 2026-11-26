@@ -58,7 +58,7 @@ Compose는 빈 PGDATA의 최초 기동에만 기본 DB(`POSTGRES_DB`, 기본값 
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` / `POSTGRES_HOST` / `POSTGRES_PORT` | docker compose와 앱이 함께 사용 |
 | `DATABASE_URL` | 기존 SQLAlchemy와 Solar 전달본의 PostgreSQL 접속. Solar 작업 전 실제 대상과 권한을 확인 |
 | `PGVECTOR_COLLECTION` | 기존 컬렉션 방식에서 필수. 사용할 컬렉션 = index_version. 미지정 시 기본 컬렉션 `langchain`에 섞인다 |
-| `ANSWER_BACKEND` | API(`api/`) 답변 생성기. `mock`(기본, LLM 호출 없음) \| `llm`(검색 없이 LLM). 그 밖의 값이면 앱 시작 실패 |
+| `ANSWER_BACKEND` | API(`api/`) 답변 생성기. `mock`(기본, LLM 호출 없음) \| `llm`(검색 없이 LLM) \| `rag`(Solar DB·임베딩·GPT). 그 밖의 값이면 앱 시작 실패 |
 | `API_CORS_ORIGINS` | API가 허용할 프론트 origin, 쉼표 구분. 비우면 CORS 미들웨어를 붙이지 않는다. `*` 금지 |
 | `API_MAX_MESSAGES` | API 요청당 메시지 수 상한. 기본 `20`, 1 이상 정수가 아니면 앱 시작 실패 |
 | `API_DOCUMENTS_DIR` | API documents 슬라이스가 읽는 원문 Markdown 폴더. 기본 `solar_handoff/documents`, 파일은 `<폴더>/<도감번호 3자리>_*.md`(예: `001_이상해씨.md`), 상대 경로는 서버 작업 디렉터리 기준. 시작 시 검사하지 않고 폴더가 없으면 요청 시 502 `DOCUMENT_SOURCE_FAILED` |

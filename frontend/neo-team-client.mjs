@@ -1,4 +1,5 @@
 /** Team HTTP contract. No local answers, persona fields, or synthetic sources. */
+import { normalizeEmbedding } from './neo-embedding.mjs';
 export class TeamApiError extends Error {
   constructor(kind, message, { httpStatus = null, code = null } = {}) {
     super(message);
@@ -58,7 +59,13 @@ export function validateTeamAnswer(body) {
     }
     refs.set(source.ref, source);
   }
-  return { answer: data.answer, mode: data.mode, sources: [...refs.values()] };
+  const result = { answer: data.answer, mode: data.mode, sources: [...refs.values()] };
+  if (data.embedding != null) {
+    if (data.mode !== 'rag') failFormat('검색하지 않은 답변에 임베딩 모델 정보가 포함됐어요.');
+    try { result.embedding = normalizeEmbedding(data.embedding); }
+    catch { failFormat('임베딩 모델 정보를 확인할 수 없어요.'); }
+  }
+  return result;
 }
 
 export function createTeamApiClient({ config = {}, fetchImpl = globalThis.fetch?.bind(globalThis) } = {}) {

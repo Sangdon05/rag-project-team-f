@@ -17,6 +17,16 @@ test("first request contains only the new user question and no local metadata", 
   assert.deepEqual(buildApiMessages([], current()), [{ role: "user", content: "새 질문" }]);
 });
 
+test('saved per-answer embedding metadata is not added to role/content request history', () => {
+  const history = pair(1);
+  history[1].embedding = { query_model: 'solar-embedding-2-query', document_model: 'solar-embedding-2-passage' };
+  const before = structuredClone(history);
+  assert.deepEqual(buildApiMessages(history, current()), [
+    { role: 'user', content: 'user 1' }, { role: 'assistant', content: 'assistant 1' }, { role: 'user', content: '새 질문' },
+  ]);
+  assert.deepEqual(history, before);
+});
+
 test("follow-up includes a completed pair; removes citations only from assistant payload", () => {
   const history = pair(1);
   history[0].content = " [1]이 무슨 뜻이야? ";

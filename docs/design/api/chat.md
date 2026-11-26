@@ -9,7 +9,7 @@
 프론트가 보낸 대화 전체(`messages[]`)를 검증해 답변 생성기에 넘기고, 답변·생성 방식·출처를 돌려준다.
 
 - 서버는 대화를 저장하지 않는다. 클라이언트가 매 요청에 대화 전체를 보낸다(R10).
-- 생성기는 `mock`(기본)·`llm`까지 구현한다. `rag`는 범위 밖이며 [연결 가이드](../../references/api-rag-integration.md) 4절 절차로 나중에 추가한다. 추가해도 이 설계안의 router·서비스·응답 스키마는 바뀌지 않는다.
+- 생성기는 `mock`(기본)·`llm`·`rag`를 지원한다. Solar 서비스의 RAG 연결은 [연결 가이드](../../references/api-rag-integration.md)를 따른다. 표시용 임베딩 메타데이터는 선택 응답 필드이며 기존 요청·세 필드 응답은 유지한다.
 - 포켓몬 지식(상성, 데이터 조회, 질문 분기)을 API에 구현하지 않는다. 답변 내용은 모두 생성기를 거친다(R9).
 - 메시지 길이 한도, 출처 개수 한도는 두지 않는다(스펙 REQ-1·REQ-3).
 
@@ -21,7 +21,8 @@
 | `Message` | 대화 메시지 하나. `role`, `content`(앞뒤 공백 제거된 값) |
 | `Conversation` | 한 요청의 대화. `messages`, `question`(마지막 user 메시지), `history`(그 앞 메시지) |
 | `ConversationLimits` | 메시지 수 한도 값 객체 `max_messages` |
-| `Answer` | 생성 결과. `text`, `mode`, `sources` |
+| `Answer` | 생성 결과. `text`, `mode`, `sources`, 선택 `embedding` |
+| `EmbeddingInfo` | 실제 질의·인덱스 임베딩 모델 ID. 표시 전용이며 모델 선택 기능이 아님 |
 | `AnswerMode` | `StrEnum`: `mock`, `llm`, `rag` |
 | `Source` | 출처 하나. `ref`, `chunk_id`, `source_ref_id` (생성기 값 그대로) |
 | `AnswerGenerator` | 답변 생성기 포트 |
@@ -47,7 +48,8 @@
 | 타입 | 필드 | 규칙 |
 | --- | --- | --- |
 | `Source` (frozen) | `ref: int`, `chunk_id: str`, `source_ref_id: str` | 검증·변환하지 않는다. 값은 생성기(RAG)가 정한 그대로(스펙 REQ-3) |
-| `Answer` (frozen) | `text: str`, `mode: AnswerMode`, `sources: tuple[Source, ...] = ()` | `__post_init__`: `text`가 앞뒤 공백 제거 후 비어 있으면 `AnswerGenerationError`. `sources` 개수 한도·순서 변경·번호 재부여 없음 |
+| `EmbeddingInfo` (frozen) | `query_model: str`, `document_model: str` | 각 값은 공백뿐이지 않은 1~200자 문자열. Unicode `C` 범주 문자는 거부. 잘못된 값은 `AnswerGenerationError` |
+| `Answer` (frozen) | `text: str`, `mode: AnswerMode`, `sources: tuple[Source, ...] = ()`, `embedding: EmbeddingInfo \| None = None` | `__post_init__`: `text`가 앞뒤 공백 제거 후 비어 있거나 제공된 `embedding`이 `EmbeddingInfo`가 아니거나 `mode`가 `rag`가 아닌데 `embedding`을 제공하면 `AnswerGenerationError`. `sources` 개수 한도·순서 변경·번호 재부여 없음 |
 
 ### 3.2 규칙 위반과 예외
 
@@ -76,7 +78,7 @@ class AnswerGenerator(ABC):
 | --- | --- | --- | --- | --- |
 | `MockAnswerGenerator` | `api/chat/infrastructure/mock_generator.py` | `mock` | 고정 문구 + 받은 질문 앞 100자. `sources=()`. 평가셋 정답을 넣지 않는다(R16) | 없음 |
 | `LlmAnswerGenerator` | `api/chat/infrastructure/llm_generator.py` | `llm` | 생성자로 `BaseChatModel`을 받는다(R4). 임시 시스템 프롬프트 + `history`를 `HumanMessage`/`AIMessage`로 + `question`. 검색 없음, `sources=()` | SDK·네트워크 예외 → `AnswerGenerationError`(로그에는 예외 타입명만), 빈 응답 → `AnswerGenerationError` |
-| `RagAnswerGenerator` | (범위 밖) | `rag` | [연결 가이드](../../references/api-rag-integration.md) 4절 | — |
+| `RagAnswerGenerator` | Solar 대화 어댑터 | `rag` | [연결 가이드](../../references/api-rag-integration.md) 4절 | — |
 
 - `LlmAnswerGenerator`의 시스템 프롬프트: 영문 Red·Blue 151마리 기준, 다른 세대 값을 말하지 않음, 근거 문서가 없으므로 확실하지 않으면 확인할 수 없다고 답함, 사용자 언어로 답함. RAG 연결 전 임시용이다.
 - `llm` 모드 답변에는 근거가 없어 `[n]`이 없다. `[n]`은 `rag` 모드에서 체인이 붙인다.
@@ -140,8 +142,13 @@ class AskService:
 | `sources[].ref` | integer | 예 | 출처 번호. `answer` 안 `[n]`의 `n`과 같은 값(체인이 정함) |
 | `sources[].chunk_id` | string | 예 | 청크 ID (RAG 메타데이터 그대로) |
 | `sources[].source_ref_id` | string | 예 | 도감번호 3자리(예: `001`). [documents](documents.md) 조회 키 |
+| `embedding` | object | 아니오 | RAG가 실제 임베딩 정보를 제공한 경우에만 존재. 없으면 `null` 대신 필드 생략 |
+| `embedding.query_model` | string | 객체 존재 시 예 | 이번 질의 임베딩에 실제 사용한 모델 ID, 1~200자·공백뿐인 값과 Unicode `C` 범주 문자 금지 |
+| `embedding.document_model` | string | 객체 존재 시 예 | 현재 인덱스에 결합된 문서 임베딩 모델 ID, query와 같은 문자열 규칙 |
 
 `ChatData.from_domain(answer)`가 `Answer` → 응답 스키마로 바꾼다. 값을 가공하지 않는다.
+
+`embedding`은 GPT 답변 모델명이 아니다. RAG 서비스가 질의 임베딩 호출 뒤 확인한 query 모델과 인덱스에 결합된 document 모델만 전달한다. API는 환경 변수로 추정하지 않는다. 필드가 없으면 기존 RAG·mock·llm 응답은 `answer`, `mode`, `sources`만 유지한다. 제공된 `embedding`이 `null`·비객체·필수 값 누락·모델 ID 규칙 위반이면 어댑터가 전체 답변을 502 `ANSWER_GENERATION_FAILED`로 거부한다. 요청·저장소·모델 선택에는 변경이 없다.
 
 상태 코드:
 
@@ -150,7 +157,7 @@ class AskService:
 | 200 | — | 답변 생성 (근거 부족으로 "확인할 수 없다"는 답 포함) |
 | 400 | `VALIDATION_ERROR` | 4.2의 1~4 위반 |
 | 405 | `METHOD_NOT_ALLOWED` | POST 외 메서드 |
-| 502 | `ANSWER_GENERATION_FAILED` | 생성기 실패, 빈 답변. `message`: `답변을 생성하지 못했습니다. 잠시 후 다시 시도하세요.` |
+| 502 | `ANSWER_GENERATION_FAILED` | 생성기 실패, 빈 답변, 제공된 임베딩 메타데이터 오류. `message`: `답변을 생성하지 못했습니다. 잠시 후 다시 시도하세요.` |
 | 500 | `INTERNAL_ERROR` | 처리 못 한 예외. 원문 비노출 |
 
 예시:
@@ -175,6 +182,8 @@ POST /api/v1/chat
   "sources": [{"ref": 1, "chunk_id": "<청크 ID>", "source_ref_id": "001"}]}}
 ```
 
+실제 임베딩 정보를 제공하는 RAG에서는 같은 `data`에 `"embedding": {"query_model": "<실제 질의 임베딩 모델 ID>", "document_model": "<인덱스 문서 임베딩 모델 ID>"}`가 추가된다. 모델 ID는 생성·추정하지 않는다.
+
 ```json
 {"success": false, "error_code": "VALIDATION_ERROR", "message": "대화는 user로 시작하고 끝나야 하며 user와 assistant가 번갈아 와야 합니다."}
 ```
@@ -184,25 +193,25 @@ POST /api/v1/chat
 ```text
 api/chat/
   __init__.py
-  domain/          conversation.py (Role, Message, ConversationLimits, Conversation), answer.py (AnswerMode, Source, Answer),
+  domain/          conversation.py (Role, Message, ConversationLimits, Conversation), answer.py (AnswerMode, Source, EmbeddingInfo, Answer),
                    generator.py (AnswerGenerator), exceptions.py
   application/     service.py (AskService)
-  infrastructure/  mock_generator.py, llm_generator.py
-  presentation/    schemas.py (MessageIn, ChatRequest, SourceOut, ChatData), dependencies.py (provide_ask_service), router.py
+  infrastructure/  mock_generator.py, llm_generator.py, rag_generator.py
+  presentation/    schemas.py (MessageIn, ChatRequest, SourceOut, EmbeddingOut, ChatData), dependencies.py (provide_ask_service), router.py
 ```
 
-- router: `APIRouter(prefix="/api/v1", tags=["chat"])`, `POST /chat`, `response_model=SuccessResponse[ChatData]`. router에서 `try/except` 하지 않는다(R6).
-- container: `create_answer_generator(settings)` — `mock` → `MockAnswerGenerator()`, `llm` → 분기 안에서 `langchain_openai.ChatOpenAI(model=os.environ["OPENAI_CHAT_MODEL"], temperature=0, reasoning_effort=os.environ.get("OPENAI_REASONING_EFFORT", "low"))`를 만들어 `LlmAnswerGenerator`에 넣는다, 그 밖 → 시작 시 `RuntimeError`. `AskService(generator, ConversationLimits(settings.max_messages))`를 `provide_ask_service`에 연결.
+- router: `APIRouter(prefix="/api/v1", tags=["chat"])`, `POST /chat`, `response_model=SuccessResponse[ChatData]`, `response_model_exclude_none=True`. router에서 `try/except` 하지 않는다(R6).
+- container: `create_answer_generator(settings)` — `mock` → `MockAnswerGenerator()`, `llm` → 분기 안에서 `langchain_openai.ChatOpenAI(model=os.environ["OPENAI_CHAT_MODEL"], temperature=0, reasoning_effort=os.environ.get("OPENAI_REASONING_EFFORT", "low"))`를 만들어 `LlmAnswerGenerator`에 넣는다. `rag` → 해당 분기에서만 Solar `create_service`를 import하고 `run_in_threadpool`과 함께 `RagAnswerGenerator`에 넣는다. 서비스·DB·공급자 구성은 실제 요청까지 지연한다. 알 수 없는 값은 시작 시 `RuntimeError`다. `AskService(generator, ConversationLimits(settings.max_messages))`를 `provide_ask_service`에 연결한다.
 
 ## 7. 설정
 
 | 변수 | 기본값 | 쓰임 |
 | --- | --- | --- |
-| `ANSWER_BACKEND` | `mock` | 생성기 선택 `mock` \| `llm` (나중에 `rag`). 알 수 없는 값이면 앱 시작 실패 |
+| `ANSWER_BACKEND` | `mock` | 생성기 선택 `mock` \| `llm` \| `rag`. 알 수 없는 값이면 앱 시작 실패 |
 | `API_MAX_MESSAGES` | `20` | 메시지 수 상한 (R11) |
-| `OPENAI_CHAT_MODEL` | (`.env.example` 값) | `llm` 모드 모델명. `llm` 분기에서만 읽는다 |
+| `OPENAI_CHAT_MODEL` | (`.env.example` 값) | `llm`의 ChatOpenAI와 `rag`의 Solar 공급자가 읽는 답변 모델명. 임베딩 모델 표시에는 사용하지 않는다 |
 | `OPENAI_REASONING_EFFORT` | `low` | `llm` 모드 추론 강도. `gpt-6-luna`는 `low`로 쓴다(팀 결정). temperature 0은 유지. `llm` 분기에서만 읽는다 |
-| `OPENAI_API_KEY` | (각자) | `llm` 모드에서 `ChatOpenAI`가 읽는다. 로그·응답에 남기지 않는다 |
+| `OPENAI_API_KEY` | (각자) | `llm`의 ChatOpenAI와 `rag`의 Solar 공급자가 서버 환경에서 읽는다. 로그·응답에 남기지 않는다 |
 
 ## 8. 테스트 시나리오 (`api/tests/chat/`)
 
@@ -226,6 +235,8 @@ api/chat/
 | T16 | API 502 | 생성기가 `AnswerGenerationError` | 502 `ANSWER_GENERATION_FAILED` |
 | T17 | API 500 | 생성기가 `RuntimeError("raw-secret")` (`raise_app_exceptions=False`) | 500 `INTERNAL_ERROR`, 본문에 `raw-secret` 없음 |
 | T18 | API | `GET /api/v1/chat` | 405 `METHOD_NOT_ALLOWED` |
+| T19 | 도메인·어댑터·API | 실제 RAG embedding 제공 / 미제공, mock·llm | 제공 값 그대로 응답 / 미제공이면 키 자체 생략, 환경으로 보충하지 않음 |
+| T20 | 도메인·어댑터·API | embedding null·비객체·누락·빈값·201자·제어문자 | 502 `ANSWER_GENERATION_FAILED`, 원문 값 비노출, 재호출·mock fallback 없음 |
 
 실제 LLM·네트워크를 부르지 않는다. `OPENAI_API_KEY` 없이 통과해야 한다(R15).
 
@@ -240,6 +251,6 @@ api/chat/
 | 질문 | 임시 기본값 |
 | --- | --- |
 | 요청 본문의 정의되지 않은 필드(`messages[].name` 등) | 무시 (pydantic 기본). 400으로 막지 않음 |
-| `rag` 모드에서 `source_ref_id`가 도감번호 3자리가 아니면 | API는 검증·변환하지 않고 그대로 전달(스펙 REQ-1·REQ-3). 이 경우 documents 조회는 400이 되므로 RAG 쪽 메타데이터 규칙으로 막는다 |
+| `rag` 모드에서 `source_ref_id`가 도감번호 3자리가 아니면 | RAG 어댑터가 기존 pokemon:N 또는 document_id를 세 자리로 변환한다. 지원하지 않는 식별자는502로 거부하고 domain·router는 값을 재가공하지 않는다 |
 | `answer`의 `[n]`과 `sources[].ref` 불일치 | API는 검사하지 않는다(체인 책임, 연결 가이드 3절 3) |
 | mock 응답에 질문을 몇 자까지 넣을지 | 앞 100자 |

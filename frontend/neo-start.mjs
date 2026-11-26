@@ -1,2 +1,2 @@
-import { startNeoChat } from './neo-chat.js?v=20261126-reset1';
+import { startNeoChat } from './neo-chat.js?v=20261126-embedding1';
 await startNeoChat();

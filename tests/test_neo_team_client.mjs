@@ -11,6 +11,24 @@ const answer = { answer: "롱스톤은 바위·땅 타입이에요[1].", mode: "
 const json = (body, status = 200) => ({ ok: status >= 200 && status < 300, status, json: async () => body });
 const isError = kind => error => error instanceof TeamApiError && error.kind === kind;
 
+test('embedding metadata passes through only for RAG and never enters a later chat payload', async () => {
+  const embedding = { query_model: 'solar-embedding-2-query', document_model: 'solar-embedding-2-passage' };
+  let posted;
+  const client = createTeamApiClient({ config, fetchImpl: async (_url, options) => {
+    posted = JSON.parse(options.body);
+    return json(envelope({ ...answer, embedding }));
+  } });
+  const result = await client.ask([{ role: 'user', content: '질문', embedding: { untrusted: true } }]);
+  assert.deepEqual(result.embedding, embedding);
+  assert.deepEqual(posted, { messages: [{ role: 'user', content: '질문' }] });
+  for (const mode of ['mock', 'llm']) assert.throws(() => validateTeamAnswer(envelope({ ...answer, mode, embedding })), isError('format'));
+  for (const invalid of [{ query_model: 'x' }, { query_model: 'x', document_model: '' },
+    { query_model: 'x\u0000', document_model: 'y' }, { ...embedding, invented: true }]) {
+    assert.throws(() => validateTeamAnswer(envelope({ ...answer, embedding: invalid })), isError('format'));
+  }
+  assert.equal(Object.hasOwn(validateTeamAnswer(envelope(answer)), 'embedding'), false);
+});
+
 test("published defaults use the team suggestion route and server-side content limits", () => {
   assert.equal(TEAM_API.suggestionsPath, "/api/v1/suggestion");
   assert.equal(TEAM_API.maxContentLength, null);

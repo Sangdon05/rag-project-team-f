@@ -19,7 +19,7 @@ from api.suggestion.application.service import SuggestionService
 from api.suggestion.infrastructure.fake_provider import FakeSuggestionProvider
 from api.suggestion.presentation.dependencies import provide_suggestion_service
 
-ANSWER_BACKENDS = ("mock", "llm")
+ANSWER_BACKENDS = ("mock", "llm", "rag")
 
 
 def validate_answer_backend(settings: Settings) -> None:
@@ -32,6 +32,12 @@ def validate_answer_backend(settings: Settings) -> None:
 
 def create_answer_generator(settings: Settings) -> AnswerGenerator:
     validate_answer_backend(settings)
+    if settings.answer_backend == "rag":
+        from starlette.concurrency import run_in_threadpool
+        from api.chat.infrastructure.rag_generator import RagAnswerGenerator
+        from solar_handoff.src.conversation import create_service
+
+        return RagAnswerGenerator(create_service, run_in_threadpool)
     if settings.answer_backend == "llm":
         from langchain_openai import ChatOpenAI   # llm 모드에서만 키·모델명이 필요하다
 

@@ -1,4 +1,5 @@
 /** Browser-local conversation records. UI messages and API history are separate views. */
+import { normalizeEmbedding } from './neo-embedding.mjs';
 const PERSONAS = new Set(["P1", "P2", "P3"]);
 const ROLES = new Set(["user", "assistant"]);
 const STATUSES = new Set(["pending", "completed", "failed"]);
@@ -27,7 +28,11 @@ function normalizeRecord(record) {
   }
   if (record.mode != null && !MODES.has(record.mode)) throw new TypeError("Unsupported answer mode.");
   if (record.sources != null && !Array.isArray(record.sources)) throw new TypeError("sources must be an array.");
-  return clone({ ...record, mode: record.mode ?? null, sources: record.sources ?? [] });
+  const embedding = normalizeEmbedding(record.embedding);
+  if (embedding && (record.role !== 'assistant' || record.mode !== 'rag')) throw new TypeError('Only a RAG answer can identify an embedding model.');
+  const normalized = { ...record, mode: record.mode ?? null, sources: record.sources ?? [] };
+  if (embedding) normalized.embedding = embedding;
+  return clone(normalized);
 }
 
 /** Stable chronological order; linked questions precede answers with the same timestamp. */
