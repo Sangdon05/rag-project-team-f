@@ -22,6 +22,9 @@
 | 청크 메타데이터 계약                     | `contracts/chunk_schema.json` (예정, 초안은 chunking 스킬)                                                              |
 | 버전·실행 기록                           | `runs/manifest.jsonl` (예정)                                                                                            |
 | 평가셋·평가 결과·실패 분석               | `eval/` (예정, 2차 Eval 에이전트)                                                                                       |
+| API 규칙·완료 게이트 (FastAPI `api/`)    | [.claude/skills/api-invariants/SKILL.md](.claude/skills/api-invariants/SKILL.md)                                        |
+| API 설계안                               | [docs/design/api/README.md](docs/design/api/README.md)                                                                  |
+| API–RAG 연결 계약·절차                   | [docs/references/api-rag-integration.md](docs/references/api-rag-integration.md)                                        |
 
 ## 에이전트
 
@@ -32,10 +35,15 @@
 | [security-reviewer](.claude/agents/security-reviewer.md) | PR 전 보안 점검 실행·분류 보고 (읽기 전용)          | security-check                     |
 | [eval](.claude/agents/eval.md)                   | 평가 실행·기록·실패 분석·비교 보고서, 평가셋 의견서          | rag-eval                           |
 | [question-designer](.claude/agents/question-designer.md) | 질문 전용 패킷으로 페르소나별 질문 후보·조건 확인사항 제안 | question-design |
+| [api-architect](.claude/agents/api-architect.md) | FastAPI 슬라이스 설계안 작성 (`docs/design/api/`만 수정) | api-invariants, api-architecture |
+| [api-implementer](.claude/agents/api-implementer.md) | 설계안대로 `api/` 슬라이스 4계층 구현, 완료 게이트 실행 | api-invariants, api-architecture, api-implementation, layer-check |
+| [api-reviewer](.claude/agents/api-reviewer.md) | `api/` 변경 독립 리뷰·실행 검증 (읽기 전용) | api-invariants, api-architecture, api-implementation, layer-check, fastapi-run |
 
 question-designer는 공식 평가셋 작성 전의 후보 제안 역할이다. v2 입력은 `problem.md`의 세 인물 발화 프로필을 포함하며, '쎄?' 같은 원표현과 기존 질문의 정보 요구를 함께 보존한다. 정답·허용 근거를 생성하거나 `eval/`을 읽고 수정하지 않는다. 후보 채택·정답 검수·평가셋 작성·잠금은 [평가셋 소유 규칙](eval/README.md)에 따라 팀원이 맡는다. 사용·검증·전달 절차는 [질문 설계 안내](docs/references/question-design.md)를 따른다.
 
-2차 예정: eval, qa, reviewer, backend(필요 시). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
+API 에이전트 세 개는 저장소 루트 `api/` 패키지(루트 `pyproject.toml` 공유)만 다룬다. DB·로그인·서버 쪽 대화 저장 없이 RAG를 중개하며, RAG 완성 전에는 mock 또는 검색 없는 LLM으로 답한다. RAG 연결은 [연결 가이드](docs/references/api-rag-integration.md)를 따른다. 모노레포 전체 폴더 규칙은 다른 파트가 합쳐진 뒤 정한다.
+
+2차 예정: eval, qa, reviewer(RAG 쪽). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
 
 ## 오케스트레이터의 역할
 
@@ -51,7 +59,7 @@ question-designer는 공식 평가셋 작성 전의 후보 제안 역할이다. 
 
 ```
 task: 한 문장 목표
-agent: data-engineer | rag-developer | security-reviewer | eval | question-designer
+agent: data-engineer | rag-developer | security-reviewer | eval | question-designer | api-architect | api-implementer | api-reviewer
 inputs: 경로 + schema_version / index_version
 outputs: 기대 산출물 경로
 done_when: 확인 가능한 완료 조건
@@ -80,6 +88,7 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 데이터  | data-engineer  | `verify_bundle()` 통과, 대상 ID·출처 검증, 문서 검토 상태 확인 |
 | 인덱스  | data-engineer  | 청크 누락 0, 이름 smoke test, sync 결과 manifest 기록 |
 | 툴·체인 | rag-developer  | 툴 단위 테스트 통과, 출처 포함 답변, 트레이스 생성    |
+| API     | api-implementer → api-reviewer | [api-invariants §7](.claude/skills/api-invariants/SKILL.md) 게이트 통과, smoke PASS, 리뷰 APPROVE |
 | 평가    | eval (2차)     | 평가셋 전체 실행, run 결과 저장                       |
 | 채택    | 오케스트레이터 | 아래 실험 규칙 충족                                   |
 | 리뷰    | reviewer (2차) | 가드레일·계약 위반 없음                               |
@@ -126,6 +135,8 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 청크 템플릿·섹션, 임베딩 모델 변경 | 새 index_version 전체 빌드 → 평가               |
 | k·필터·프롬프트                    | 체인 테스트 → 평가                              |
 | 툴 추가·시그니처 변경              | 툴 테스트 → 평가                                |
+| 체인 진입점·반환 형식 변경         | 연결 가이드 갱신 → API 어댑터 수정 → API 게이트 |
+| `api/` 코드                        | API 게이트 → api-reviewer (RAG 평가 재실행 불필요) |
 
 ## 가드레일
 

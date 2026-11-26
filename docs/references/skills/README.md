@@ -21,9 +21,14 @@
 | [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도, 원본 문서 규칙, 동기화 검사 스크립트 |
 | [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |
 | [rag-eval](../../../.claude/skills/rag-eval/SKILL.md) | eval | 사용자 평가셋 검증·의견서, 실행 기록, 발제 지표, 사람 채점 집계, 실패 분석, 비교 보고서 |
+| [api-invariants](../../../.claude/skills/api-invariants/SKILL.md) | api-architect, api-implementer, api-reviewer | `api/` 규칙 R1~R16(계층, 조립, 에러, RAG 경계, 입력·보안, 테스트)과 완료 게이트 원본 |
+| [api-architecture](../../../.claude/skills/api-architecture/SKILL.md) | api-architect, api-implementer, api-reviewer | `api/` 폴더 구조, 4계층 책임, `AnswerGenerator` 포트, `container.py` 조립 |
+| [api-implementation](../../../.claude/skills/api-implementation/SKILL.md) | api-implementer, api-reviewer | 계층별 코드 패턴, 공통 에러 형식, mock·llm 생성기, unittest 작성법 |
+| [layer-check](../../../.claude/skills/layer-check/SKILL.md) | api-implementer, api-reviewer | `api/` 계층 import 방향·RAG 경계·CORS 자동 검사 스크립트 |
+| [fastapi-run](../../../.claude/skills/fastapi-run/SKILL.md) | api-reviewer | PID 파일 방식 서버 기동·종료와 smoke 스크립트 |
 | [question-design](../../../.claude/skills/question-design/SKILL.md) | question-designer | '쎄?' 등 원표현과 세 인물의 v2 발화 프로필·질문 의도를 보존한 후보 제안, 답변 없는 입력 추출·출력 구조 검사, 사람 채택으로 전달 |
 
-2차 예정: rag-eval(Eval), testing(QA), api-server(Backend, 필요 시).
+2차 예정: rag-eval(Eval), testing(QA).
 
 ## 데이터 현황 (설계 근거)
 

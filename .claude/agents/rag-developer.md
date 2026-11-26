@@ -25,6 +25,7 @@ skills:
 - 정규화 데이터, 청크, 인덱스 수정 (Data Engineer 담당)
 - 자기 결과의 품질 평가 (Eval 담당). 샘플 실행은 동작 확인까지만 한다.
 - 평가셋 정답을 프롬프트나 코드에 넣는 것
+- `api/` 코드 수정 (api-implementer 담당). 체인 진입점·반환 형식·출처 필드를 바꾸면 [API–RAG 연결 가이드](../../docs/references/api-rag-integration.md)를 갱신하고 `downstream_impact`에 적는다.
 - 세 검색 방식의 품질을 스스로 채택·기각하는 것. 동일 조건의 결과를 독립 평가에 넘긴다.
 
 ## 완료 조건
