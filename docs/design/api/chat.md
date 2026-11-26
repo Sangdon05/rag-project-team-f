@@ -192,7 +192,7 @@ api/chat/
 ```
 
 - router: `APIRouter(prefix="/api/v1", tags=["chat"])`, `POST /chat`, `response_model=SuccessResponse[ChatData]`. router에서 `try/except` 하지 않는다(R6).
-- container: `create_answer_generator(settings)` — `mock` → `MockAnswerGenerator()`, `llm` → 분기 안에서 `langchain_openai.ChatOpenAI(model=os.environ["OPENAI_CHAT_MODEL"], temperature=0)`를 만들어 `LlmAnswerGenerator`에 넣는다, 그 밖 → 시작 시 `RuntimeError`. `AskService(generator, ConversationLimits(settings.max_messages))`를 `provide_ask_service`에 연결.
+- container: `create_answer_generator(settings)` — `mock` → `MockAnswerGenerator()`, `llm` → 분기 안에서 `langchain_openai.ChatOpenAI(model=os.environ["OPENAI_CHAT_MODEL"], temperature=0, reasoning_effort=os.environ.get("OPENAI_REASONING_EFFORT", "low"))`를 만들어 `LlmAnswerGenerator`에 넣는다, 그 밖 → 시작 시 `RuntimeError`. `AskService(generator, ConversationLimits(settings.max_messages))`를 `provide_ask_service`에 연결.
 
 ## 7. 설정
 
@@ -201,6 +201,7 @@ api/chat/
 | `ANSWER_BACKEND` | `mock` | 생성기 선택 `mock` \| `llm` (나중에 `rag`). 알 수 없는 값이면 앱 시작 실패 |
 | `API_MAX_MESSAGES` | `20` | 메시지 수 상한 (R11) |
 | `OPENAI_CHAT_MODEL` | (`.env.example` 값) | `llm` 모드 모델명. `llm` 분기에서만 읽는다 |
+| `OPENAI_REASONING_EFFORT` | `low` | `llm` 모드 추론 강도. `gpt-6-luna`는 `low`로 쓴다(팀 결정). temperature 0은 유지. `llm` 분기에서만 읽는다 |
 | `OPENAI_API_KEY` | (각자) | `llm` 모드에서 `ChatOpenAI`가 읽는다. 로그·응답에 남기지 않는다 |
 
 ## 8. 테스트 시나리오 (`api/tests/chat/`)
