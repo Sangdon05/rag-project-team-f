@@ -265,6 +265,10 @@ class WorkDocsTests(unittest.TestCase):
         self.write_spec(status="approved", approved=True)
         self.write_plan([t.replace("done", "todo") for t in self.GOOD_TASKS])
         r = self.run_wd("cancel", "spec", self.spec_id, "--reason", "우선순위 변경")
+        self.assertIn("사용자 결정이 필요", r.stderr)
+        self.write_spec(status="approved", decisions=f"| {TODAY} | 스펙 취소 | user | 우선순위 |")
+        self.write_plan([t.replace("done", "todo") for t in self.GOOD_TASKS])
+        r = self.run_wd("cancel", "spec", self.spec_id, "--reason", "우선순위 변경")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         for rel in (f"docs/archives/specs/{self.spec_id}.md", f"docs/archives/plans/{self.plan_id}.md"):
             text = self.read(rel)
@@ -342,6 +346,19 @@ class WorkDocsTests(unittest.TestCase):
         p.write_text(p.read_text(encoding="utf-8").replace("청크 계약 파일이", "청크 계약 파일은"), encoding="utf-8")
         r = self.run_wd("check")
         self.assertIn("archived_hash 불일치", r.stdout)
+
+    def test_plan_is_director_judgement_without_hitl(self):
+        self.write_spec(status="approved")
+        self.write_plan(self.GOOD_TASKS, status="draft")
+        r = self.run_wd("approve", "plan", self.plan_id, "--by", "data-engineer")
+        self.assertIn("하위 에이전트", r.stderr)
+        r = self.run_wd("approve", "plan", self.plan_id)  # 결정 행·사용자 없이 디렉터 확정
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("approved_by: 오케스트레이터", self.read(f"docs/plans/{self.plan_id}.md"))
+        self.assertIn("--by <사용자>", self.run_wd("approve", "spec", self.spec_id).stderr)
+        r = self.run_wd("cancel", "plan", self.plan_id, "--reason", "작업 재구성")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("status: approved", self.read(f"docs/specs/{self.spec_id}.md"))
 
     def test_start_requires_approved_plan(self):
         self.write_spec(status="approved")

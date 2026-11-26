@@ -5,7 +5,7 @@
     uv run python .claude/skills/spec-plan/scripts/workdocs.py new plan <name> --spec <spec-id> --title "..."
     uv run python .claude/skills/spec-plan/scripts/workdocs.py check [--strict]
     uv run python .claude/skills/spec-plan/scripts/workdocs.py waves <plan-id>
-    uv run python .claude/skills/spec-plan/scripts/workdocs.py approve spec|plan <id> --by <이름>
+    uv run python .claude/skills/spec-plan/scripts/workdocs.py approve spec <id> --by <사용자> | approve plan <id> [--by 디렉터]
     uv run python .claude/skills/spec-plan/scripts/workdocs.py start <plan-id>
     uv run python .claude/skills/spec-plan/scripts/workdocs.py archive <spec-id> [--dry-run]
     uv run python .claude/skills/spec-plan/scripts/workdocs.py cancel spec|plan <id> --reason "..." [--dry-run]
@@ -45,7 +45,8 @@ REQUIRED = {
 NAME_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 TASK_STATUSES = {"todo", "doing", "done", "blocked", "cancelled"}
-HUMAN_ASSIGNEES = {"오케스트레이터", "팀원", "사용자"}
+HUMAN_ASSIGNEES = {"오케스트레이터", "디렉터", "팀원", "사용자"}  # 에이전트가 아닌 담당
+DIRECTORS = {"오케스트레이터", "디렉터"}  # 계획 승인·작업 판단 (HITL 아님)
 VERDICTS = {"pass", "fail", "waived"}
 METHODS = ("명령", "파일", "사람", "보고")
 VAGUE = ["적절", "충분", "잘 ", "깔끔", "가능한 한", "가급적", "최대한", "등등", "원활"]
@@ -214,9 +215,9 @@ def decision_rows(d: "Doc") -> list[dict]:
 
 
 def is_person(name: str) -> bool:
-    """결정자는 사람이어야 한다: 에이전트·오케스트레이터가 아니면 사람으로 본다."""
+    """스펙 결정자는 사람이어야 한다: 에이전트·오케스트레이터·디렉터가 아니면 사람으로 본다."""
     name = name.strip()
-    return bool(name) and name != "오케스트레이터" and not any(a in name for a in agent_names())
+    return bool(name) and not any(r in name for r in DIRECTORS) and not any(a in name for a in agent_names())
 
 
 def paths_in(cell: str) -> list[str]:
@@ -413,7 +414,7 @@ def check_plan_done(d: Doc, spec: Doc, tasks: list[dict], verdict: list[dict], s
         assignees = {t.get("담당", "") for t in tasks if ac in ids(t.get("완료 기준", ""), "AC")}
         for a in assignees - {"사용자", "팀원"}:
             if a and a in confirmer:
-                if a == "오케스트레이터" and method_of(spec, ac) == "명령":
+                if a in DIRECTORS and method_of(spec, ac) == "명령":
                     continue  # 결정적 명령은 오케스트레이터가 다시 실행해 확인할 수 있다
                 errors.append(f"[done] {where}: {ac} 확인자 '{confirmer}'에 수행 담당 '{a}'가 들어 있음")
 
@@ -622,15 +623,22 @@ def cmd_approve(a) -> int:
     d = find(docs, a.id, a.kind)
     if not d or d.archived:
         sys.exit(f"활성 {a.kind} '{a.id}'가 없음")
+    if not a.by:
+        if a.kind == "spec":
+            sys.exit("중단: 스펙 승인은 --by <사용자>가 필요하다")
+        a.by = "오케스트레이터"
     allowed = {"spec": ("draft", "clarifying"), "plan": ("draft", "approved", "in_progress")}[a.kind]
     if d.status not in allowed:
         sys.exit(f"중단: {d.id}는 {d.status} — 승인된 스펙을 바꿨다면 status를 clarifying으로 되돌리고 "
                  "변경 이력을 쓴 뒤 다시 승인한다")
-    if not is_person(a.by):
-        sys.exit(f"중단: --by '{a.by}'는 사람이 아님. 승인은 사용자·팀원만 한다")
-    if not any("승인" in r.get("결정", "") and r.get("결정자", "").strip() == a.by for r in decision_rows(d)):
-        sys.exit(f"중단: {d.rel} 결정 기록에 '{a.by}'의 승인 행이 없음 "
-                 f"(| 날짜 | ... 승인 | {a.by} | 근거 |). 사용자 확인을 받은 뒤 기록한다")
+    if a.kind == "spec":  # HITL은 스펙에만: 사람의 승인 행이 있어야 한다
+        if not is_person(a.by):
+            sys.exit(f"중단: --by '{a.by}'는 사람이 아님. 스펙 승인은 사용자·팀원만 한다")
+        if not any("승인" in r.get("결정", "") and r.get("결정자", "").strip() == a.by for r in decision_rows(d)):
+            sys.exit(f"중단: {d.rel} 결정 기록에 '{a.by}'의 승인 행이 없음 "
+                     f"(| 날짜 | ... 승인 | {a.by} | 근거 |). 사용자 확인을 받은 뒤 기록한다")
+    elif a.by in agent_names():
+        sys.exit(f"중단: --by '{a.by}'는 하위 에이전트. 계획은 오케스트레이터·디렉터가 승인한다")
     status = "approved" if d.status in ("draft", "clarifying", "approved") else d.status
     upd = {"status": status, "approved_by": a.by, "approved_at": today(), "updated": today()}
     original = d.text
@@ -703,6 +711,9 @@ def cmd_cancel(a) -> int:
         sys.exit(f"활성 {a.kind} '{a.id}'가 없음")
     d_ = today()
     upd = {"status": "cancelled", "cancel_reason": a.reason, "archived_at": d_, "updated": d_}
+    if d.type == "spec" and not any("취소" in r.get("결정", "") and is_person(r.get("결정자", ""))
+                                    for r in decision_rows(d)):
+        sys.exit(f"중단: 스펙 취소는 사용자 결정이 필요하다. {d.rel} 결정 기록에 사람의 취소 결정 행을 쓴 뒤 실행한다")
     targets = [d]
     if d.type == "spec":
         targets += [x for x in docs if x.type == "plan" and x.fm.get("spec") == d.id and not x.archived]
@@ -722,7 +733,8 @@ def main() -> int:
     p.add_argument("--title", required=True); p.add_argument("--spec")
     p = sp.add_parser("check"); p.add_argument("--strict", action="store_true")
     p = sp.add_parser("waves"); p.add_argument("id")
-    p = sp.add_parser("approve"); p.add_argument("kind", choices=["spec", "plan"]); p.add_argument("id"); p.add_argument("--by", required=True)
+    p = sp.add_parser("approve"); p.add_argument("kind", choices=["spec", "plan"]); p.add_argument("id")
+    p.add_argument("--by", help="스펙: 승인한 사용자(필수). 계획: 기본 오케스트레이터")
     p = sp.add_parser("start"); p.add_argument("id")
     p = sp.add_parser("archive"); p.add_argument("id"); p.add_argument("--dry-run", action="store_true")
     p = sp.add_parser("cancel"); p.add_argument("kind", choices=["spec", "plan"]); p.add_argument("id"); p.add_argument("--reason", required=True)

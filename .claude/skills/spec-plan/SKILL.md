@@ -6,6 +6,8 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 # spec-plan
 
 오케스트레이터(디렉터)가 업무를 발주하기 전에 스펙을 쓰고, 사용자와 모호한 점을 해결해 승인받고, 계획을 세워 발주·검증한 뒤, 완료 기준을 충족하면 문서를 보관하는 절차다.
+
+**사람의 판단(HITL)이 필요한 것은 스펙뿐이다.** 스펙의 미결 사항 해결·승인·변경·취소, 완료 기준 면제(`waived`)는 사용자가 정한다. 계획 작성·승인·변경, 발주, 막힌 작업 처리, 계획 취소, 완료 판정과 보관은 오케스트레이터(디렉터)가 스펙 범위 안에서 판단해 진행하고 결과를 보고한다.
 문서 상태의 원본은 각 문서의 frontmatter다. 목록 README는 스크립트가 frontmatter로 만든다.
 
 구성:
@@ -45,7 +47,7 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 | `status` | 아래 상태 표 | |
 | `owner` | `orchestrator` | 작성·관리 책임자 |
 | `created`, `updated` | `YYYY-MM-DD` | 내용을 고칠 때마다 `updated`를 바꾼다 |
-| `approved_by`, `approved_at` | 승인한 사용자, 날짜 | `approve` 명령이 채운다 |
+| `approved_by`, `approved_at` | 승인자, 날짜 | 스펙은 사용자, 계획은 오케스트레이터(디렉터). `approve` 명령이 채운다 |
 | `approved_hash` | 해시 | `approve`가 승인 대상(스펙: 요구사항·완료 기준 표, 계획: 작업 표의 상태 외 열)을 고정한다. 손으로 고치지 않는다 |
 | `completed_at`, `archived_at` | 날짜 | `archive`·`cancel` 명령이 채운다 |
 | `archived_hash` | 해시 | 보관할 때 문서 전체를 고정한다. 보관 후 수정을 검사가 잡는다 |
@@ -59,10 +61,10 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 | 문서 | 상태 흐름 | 뜻 |
 | --- | --- | --- |
 | 스펙 | `draft` → `clarifying` → `approved` → `done` | 작성 중 → 사용자와 미결 사항 해결 중 → 사용자 승인 → 완료 기준 충족 |
-| 계획 | `draft` → `approved` → `in_progress` → `done` | 작성 중 → 사용자 확인 → 발주 시작(`start`) → 모든 작업·완료 기준 충족 |
-| 공통 | 어느 단계에서든 → `cancelled` | 사용자가 중단을 결정. 사유를 남기고 보관 |
+| 계획 | `draft` → `approved` → `in_progress` → `done` | 작성 중 → 디렉터 확정 → 발주 시작(`start`) → 모든 작업·완료 기준 충족 |
+| 공통 | 어느 단계에서든 → `cancelled` | 스펙은 사용자, 계획은 디렉터가 중단을 결정. 사유를 남기고 보관 |
 
-승인(`approved` 이후)된 스펙의 요구사항·완료 기준을 바꾸려면 상태를 `clarifying`으로 되돌리고, 9절 변경 이력에 남기고, 다시 승인받는다. 승인 후 계획의 작업을 추가·변경·취소하면 계획 결정 기록에 사용자 승인을 남기고 `approve plan`을 다시 실행한다(상태는 유지). 되돌리지 않고 고치면 `approved_hash`가 맞지 않아 검사가 실패한다.
+승인(`approved` 이후)된 스펙의 요구사항·완료 기준을 바꾸려면 상태를 `clarifying`으로 되돌리고, 9절 변경 이력에 남기고, 다시 승인받는다. 승인 후 계획의 작업을 추가·변경·취소하면 디렉터가 계획 결정 기록에 이유를 남기고 `approve plan`을 다시 실행한다(상태는 유지, 사용자 확인 불필요). 단, 그 변경이 스펙의 범위·요구사항·완료 기준을 바꾸면 스펙 변경 절차(HITL)를 먼저 밟는다. 되돌리지 않고 고치면 `approved_hash`가 맞지 않아 검사가 실패한다.
 
 ## 문서 형식
 
@@ -91,7 +93,7 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 | 5. 검증과 보고 | 에이전트 보고 형식, 오케스트레이터 검토 절차, 사용자 보고 형식 |
 | 6. 위험과 대응 | |
 | 7. 진행 기록 | 날짜·작업·내용·근거(명령, 경로, 커밋) |
-| 8. 결정 기록 | 계획 승인, 작업 변경 승인 |
+| 8. 결정 기록 | 디렉터의 판단: 계획 확정, 작업 추가·변경·취소, 막힌 작업 처리 |
 | 9. 완료 판정 | AC마다 결과(`pass`/`fail`/`waived`)·근거·확인자 |
 
 표의 머리글(`| ID | 요구사항`, `| ID | 기준`, `| ID | 질문`, `| ID | 작업`, `| AC | 결과`, `| 날짜 | 결정`)은 스크립트가 표를 찾는 열쇠다. 열 이름과 순서를 바꾸지 않는다.
@@ -115,20 +117,20 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 
 사용자의 명시적 확인 없이 승인하지 않는다. 기본값으로 진행해도 된다고 사용자가 말한 질문만 기본값으로 `resolved` 처리하고 그 사실을 결정 기록에 쓴다.
 
-### 3. 계획 작성 (디렉터)
+### 3. 계획 작성 (디렉터 판단, 사용자 확인 없음)
 
 1. `workdocs.py new plan <name> --spec <spec-id> --title "..."`. 스펙이 `approved`가 아니면 만들지 않는다.
-2. 2절 작업 분해: 작업 하나 = 담당 하나 = 발주 하나. 읽기 전용 에이전트(frontmatter `tools`에 Write·Edit 없음)는 산출물 칸을 비워도 된다. 담당은 `.claude/agents/`의 에이전트 또는 `오케스트레이터`·`팀원`·`사용자`다. 평가셋 작성·잠금처럼 사람만 하는 일은 `팀원`에게 둔다 (`AGENTS.md` 가드레일).
+2. 2절 작업 분해: 작업 하나 = 담당 하나 = 발주 하나. 읽기 전용 에이전트(frontmatter `tools`에 Write·Edit 없음)는 산출물 칸을 비워도 된다. 담당은 `.claude/agents/`의 에이전트 또는 `오케스트레이터`·`디렉터`·`팀원`·`사용자`다. 평가셋 작성·잠금처럼 사람만 하는 일은 `팀원`에게 둔다 (`AGENTS.md` 가드레일).
 3. 스펙의 모든 AC를 맡는 작업이 있어야 한다. 수정한 에이전트와 그 결과를 판정하는 담당을 같은 작업에 두지 않는다 (예: 구현 T-2 → 리뷰 T-3 api-reviewer).
 4. `workdocs.py waves <plan-id>`로 단계를 계산해 3절에 붙인다. 같은 단계 작업의 산출물 경로가 겹치면 ERROR다 — 선행 관계를 넣어 순서를 정한다.
 5. 4절 발주서와 5절 보고 형식을 쓴다. `done_when`은 해당 AC의 확인 방법·기대 결과를 그대로 옮긴다.
-6. 사용자에게 계획을 보여주고 확인받으면 계획 8절에 승인 행을 쓰고 `workdocs.py approve plan <plan-id> --by <사용자>`.
+6. 디렉터가 검사(`workdocs.py check`)를 통과시킨 뒤 `workdocs.py approve plan <plan-id>`로 확정한다(`--by` 기본값 `오케스트레이터`, 하위 에이전트 이름은 거부). 사용자에게는 계획 요약을 보고만 한다.
 
 ### 4. 실행과 기록
 
 1. 발주를 시작하면 `workdocs.py start <plan-id>`로 계획을 `in_progress`로 바꾼다. 단계 순서대로 발주하고, 같은 단계 작업은 동시에 발주한다.
 2. 보고를 받으면 `AGENTS.md` 보고 검토 절차대로 evidence를 직접 다시 실행하고, 작업 상태와 7절 진행 기록을 갱신한다. 보고 내용만으로 `done`을 적지 않는다.
-3. 막히면 작업을 `blocked`로 두고 5절 사용자 보고 형식으로 필요한 결정을 묻는다. 스펙을 바꿔야 하면 스펙을 `clarifying`으로 되돌린다 (2절 절차).
+3. 막히면 작업을 `blocked`로 두고 디렉터가 처리를 정한다(재발주, 작업 분할·추가, 담당 변경, 계획 취소 후 새 계획). 판단은 8절 결정 기록에 남긴다. 스펙의 범위·요구사항·완료 기준을 바꿔야 할 때만 스펙을 `clarifying`으로 되돌리고 사용자에게 묻는다 (2절 절차).
 4. 커밋 전마다 `workdocs.py check`를 실행한다.
 
 ### 5. 완료 판정과 보관
@@ -138,7 +140,9 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 3. 통과하면 `workdocs.py archive <spec-id>`. 스펙과 연결된 활성 계획을 함께 `done`으로 바꾸고(`completed_at`, `archived_at`, `updated`, `archived_hash`), 보관 폴더로 옮기고(추적 중인 파일은 `git mv`, 아직 추적되지 않은 파일은 이동), 저장소 Markdown의 상대 링크와 목록 README를 갱신한다.
 4. 5절 사용자 보고 형식으로 완료를 보고한다.
 
-중단: `workdocs.py cancel spec|plan <id> --reason "..."`. 스펙을 취소하면 연결된 활성 계획도 함께 취소·보관한다. 계획만 취소하면 스펙은 남고 새 계획을 쓴다. 취소는 사용자 결정이 있을 때만 한다.
+중단: `workdocs.py cancel spec|plan <id> --reason "..."`.
+- 스펙 취소는 사용자 결정이다. 스펙 8절에 사람의 `취소` 결정 행이 있어야 명령이 동작하며, 연결된 활성 계획도 함께 취소·보관한다.
+- 계획 취소는 디렉터가 판단한다. 스펙은 남고 새 계획을 쓴다.
 
 ## 검사
 
@@ -163,7 +167,8 @@ uv run python .claude/skills/spec-plan/scripts/workdocs.py check --strict   # PR
 
 ## 하지 않는 것
 
-- 사용자 확인 없이 스펙·계획을 승인하거나 `Q-n`을 임의로 `resolved` 처리하지 않는다.
+- 사용자 확인 없이 스펙을 승인·변경·취소하거나 `Q-n`을 임의로 `resolved` 처리하지 않는다.
+- 반대로 계획·발주·작업 처리를 사용자 확인 대기로 멈추지 않는다. 디렉터가 정하고 보고한다.
 - 완료 기준을 통과시키려고 승인 후 AC를 몰래 바꾸거나 지우지 않는다. 바꾸면 재승인을 받는다.
 - 평가셋 정답이나 `eval/` 내용을 스펙·계획에 옮겨 적지 않는다 (`AGENTS.md` 가드레일).
 - 보관 문서를 고치지 않는다. 목록 README를 손으로 고치지 않는다 (`index`가 덮어쓴다).
