@@ -100,6 +100,13 @@ class DocumentsApiTest(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("/abs/secret", r.text)
         self.assertEqual(r.headers.get("access-control-allow-origin"), CORS_ORIGIN)
 
+    async def test_openapi_path_param_description(self):
+        async with self.client() as c:
+            r = await c.get("/openapi.json")
+        params = r.json()["paths"][f"{URL}/{{source_ref_id}}"]["get"]["parameters"]
+        param = next(p for p in params if p["name"] == "source_ref_id")
+        self.assertEqual(param["description"], "chat sources[].source_ref_id 값. 도감번호 3자리 [0-9]{3} (예: 001)")
+
     async def test_post_is_method_not_allowed(self):
         async with self.client() as c:
             r = await c.post(f"{URL}/{DEX_ID}")

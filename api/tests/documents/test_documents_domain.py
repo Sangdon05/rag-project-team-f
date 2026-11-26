@@ -3,6 +3,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from api.documents.application.service import DocumentService
 from api.documents.domain.document import Document, SourceRefId
@@ -90,6 +91,19 @@ class FileDocumentStoreTest(unittest.IsolatedAsyncioTestCase):
             self.assertNotIn(self.tmp.name, ctx.exception.message)
             self.assertNotIn(".md", ctx.exception.message)
             self.assertNotIn(self.tmp.name, "\n".join(logs.output))
+
+    async def test_unreadable_base_dir_is_source_error(self):
+        # Path.glob과 달리 폴더 읽기 권한 오류가 404로 숨지 않는다. root 실행에도 같게 mock으로 낸다.
+        (self.base / "001_x.md").write_bytes(b"a")
+        target = "api.documents.infrastructure.file_store.os.scandir"
+        with mock.patch(target, side_effect=PermissionError(13, "Permission denied", self.tmp.name)) as scandir:
+            with self.assertLogs("api.documents.infrastructure.file_store", "WARNING") as logs:
+                with self.assertRaises(DocumentSourceError) as ctx:
+                    await FileDocumentStore(self.base).get("001")
+        scandir.assert_called_once_with(self.base)
+        self.assertIsInstance(ctx.exception.__cause__, PermissionError)
+        self.assertNotIn(self.tmp.name, ctx.exception.message)
+        self.assertNotIn(self.tmp.name, "\n".join(logs.output))
 
     async def test_base_dir_is_file_is_source_error(self):
         f = self.base / "file"

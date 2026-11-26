@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import os
 from pathlib import Path
 
 from api.documents.domain.exceptions import DocumentNotFoundError, DocumentSourceError
@@ -17,7 +18,14 @@ class FileDocumentStore(DocumentStore):
         self.base_dir = base_dir
 
     def _find(self, source_ref_id: str) -> list[Path]:
-        return sorted(self.base_dir.glob(f"{source_ref_id}_*.md"))
+        # Path.glob은 폴더 읽기 OSError를 삼켜 빈 결과(404)를 내므로 os.scandir로 OSError를 올린다.
+        prefix = f"{source_ref_id}_"
+        with os.scandir(self.base_dir) as entries:
+            return sorted(
+                Path(entry.path)
+                for entry in entries
+                if entry.name.startswith(prefix) and entry.name.endswith(".md")
+            )
 
     async def get(self, source_ref_id: str) -> str:
         if not self.base_dir.is_dir():
