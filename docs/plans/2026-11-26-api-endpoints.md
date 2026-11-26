@@ -1,6 +1,6 @@
 ---
 title: API 엔드포인트 3종 구현 계획
-status: 진행 중
+status: 구현 완료 (PR 대기)
 created: 2026-11-26
 owner: 오케스트레이터
 ---
@@ -139,7 +139,22 @@ constraints: data/, scripts/, eval/ 수정 금지, 실제 LLM 호출 금지
 - PR ①~⑤가 게이트 통과와 리뷰 APPROVE 뒤 머지된다.
 - 파일럿 청크의 `source_ref_id`로 documents 조회가 성공한다.
 
-## 7. 위험
+## 7. 진행 기록
+
+| 단계 | 브랜치 | 커밋 | 결과 |
+| --- | --- | --- | --- |
+| 1 계약 문서 | `docs/api-ep-contracts` | b096b09 | doc-sync ERROR 0, security ERROR 0 |
+| 2 `source_ref_id` | `feat/source-ref-id` (main 기준, 별도) | dff952e | 파일럿 10청크 `bulbasaur_red_blue`, tests 103 OK |
+| 3 설계안 | `docs/api-design` | 81a6581, cc17162 | 네 설계안 "검토 중" |
+| 4-③ 공통·health·suggestion | `feat/api-core` | 16d1ac7 | api-reviewer APPROVE |
+| 4-④ chat | `feat/api-chat` | 95938ae | api-reviewer APPROVE |
+| 4-⑤ documents + 공통 보완 + role 수정 + `reasoning_effort` | `feat/api-documents` | 698f707, 9e697a9, 21fd77f | api-reviewer APPROVE, smoke 14항목 PASS |
+
+브랜치는 1 → 3 → ③ → ④ → ⑤ 순서로 쌓여 있다. ③의 `environment.md` 패키지 행(fastapi·uvicorn·httpx)은 ⑤ 커밋에 들어가 있어 ③만 따로 PR하면 doc-sync ERROR가 난다.
+
+추가 결정: llm 모드 `OPENAI_REASONING_EFFORT`(기본 `low`), temperature 0 유지. RAG 체인 반영과 실제 키 확인은 [후속 목록](../proposals/api-dev-env-followups.md) G7.
+
+## 8. 위험
 
 - 2단계가 늦어지면 ⑤는 파일명을 직접 넣는 테스트로 완료하고, chat → documents 연결 확인은 `rag` 연결 때로 미룬다(mock·llm은 `sources`가 비어 있다).
 - api-implementation 스킬의 예시 코드는 1단계에서 문서만 고친다. 실제 동작 확인은 ③ ④ 구현의 게이트에서 한다.

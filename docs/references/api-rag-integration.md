@@ -106,7 +106,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 - [ ] 3절 준비 항목 4개 충족
 - [ ] 설계안에 `rag` 백엔드와 에러·타임아웃 명세 반영
 - [ ] `RagAnswerGenerator` + 테스트 (fake 체인)
-- [ ] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동
+- [x] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동 (API 엔드포인트 계획 PR ③~⑤ smoke로 확인)
 - [ ] api-invariants 완료 게이트, smoke 통과
 - [ ] `.env.example`, environment.md, README 환경 변수 설명 갱신
 - [ ] 이 문서 1절 표의 `rag` 행을 "예정"에서 실제 상태로 갱신
