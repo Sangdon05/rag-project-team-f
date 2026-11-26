@@ -134,9 +134,19 @@ class GeneratorWiringTest(unittest.TestCase):
     def test_llm_backend_builds_without_network(self):
         env = {"OPENAI_CHAT_MODEL": "test-model", "OPENAI_API_KEY": "test-key-not-secret"}  # security: allow 테스트 더미 키, 네트워크 호출 없음
         with mock.patch.dict(os.environ, env):
+            os.environ.pop("OPENAI_REASONING_EFFORT", None)   # 미지정 → 기본 low
             generator = create_answer_generator(self.settings("llm"))
         self.assertIsInstance(generator, LlmAnswerGenerator)
         self.assertEqual(generator.model.model_name, "test-model")
+        self.assertEqual(generator.model.temperature, 0)
+        self.assertEqual(generator.model.reasoning_effort, "low")
+
+    def test_llm_backend_reads_reasoning_effort(self):
+        env = {"OPENAI_CHAT_MODEL": "test-model", "OPENAI_API_KEY": "test-key-not-secret",  # security: allow 테스트 더미 키, 네트워크 호출 없음
+               "OPENAI_REASONING_EFFORT": "medium"}
+        with mock.patch.dict(os.environ, env):
+            generator = create_answer_generator(self.settings("llm"))
+        self.assertEqual(generator.model.reasoning_effort, "medium")
         self.assertEqual(generator.model.temperature, 0)
 
     def test_unknown_backend_fails_at_startup(self):

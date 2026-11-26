@@ -48,6 +48,7 @@ uv run python -m unittest discover -s tests            # 테스트
 | --- | --- |
 | `OPENAI_API_KEY` | 각자 발급 |
 | `OPENAI_CHAT_MODEL` / `OPENAI_EMBEDDING_MODEL` | 사용할 LLM / 임베딩 모델 |
+| `OPENAI_REASONING_EFFORT` | API `llm` 모드 추론 강도 (기본 `low`) |
 | `UPSTAGE_API_KEY` | Solar 임베딩 API 인증 키 |
 | `UPSTAGE_EMBEDDING_MODEL` / `UPSTAGE_QUERY_MODEL` | Solar 문서 / 질문 임베딩 모델 ID |
 | `POSTGRES_*`, `DATABASE_URL` | DB 접속 정보 (docker compose와 앱, Solar 전달본에서 사용). Solar 작업 전 실제 대상·권한 확인 |

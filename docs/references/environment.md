@@ -46,6 +46,7 @@ docker compose ps            # STATUS가 healthy인지 확인
 | --- | --- |
 | `OPENAI_API_KEY` | 각자 발급. 커밋·공유 금지 |
 | `OPENAI_CHAT_MODEL` | `gpt-6-luna` |
+| `OPENAI_REASONING_EFFORT` | API `llm` 모드 추론 강도. 기본 `low`(팀 결정), temperature 0은 유지. `ANSWER_BACKEND=llm`일 때만 읽는다 |
 | `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` |
 | `UPSTAGE_API_KEY` | Solar 임베딩 API 인증. 커밋·공유 금지 |
 | `UPSTAGE_EMBEDDING_MODEL` | Solar 문서 임베딩 모델 ID |

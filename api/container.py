@@ -35,7 +35,11 @@ def create_answer_generator(settings: Settings) -> AnswerGenerator:
     if settings.answer_backend == "llm":
         from langchain_openai import ChatOpenAI   # llm 모드에서만 키·모델명이 필요하다
 
-        return LlmAnswerGenerator(ChatOpenAI(model=os.environ["OPENAI_CHAT_MODEL"], temperature=0))
+        return LlmAnswerGenerator(ChatOpenAI(
+            model=os.environ["OPENAI_CHAT_MODEL"],
+            temperature=0,
+            reasoning_effort=os.environ.get("OPENAI_REASONING_EFFORT", "low"),
+        ))
     return MockAnswerGenerator()
 
 
