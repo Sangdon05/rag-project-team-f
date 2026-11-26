@@ -15,10 +15,10 @@
 | --- | --- | --- |
 | [data-normalize](../../../.claude/skills/data-normalize/SKILL.md) | data-engineer | 해시 고정 데이터 보호, Red·Blue 정제 데이터·출처 검증, Solar 문서 생성 범위 |
 | [chunking](../../../.claude/skills/chunking/SKILL.md) | data-engineer | 포켓몬별 Markdown 청킹·근거 연결 및 Solar 제목 기반 청크 |
-| [vectordb](../../../.claude/skills/vectordb/SKILL.md) | data-engineer | 기존 pgvector 컬렉션 sync와 별도 Solar 벡터 전달·증분 적재 |
+| [vectordb](../../../.claude/skills/vectordb/SKILL.md) | data-engineer | 기존 pgvector 컬렉션 sync, 빈 볼륨 최초 Solar 스키마 초기화와 별도 벡터 복원·증분 적재 |
 | [tool-calling](../../../.claude/skills/tool-calling/SKILL.md) | rag-developer | 향후 정형 조회·상성·검색 툴 계약과 Solar CLI의 경계 |
 | [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | Solar 질문 CLI·검색·트레이스와 향후 에이전트 체인 |
-| [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도, 원본 문서 규칙, 동기화 검사 스크립트 |
+| [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도와 동기화 검사, Docker 초기화·Solar 스키마 관련 문서 연결 점검 |
 | [spec-plan](../../../.claude/skills/spec-plan/SKILL.md) | 오케스트레이터 | 업무 스펙(HITL 승인)·작업 계획 형식과 frontmatter, 완료 기준 규칙, 활성·보관 문서 관리 스크립트 |
 | [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |
 | [rag-eval](../../../.claude/skills/rag-eval/SKILL.md) | eval | 사용자 평가셋 검증·의견서, 실행 기록, 발제 지표, 사람 채점 집계, 실패 분석, 비교 보고서 |

@@ -21,14 +21,16 @@
 
 ### 설정
 
+기동 전 5432 포트의 기존 서비스와 DB·볼륨을 확인한다. 충돌 시 기존 서비스를 임의로 멈추거나 DB·볼륨을 삭제하지 말고 팀과 대상을 합의한다.
+
 ```bash
 uv sync                  # .venv 생성 + 패키지 설치 (Python 3.13이 없으면 자동 설치)
-cp .env.example .env     # .env에 OPENAI_API_KEY 입력
-docker compose up -d     # PostgreSQL + pgvector 기동 (최초 기동 시 vector 확장 생성)
+[ -e .env ] || cp .env.example .env  # 각자 API 키를 안전하게 설정하고 값을 출력하지 않는다
+docker compose up -d     # 빈 볼륨 최초 기동: vector 확장과 빈 Solar 스키마 생성
 docker compose ps        # STATUS가 healthy인지 확인
 ```
 
-로컬에서 다른 Postgres가 5432 포트를 쓰고 있으면 먼저 멈춘다. 포트는 바꾸지 않는다.
+Compose 초기화는 빈 PGDATA의 최초 기동에만 적용된다. 기본 DB(`POSTGRES_DB`, 기본값 `pokedex`)에 빈 테이블만 만들고 데이터나 벡터는 적재하지 않는다. Solar 스키마 생성 중 SQL 오류가 나면 스키마 생성 트랜잭션은 롤백되지만, 이미 초기화된 PGDATA에서는 재시작해도 자동 재시도되지 않는다. `healthy`는 스키마 준비의 증거가 아니다. 기존 볼륨을 삭제하지 말고 스키마·세 테이블의 존재를 확인해 승인된 대상에만 수동 초기화한다. 기존 볼륨과 복원 절차는 [Solar 안내](solar_handoff/README.md#기존-solar-벡터를-팀-db로-전달)를 따른다.
 
 ### 확인
 
