@@ -21,7 +21,7 @@ description: Use when writing or fixing api/ code. Per-layer code patterns for s
 
    | 변수 | 기본값 | 뜻 |
    | --- | --- | --- |
-   | `ANSWER_BACKEND` | `mock` | 답변 생성기 선택 `mock` \| `llm` (나중에 `rag`) |
+   | `ANSWER_BACKEND` | `mock` | 답변 생성기 선택 `mock` \| `llm` \| `rag` (`rag` 설정은 [연결 가이드](../../../docs/references/api-rag-integration.md)) |
    | `API_CORS_ORIGINS` | (빈 값) | 허용할 프론트 origin, 쉼표 구분 |
    | `API_MAX_MESSAGES` | `20` | 요청당 메시지 수 상한 (메시지 길이 한도는 두지 않는다, R11) |
    | `API_DOCUMENTS_DIR` | `solar_handoff/documents` | documents 슬라이스가 읽는 원문 Markdown 폴더 |
@@ -195,13 +195,17 @@ async def chat(body: ChatRequest, service: Annotated[AskService, Depends(provide
 ```python
 # api/container.py (요지)
 def create_answer_generator(settings: Settings) -> AnswerGenerator:
+    if settings.answer_backend == "rag":            # 이 분기 안에서만 solar_handoff를 import한다
+        from starlette.concurrency import run_in_threadpool
+        from solar_handoff.src.conversation import create_service
+        return RagAnswerGenerator(create_service, run_in_threadpool)
     if settings.answer_backend == "mock":
         return MockAnswerGenerator()
     if settings.answer_backend == "llm":
         from langchain_openai import ChatOpenAI       # llm 모드에서만 키가 필요하다
         return LlmAnswerGenerator(ChatOpenAI(model=os.environ["OPENAI_CHAT_MODEL"], temperature=0,
                                                reasoning_effort=os.environ.get("OPENAI_REASONING_EFFORT", "low")))
-    raise RuntimeError(f"알 수 없는 ANSWER_BACKEND: {settings.answer_backend!r} (mock | llm)")
+    raise RuntimeError(f"알 수 없는 ANSWER_BACKEND: {settings.answer_backend!r} (mock | llm | rag)")
 
 
 def wire_dependencies(app: FastAPI, settings: Settings) -> None:

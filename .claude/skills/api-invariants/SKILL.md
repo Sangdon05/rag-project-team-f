@@ -48,9 +48,9 @@ FastAPI 서비스(`api/`)가 어떤 작업에서도 지켜야 하는 규칙과 �
 
 | ID | 규칙 | 검사 |
 | --- | --- | --- |
-| R8 | RAG 경계 패키지(langchain*, langgraph, openai, tiktoken, ragas, psycopg, sqlalchemy, RAG 패키지 `pokedex`, 저장소 `scripts`)는 infrastructure와 조립 지점(`main.py`, `container.py`)에서만 import한다. | 자동(`[외부의존]`) |
-| R9 | 답변 생성기 계약(`AnswerGenerator`, `Answer`, `Source`)은 [연결 가이드](../../../docs/references/api-rag-integration.md)가 원본이다. 계약을 바꾸면 가이드를 먼저 고친다. 포켓몬 지식(상성 계산, 데이터 조회, 질문 분기)을 API에 구현하지 않는다. 답변 내용은 모두 생성기를 거친다(툴·체인은 rag-developer 담당). `api/` 작업에서 `scripts/`, `data/`, `src/pokedex/`, `eval/`을 고치지 않는다. | 정독 |
-| R10 | 서버는 상태가 없다. 대화·사용자 데이터를 저장하지 않고 DB에 연결하지 않는다. 모듈 전역 객체는 상태 없는 것(설정, 생성기 클라이언트)만 둔다. | 정독 |
+| R8 | RAG 경계 패키지(langchain*, langgraph, openai, tiktoken, ragas, psycopg, sqlalchemy, RAG 패키지 `pokedex`, 저장소 `scripts`, Solar 대화 서비스 `solar_handoff`)는 infrastructure와 조립 지점(`main.py`, `container.py`)에서만 import한다. | 자동(`[외부의존]`) |
+| R9 | 답변 생성기 계약(`AnswerGenerator`, `Answer`, `Source`)은 [연결 가이드](../../../docs/references/api-rag-integration.md)가 원본이다. 계약을 바꾸면 가이드를 먼저 고친다. 포켓몬 지식(상성 계산, 데이터 조회, 질문 분기)을 API에 구현하지 않는다. 답변 내용은 모두 생성기를 거친다(툴·체인은 rag-developer 담당). `api/` 작업에서 `scripts/`, `data/`, `src/pokedex/`, `solar_handoff/`, `eval/`을 고치지 않는다. | 정독 |
+| R10 | 서버는 상태가 없다. 대화·사용자 데이터를 저장하지 않고 API 코드가 DB에 직접 연결하지 않는다(`rag` 모드에서 RAG 서비스가 자기 설정으로 검색 DB를 읽는 것은 허용, [연결 가이드](../../../docs/references/api-rag-integration.md) 3절). 모듈 전역 객체는 상태 없는 것(설정, 생성기 클라이언트)만 둔다. | 정독 |
 
 ## 5. 입력과 보안
 

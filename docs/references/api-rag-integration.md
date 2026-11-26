@@ -81,7 +81,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 
 1. **import 가능한 진입점.** API 어댑터가 부를 함수 또는 객체 하나. 예: `answer(question: str, history: list[dict]) -> {"answer": str, "sources": [...]}` (비동기면 더 좋다).
    - `solar_handoff.src.conversation.create_service().answer(messages)`가 동기 진입점이다. 어댑터는 전체 대화를 role/content 목록으로 넘기고 조립부가 주입한 스레드 실행기로 호출한다. 서비스는 질문 UTF-8 3,800바이트·총 대화128,000바이트 제한을 별도로 검증하며 위반은400으로 변환한다.
-2. **설정은 환경 변수로.** 모델명, `DATABASE_URL`, `PGVECTOR_COLLECTION` 등을 체인이 직접 읽는다. API는 DB 접속 정보를 알지 않는다.
+2. **설정은 환경 변수로.** 모델명, `DATABASE_URL`, `SOLAR_RETRIEVAL_METHOD` 등을 체인이 직접 읽는다. API 코드는 DB 접속 정보를 알지 않고 DB에 직접 연결하지 않는다(검색 DB 연결은 RAG 서비스 몫, api-invariants R10).
 3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 도감번호 3자리다. Solar 질문 CLI는 `source_ref_id` 대신 `document_id`·`source_document`를 내보내므로 어댑터가 변환한다(2절 `Source`). 체인 쪽 변경은 필요 없다.
 4. **동작 확인 기록.** 툴·체인 테스트 통과, 사용한 `index_version` 기록(langchain-rag 스킬의 완료 조건).
 
@@ -114,6 +114,6 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 - [ ] 설계안에 `rag` 백엔드와 에러·타임아웃 명세 반영
 - [x] `RagAnswerGenerator` + 테스트 (fake 체인)
 - [x] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동 (API 엔드포인트 계획 smoke로 확인)
-- [ ] api-invariants 완료 게이트, smoke 통과
+- [x] api-invariants 완료 게이트, smoke 통과 (2026-11-26 main 3945d46: 게이트 4개 통과, mock smoke 모두 PASS, `rag` 실제 호출 2회 200)
 - [x] `.env.example`, environment.md, README 환경 변수 설명 갱신
 - [x] 이 문서 1절 표의 `rag` 행을 실제 구현으로 갱신
