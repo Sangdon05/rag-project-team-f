@@ -8,13 +8,13 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 오케스트레이터(디렉터)가 업무를 발주하기 전에 스펙을 쓰고, 사용자와 모호한 점을 해결해 승인받고, 계획을 세워 발주·검증한 뒤, 완료 기준을 충족하면 문서를 보관하는 절차다.
 
 **사람의 판단(HITL)이 필요한 것은 스펙뿐이다.** 스펙의 미결 사항 해결·승인·변경·취소, 완료 기준 면제(`waived`)는 사용자가 정한다. 계획 작성·승인·변경, 발주, 막힌 작업 처리, 계획 취소, 완료 판정과 보관은 오케스트레이터(디렉터)가 스펙 범위 안에서 판단해 진행하고 결과를 보고한다.
-문서 상태의 원본은 각 문서의 frontmatter다. 목록 README는 스크립트가 frontmatter로 만든다.
+문서 상태의 원본은 각 문서의 frontmatter다. **인덱스 파일(`README.md`, `index.md` 등)은 만들지 않는다.** 끝난 문서를 보관 폴더로 옮기는 이유가 이것이다: 활성 폴더에는 진행 중인 문서만 남으므로 폴더 자체가 목록이 되고, 목록 파일을 따로 갱신할 필요가 없다. 목록이 필요하면 `workdocs.py list`로 출력만 한다.
 
 구성:
 
 - [templates/spec.md](templates/spec.md), [templates/plan.md](templates/plan.md) — 문서 형식 (`new` 명령이 복사)
 - [references/completion-criteria.md](references/completion-criteria.md) — 완료 기준 작성·판정 규칙
-- `scripts/workdocs.py` — 생성, 검사, 병렬 단계 계산, 승인, 보관, 목록 갱신 (stdlib만 사용)
+- `scripts/workdocs.py` — 생성, 검사, 병렬 단계 계산, 승인, 보관, 목록 출력 (stdlib만 사용)
 
 ## 언제 쓰는가
 
@@ -24,15 +24,15 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 
 ## 저장 위치와 이름
 
-| 문서 | 활성 | 보관 | 목록 |
-| --- | --- | --- | --- |
-| 스펙 | `docs/specs/` | `docs/archives/specs/` | [docs/specs/README.md](../../../docs/specs/README.md) |
-| 계획 | `docs/plans/` | `docs/archives/plans/` | [docs/plans/README.md](../../../docs/plans/README.md) |
-| 보관 | | | [docs/archives/README.md](../../../docs/archives/README.md) |
+| 문서 | 활성 | 보관 |
+| --- | --- | --- |
+| 스펙 | `docs/specs/` | `docs/archives/specs/` |
+| 계획 | `docs/plans/` | `docs/archives/plans/` |
 
 - 파일 이름: `YYYY-MM-DD-{기능명 또는 작업명}.md`. 날짜는 작성일(`created`), 이름은 영문 소문자·숫자 kebab-case다 (예: `2026-11-26-chunk-schema-contract.md`).
 - 스펙과 그 계획은 같은 이름을 써도 된다. 날짜는 각자의 작성일이다.
-- 활성 폴더에는 진행 중인 문서만, 보관 폴더에는 `done`·`cancelled` 문서만 둔다. 검사가 강제한다.
+- 활성 폴더에는 진행 중인 문서만, 보관 폴더에는 `done`·`cancelled` 문서만 둔다. 인덱스 파일과 하위 폴더는 두지 않는다. 검사가 강제한다.
+- 진행 중 목록: `workdocs.py list`, 보관 목록: `workdocs.py list --archived`. 결과를 파일로 저장하지 않는다.
 - 보관 문서는 고치지 않는다. 오타도 그대로 둔다(`archived_hash` 검사). 다시 할 일이 생기면 새 스펙을 쓰고 `related`에 옛 id를 적는다.
 
 ## frontmatter
@@ -137,7 +137,7 @@ description: Use when ordering work that needs a spec and plan, resolving spec a
 
 1. 9절 완료 판정 표를 채운다. 스펙의 모든 AC를 판정한다(취소한 작업의 AC 포함). 확인자 규칙은 [completion-criteria](references/completion-criteria.md) 6번이다.
 2. `workdocs.py archive <spec-id> --dry-run`으로 조건을 확인한다. 조건은 [completion-criteria 판정 규칙](references/completion-criteria.md#판정-규칙)이다.
-3. 통과하면 `workdocs.py archive <spec-id>`. 스펙과 연결된 활성 계획을 함께 `done`으로 바꾸고(`completed_at`, `archived_at`, `updated`, `archived_hash`), 보관 폴더로 옮기고(추적 중인 파일은 `git mv`, 아직 추적되지 않은 파일은 이동), 저장소 Markdown의 상대 링크와 목록 README를 갱신한다.
+3. 통과하면 `workdocs.py archive <spec-id>`. 스펙과 연결된 활성 계획을 함께 `done`으로 바꾸고(`completed_at`, `archived_at`, `updated`, `archived_hash`), 보관 폴더로 옮기고(추적 중인 파일은 `git mv`, 아직 추적되지 않은 파일은 이동), 저장소 Markdown에서 옮긴 문서를 가리키던 상대 링크를 갱신한다.
 4. 5절 사용자 보고 형식으로 완료를 보고한다.
 
 중단: `workdocs.py cancel spec|plan <id> --reason "..."`.
@@ -161,9 +161,9 @@ uv run python .claude/skills/spec-plan/scripts/workdocs.py check --strict   # PR
 | done | 완료 처리 조건 미충족 |
 
 보관 문서에는 WARN을 내지 않는다(고칠 수 없으므로). 출력 끝의 `루트`가 저장소 경로인지 확인한다(`WORKDOCS_ROOT`는 테스트용).
-| index | 목록 README가 frontmatter와 다름 → `workdocs.py index` |
+| index | 스펙·계획 폴더에 인덱스 파일(`README.md`, `index.md`)이나 하위 폴더가 있음 → 지운다 |
 
-문서 링크·허브 도달성은 [doc-sync](../doc-sync/SKILL.md)가 따로 검사한다. 목록 README가 활성·보관 문서를 모두 링크하므로 `index`를 최신으로 두면 고아 문서가 생기지 않는다.
+문서 링크는 [doc-sync](../doc-sync/SKILL.md)가 따로 검사한다. 스펙·계획 폴더는 허브 링크가 없으므로 doc-sync 고아 문서 검사에서 빠진다(`doc-map.json`의 `orphan_exclude`). 대신 이 검사가 폴더의 문서를 모두 확인한다.
 
 ## 하지 않는 것
 
@@ -171,5 +171,6 @@ uv run python .claude/skills/spec-plan/scripts/workdocs.py check --strict   # PR
 - 반대로 계획·발주·작업 처리를 사용자 확인 대기로 멈추지 않는다. 디렉터가 정하고 보고한다.
 - 완료 기준을 통과시키려고 승인 후 AC를 몰래 바꾸거나 지우지 않는다. 바꾸면 재승인을 받는다.
 - 평가셋 정답이나 `eval/` 내용을 스펙·계획에 옮겨 적지 않는다 (`AGENTS.md` 가드레일).
-- 보관 문서를 고치지 않는다. 목록 README를 손으로 고치지 않는다 (`index`가 덮어쓴다).
+- 보관 문서를 고치지 않는다.
+- 스펙·계획 목록 파일(README, index)을 만들지 않는다. 다른 문서에서 스펙·계획 폴더를 가리킬 때는 링크 대신 인라인 코드(`docs/specs/`)로 쓴다.
 - 세부 절차를 스펙·계획에 복사하지 않는다. 해당 스킬·`AGENTS.md`로 링크한다.

@@ -9,7 +9,9 @@
     uv run python .claude/skills/spec-plan/scripts/workdocs.py start <plan-id>
     uv run python .claude/skills/spec-plan/scripts/workdocs.py archive <spec-id> [--dry-run]
     uv run python .claude/skills/spec-plan/scripts/workdocs.py cancel spec|plan <id> --reason "..." [--dry-run]
-    uv run python .claude/skills/spec-plan/scripts/workdocs.py index
+    uv run python .claude/skills/spec-plan/scripts/workdocs.py list [--archived]
+
+목록(인덱스) 파일은 만들지 않는다. 활성 폴더 자체가 진행 중 목록이고, 끝난 문서는 보관 폴더로 옮긴다.
 
 규칙 원본은 같은 스킬의 SKILL.md와 references/completion-criteria.md다.
 """
@@ -30,7 +32,6 @@ ROOT = Path(os.environ.get("WORKDOCS_ROOT") or SKILL.parents[2])
 
 ACTIVE = {"spec": "docs/specs", "plan": "docs/plans"}
 ARCHIVE = {"spec": "docs/archives/specs", "plan": "docs/archives/plans"}
-INDEX = {"spec": "docs/specs/README.md", "plan": "docs/plans/README.md", "archive": "docs/archives/README.md"}
 STATUSES = {
     "spec": ["draft", "clarifying", "approved", "done", "cancelled"],
     "plan": ["draft", "approved", "in_progress", "done", "cancelled"],
@@ -50,7 +51,6 @@ DIRECTORS = {"오케스트레이터", "디렉터"}  # 계획 승인·작업 판�
 VERDICTS = {"pass", "fail", "waived"}
 METHODS = ("명령", "파일", "사람", "보고")
 VAGUE = ["적절", "충분", "잘 ", "깔끔", "가능한 한", "가급적", "최대한", "등등", "원활"]
-MARK_START, MARK_END = "<!-- workdocs:index:start -->", "<!-- workdocs:index:end -->"
 
 errors: list[str] = []
 warns: list[str] = []
@@ -117,12 +117,35 @@ class Doc:
         self.status = self.fm.get("status", "")
 
 
+INDEX_NAMES = {"readme.md", "index.md", "_index.md"}
+
+
+def is_index_name(name: str) -> bool:
+    return name.lower() in INDEX_NAMES
+
+
+def stray_files() -> list[str]:
+    """문서 폴더 안의 인덱스 파일과 하위 폴더 (이 폴더들에는 문서만 둔다)."""
+    out = []
+    for folder in [*ACTIVE.values(), "docs/archives", *ARCHIVE.values()]:
+        d = ROOT / folder
+        if not d.is_dir():
+            continue
+        for p in sorted(d.iterdir()):
+            rel = p.relative_to(ROOT).as_posix()
+            if p.is_file() and is_index_name(p.name):
+                out.append(rel)
+            elif p.is_dir() and p.relative_to(ROOT).as_posix() not in ARCHIVE.values():
+                out.append(rel + "/")
+    return out
+
+
 def all_docs() -> list[Doc]:
     out = []
     for folder in list(ACTIVE.values()) + list(ARCHIVE.values()):
         d = ROOT / folder
         if d.is_dir():
-            out += [Doc(p) for p in sorted(d.glob("*.md")) if p.name != "README.md"]
+            out += [Doc(p) for p in sorted(d.glob("*.md")) if not is_index_name(p.name)]
     return out
 
 
@@ -419,14 +442,6 @@ def check_plan_done(d: Doc, spec: Doc, tasks: list[dict], verdict: list[dict], s
                 errors.append(f"[done] {where}: {ac} 확인자 '{confirmer}'에 수행 담당 '{a}'가 들어 있음")
 
 
-def check_index() -> None:
-    for key, rel in INDEX.items():
-        p = ROOT / rel
-        want = render_index(key)
-        if not p.exists() or extract_block(p.read_text(encoding="utf-8")) != want:
-            errors.append(f"[index] {rel}: 목록이 최신이 아님 — `workdocs.py index` 실행")
-
-
 def run_check(strict: bool) -> int:
     docs = all_docs()
     seen: dict[tuple[str, str], str] = {}
@@ -435,76 +450,14 @@ def run_check(strict: bool) -> int:
             errors.append(f"[frontmatter] {d.rel}: {d.type} id '{d.id}'가 {seen[(d.type, d.id)]}와 중복")
         seen[(d.type, d.id)] = d.rel
         check_doc(d, docs)
-    check_index()
+    for rel in stray_files():
+        errors.append(f"[index] {rel}: 스펙·계획 폴더에 인덱스 파일·하위 폴더를 두지 않는다 — 목록은 `workdocs.py list`")
     for e in errors:
         print("ERROR", e)
     for w in warns:
         print("WARN ", w)
     print(f"\n루트 {ROOT}\n문서 {len(docs)}개, ERROR {len(errors)}, WARN {len(warns)}")
     return 1 if errors or (strict and warns) else 0
-
-
-# ── 목록 README ───────────────────────────────────────────────────────────
-INDEX_HEAD = {
-    "spec": "# 활성 스펙\n\n진행 중인 작업 스펙이다. 작성·승인·보관 규칙은 "
-            "[spec-plan 스킬](../../.claude/skills/spec-plan/SKILL.md)을 따른다. "
-            "완료·취소된 스펙은 [보관 목록](../archives/README.md)에 있다.\n",
-    "plan": "# 활성 계획\n\n진행 중인 작업 계획이다. 작성·승인·보관 규칙은 "
-            "[spec-plan 스킬](../../.claude/skills/spec-plan/SKILL.md)을 따른다. "
-            "완료·취소된 계획은 [보관 목록](../archives/README.md)에 있다.\n",
-    "archive": "# 보관 문서\n\n완료(done)·취소(cancelled)된 스펙과 계획이다. 수정하지 않는다. "
-               "규칙은 [spec-plan 스킬](../../.claude/skills/spec-plan/SKILL.md)을 따른다.\n",
-}
-
-
-def render_index(key: str) -> str:
-    docs = all_docs()
-    def cell(s) -> str:
-        return str(s or "-").replace("|", "\\|")
-    if key in ("spec", "plan"):
-        rows = [d for d in docs if d.type == key and not d.archived]
-        other = "계획" if key == "spec" else "스펙"
-        lines = [f"| 문서 | 제목 | 상태 | {other} | 갱신 |", "| --- | --- | --- | --- | --- |"]
-        for d in rows:
-            if key == "spec":
-                rel = ", ".join(x.id for x in docs if x.type == "plan" and x.fm.get("spec") == d.id) or "-"
-            else:
-                rel = d.fm.get("spec", "-")
-            lines.append(f"| [{d.id}]({d.path.name}) | {cell(d.fm.get('title'))} | {d.status} | {rel} | {cell(d.fm.get('updated'))} |")
-        if not rows:
-            lines.append("| - | (없음) | | | |")
-        return "\n".join(lines)
-    parts = []
-    for t, label in (("spec", "스펙"), ("plan", "계획")):
-        rows = [d for d in docs if d.type == t and d.archived]
-        lines = [f"## {label}", "", "| 문서 | 제목 | 결과 | 완료일 | 보관일 |", "| --- | --- | --- | --- | --- |"]
-        for d in rows:
-            sub = Path(ARCHIVE[t]).name
-            lines.append(f"| [{d.id}]({sub}/{d.path.name}) | {cell(d.fm.get('title'))} | {d.status} | "
-                         f"{cell(d.fm.get('completed_at'))} | {cell(d.fm.get('archived_at'))} |")
-        if not rows:
-            lines.append("| - | (없음) | | | |")
-        parts.append("\n".join(lines))
-    return "\n\n".join(parts)
-
-
-def extract_block(text: str) -> str:
-    m = re.search(re.escape(MARK_START) + r"\n(.*?)\n" + re.escape(MARK_END), text, re.S)
-    return m.group(1) if m else ""
-
-
-def write_index() -> None:
-    for key, rel in INDEX.items():
-        p = ROOT / rel
-        block = f"{MARK_START}\n{render_index(key)}\n{MARK_END}"
-        if p.exists() and MARK_START in (text := p.read_text(encoding="utf-8")):
-            new = re.sub(re.escape(MARK_START) + r".*?" + re.escape(MARK_END), lambda _: block, text, flags=re.S)
-        else:
-            new = INDEX_HEAD[key] + "\n" + block + "\n"
-        p.parent.mkdir(parents=True, exist_ok=True)
-        if not p.exists() or p.read_text(encoding="utf-8") != new:
-            p.write_text(new, encoding="utf-8")
-            print(f"갱신 {rel}")
 
 
 # ── 이동과 링크 갱신 ──────────────────────────────────────────────────────
@@ -548,9 +501,8 @@ def move_docs(moves: list[tuple[Doc, dict]], dry: bool) -> None:
         return
     for d, upd in moves:
         d.save(upd)
-    index_files = {ROOT / rel for rel in INDEX.values()}
     for f in repo_md():
-        if f in mapping or f in index_files:  # 목록은 write_index가 다시 만든다
+        if f in mapping:
             continue
         text = f.read_text(encoding="utf-8")
         new = relink(text, f.parent, mapping)
@@ -567,7 +519,6 @@ def move_docs(moves: list[tuple[Doc, dict]], dry: bool) -> None:
             subprocess.run(["git", "mv", str(old), str(new)], cwd=ROOT, check=True)
         else:
             shutil.move(old, new)
-    write_index()
 
 
 # ── 명령 ─────────────────────────────────────────────────────────────────
@@ -601,7 +552,6 @@ def cmd_new(a) -> int:
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(text, encoding="utf-8")
     print(dest.relative_to(ROOT).as_posix())
-    write_index()
     return 0
 
 
@@ -653,7 +603,20 @@ def cmd_approve(a) -> int:
         print("승인하지 않음 (파일 원상 복구)")
         return 1
     print(f"{d.rel}: approved by {a.by}")
-    write_index()
+    return 0
+
+
+def cmd_list(a) -> int:
+    """frontmatter로 목록을 출력한다 (파일로 쓰지 않는다)."""
+    docs = all_docs()
+    for kind in ("spec", "plan"):
+        rows = [d for d in docs if d.type == kind and d.archived == a.archived]
+        print(f"[{kind}] {len(rows)}개")
+        for d in rows:
+            link = d.fm.get("spec", "") if kind == "plan" else ", ".join(
+                x.id for x in docs if x.type == "plan" and x.fm.get("spec") == d.id)
+            date = d.fm.get("archived_at") if a.archived else d.fm.get("updated")
+            print(f"  {d.id}  {d.status}  {date}  {d.fm.get('title', '')}" + (f"  ↔ {link}" if link else ""))
     return 0
 
 
@@ -665,7 +628,6 @@ def cmd_start(a) -> int:
         sys.exit(f"중단: {d.id}는 {d.status} — 사용자 승인(approved) 뒤에 발주를 시작한다")
     d.save({"status": "in_progress", "updated": today()})
     print(f"{d.rel}: in_progress")
-    write_index()
     return 0
 
 
@@ -739,13 +701,12 @@ def main() -> int:
     p = sp.add_parser("archive"); p.add_argument("id"); p.add_argument("--dry-run", action="store_true")
     p = sp.add_parser("cancel"); p.add_argument("kind", choices=["spec", "plan"]); p.add_argument("id"); p.add_argument("--reason", required=True)
     p.add_argument("--dry-run", action="store_true")
-    sp.add_parser("index")
+    p = sp.add_parser("list"); p.add_argument("--archived", action="store_true")
     a = ap.parse_args()
     if a.cmd == "check":
         return run_check(a.strict)
-    if a.cmd == "index":
-        write_index()
-        return 0
+    if a.cmd == "list":
+        return cmd_list(a)
     return {"new": cmd_new, "waves": cmd_waves, "approve": cmd_approve, "start": cmd_start,
             "archive": cmd_archive, "cancel": cmd_cancel}[a.cmd](a)
 

@@ -81,7 +81,8 @@ def check_orphans(files: list[str], cfg: dict) -> None:
         if f.endswith(".md"):
             stack += [normpath(resolve(f, l)) for l in md_links(f)]
     for f in files:
-        if f.endswith(".md") and match_any(f, cfg["orphan_scope"]) and f not in seen:
+        if f.endswith(".md") and match_any(f, cfg["orphan_scope"]) and f not in seen \
+                and not match_any(f, cfg.get("orphan_exclude", [])):
             errors.append(f"[orphan] {f}: AGENTS.md/README.md에서 링크로 도달할 수 없음")
 
 

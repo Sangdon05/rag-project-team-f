@@ -147,13 +147,14 @@ class WorkDocsTests(unittest.TestCase):
     ]
 
     # 테스트 ------------------------------------------------------------
-    def test_new_spec_uses_name_rule_and_updates_index(self):
+    def test_new_spec_uses_name_rule_and_creates_no_index(self):
         r = self.run_wd("new", "spec", "sample", "--title", "예시")
         self.assertEqual(r.returncode, 0, r.stderr)
         text = self.read(f"docs/specs/{TODAY}-sample.md")
         self.assertIn(f"id: {TODAY}-sample", text)
         self.assertIn("status: draft", text)
-        self.assertIn(f"[{TODAY}-sample]({TODAY}-sample.md)", self.read("docs/specs/README.md"))
+        self.assertEqual(sorted(p.name for p in (self.root / "docs/specs").iterdir()), [f"{TODAY}-sample.md"])
+        self.assertIn(f"{TODAY}-sample  draft", self.run_wd("list").stdout)
         self.assertEqual(self.run_wd("check").returncode, 0)
         bad = self.run_wd("new", "spec", "Health_API", "--title", "x")
         self.assertNotEqual(bad.returncode, 0)
@@ -242,7 +243,6 @@ class WorkDocsTests(unittest.TestCase):
         self.write_plan(self.GOOD_TASKS, self.GOOD_VERDICT, status="in_progress")
         self.write("docs/notes.md", f"[스펙](specs/{self.spec_id}.md#6-완료-기준), [계획](plans/{self.plan_id}.md)\n")
         self.git("add", "-A")
-        self.run_wd("index")
         r = self.run_wd("archive", self.spec_id)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         spec = self.read(f"docs/archives/specs/{self.spec_id}.md")
@@ -256,8 +256,10 @@ class WorkDocsTests(unittest.TestCase):
         notes = self.read("docs/notes.md")
         self.assertIn(f"archives/specs/{self.spec_id}.md#6-완료-기준", notes)
         self.assertIn(f"archives/plans/{self.plan_id}.md", notes)
-        self.assertIn(f"specs/{self.spec_id}.md", self.read("docs/archives/README.md"))
-        self.assertNotIn(self.spec_id, self.read("docs/specs/README.md"))
+        self.assertEqual(list((self.root / "docs/specs").iterdir()), [])
+        self.assertEqual(sorted(p.name for p in (self.root / "docs/archives").iterdir()), ["plans", "specs"])
+        self.assertIn(f"{self.spec_id}  done", self.run_wd("list", "--archived").stdout)
+        self.assertNotIn(self.spec_id, self.run_wd("list").stdout)
         r = self.run_wd("check", "--strict")
         self.assertEqual(r.returncode, 0, r.stdout)
 
@@ -359,6 +361,13 @@ class WorkDocsTests(unittest.TestCase):
         r = self.run_wd("cancel", "plan", self.plan_id, "--reason", "작업 재구성")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("status: approved", self.read(f"docs/specs/{self.spec_id}.md"))
+
+    def test_index_files_are_rejected(self):
+        for rel in ("docs/specs/README.md", "docs/plans/index.md", "docs/archives/README.md"):
+            self.write(rel, "# 목록\n")
+        out = self.run_wd("check").stdout
+        for rel in ("docs/specs/README.md", "docs/plans/index.md", "docs/archives/README.md"):
+            self.assertIn(f"[index] {rel}", out)
 
     def test_start_requires_approved_plan(self):
         self.write_spec(status="approved")

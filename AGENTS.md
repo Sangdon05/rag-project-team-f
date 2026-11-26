@@ -15,7 +15,7 @@
 | 개발 환경 (Python, uv, .env, PostgreSQL) | [docs/references/environment.md](docs/references/environment.md)                                                        |
 | 문서 동기화 규칙, 검사 스크립트          | [.claude/skills/doc-sync/SKILL.md](.claude/skills/doc-sync/SKILL.md)                                                    |
 | 업무 스펙·계획 작성·승인·보관 규칙       | [.claude/skills/spec-plan/SKILL.md](.claude/skills/spec-plan/SKILL.md)                                                  |
-| 활성 스펙·계획, 보관 문서 목록           | [docs/specs/README.md](docs/specs/README.md), [docs/plans/README.md](docs/plans/README.md), [docs/archives/README.md](docs/archives/README.md) |
+| 활성 스펙·계획, 보관 문서 (인덱스 파일 없음) | `docs/specs/`, `docs/plans/`, `docs/archives/` (목록: `workdocs.py list`)                                    |
 | PR 전 보안 점검 규칙, 검사 스크립트      | [.claude/skills/security-check/SKILL.md](.claude/skills/security-check/SKILL.md)                                        |
 | 포켓몬 번호·이름·타입 참조표             | [docs/references/pokemon-gen1-reference.md](docs/references/pokemon-gen1-reference.md)                                  |
 | 기준 데이터 (해시 고정)                  | [data/processed/](data/processed/), 검증 [scripts/gen1_battle/data_integrity.py](scripts/gen1_battle/data_integrity.py) |

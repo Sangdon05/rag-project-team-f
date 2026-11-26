@@ -1,6 +1,7 @@
 {
   "hubs": ["AGENTS.md", "README.md"],
   "orphan_scope": ["docs/*.md", ".claude/*.md"],
+  "orphan_exclude": ["docs/specs/*.md", "docs/plans/*.md", "docs/archives/*.md"],
 
   "registries": {
     "skills_readme": "docs/references/skills/README.md",
