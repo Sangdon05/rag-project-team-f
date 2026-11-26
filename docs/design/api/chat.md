@@ -139,7 +139,7 @@ class AskService:
 | `sources` | array | 예 | 출처. 개수 한도 없음. 생성기 순서·값 그대로. `mock`·`llm`은 `[]` |
 | `sources[].ref` | integer | 예 | 출처 번호. `answer` 안 `[n]`의 `n`과 같은 값(체인이 정함) |
 | `sources[].chunk_id` | string | 예 | 청크 ID (RAG 메타데이터 그대로) |
-| `sources[].source_ref_id` | string | 예 | 원문 Markdown 파일명(확장자 제외). [documents](documents.md) 조회 키 |
+| `sources[].source_ref_id` | string | 예 | 도감번호 3자리(예: `001`). [documents](documents.md) 조회 키 |
 
 `ChatData.from_domain(answer)`가 `Answer` → 응답 스키마로 바꾼다. 값을 가공하지 않는다.
 
@@ -172,7 +172,7 @@ POST /api/v1/chat
 
 ```json
 {"success": true, "data": {"answer": "<근거 문장> [1].", "mode": "rag",
-  "sources": [{"ref": 1, "chunk_id": "<청크 ID>", "source_ref_id": "bulbasaur_red_blue"}]}}
+  "sources": [{"ref": 1, "chunk_id": "<청크 ID>", "source_ref_id": "001"}]}}
 ```
 
 ```json

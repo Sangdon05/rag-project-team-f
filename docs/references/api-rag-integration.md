@@ -35,7 +35,7 @@ class AnswerGenerator(ABC):
 | | `mode: "mock" \| "llm" \| "rag"` | 생성 방식 |
 | | `sources: tuple[Source, ...]` | 근거. 근거가 없으면 빈 목록 |
 | `Source` | `ref: int` | 출처 번호. `text` 안의 `[n]`과 같은 값이며 체인이 정한다. API는 번호를 바꾸거나 목록을 자르지 않는다 |
-| | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 값 그대로. `source_ref_id`는 원문 Markdown 파일명(확장자 제외, 허용 문자 `[A-Za-z0-9_-]`)이며 문서 조회 키로 쓴다 |
+| | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 값 그대로. `source_ref_id`는 도감번호 3자리(예: `001`)이며 문서 조회 키로 쓴다 |
 
 실패 규약:
 
@@ -52,7 +52,7 @@ class DocumentStore(ABC):
     async def get(self, source_ref_id: str) -> str: ...   # 원문 Markdown
 ```
 
-- 구현체는 `<API_DOCUMENTS_DIR>/<source_ref_id>.md`를 읽는다. API는 파일을 읽기만 하고 고치지 않는다.
+- 구현체는 `<API_DOCUMENTS_DIR>/<source_ref_id>_*.md`(예: `solar_handoff/documents/001_이상해씨.md`)를 읽는다. 같은 번호 파일이 둘 이상이면 502다. API는 파일을 읽기만 하고 고치지 않는다.
 - 파일이 없으면 `DocumentNotFoundError` → 404 `DOCUMENT_NOT_FOUND`. 읽기 실패는 `DocumentSourceError` → 502 `DOCUMENT_SOURCE_FAILED`.
 - 문서 파일 위치·이름 규칙은 RAG 쪽(chunking 스킬)이 원본이다. 바뀌면 `API_DOCUMENTS_DIR`만 바꾼다.
 
@@ -75,7 +75,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 1. **import 가능한 진입점.** API 어댑터가 부를 함수 또는 객체 하나. 예: `answer(question: str, history: list[dict]) -> {"answer": str, "sources": [...]}` (비동기면 더 좋다).
    - 지금 체인 코드는 패키지가 아니다. 진입점의 위치(예: `src/pokedex/`)와 import 방법(루트 `pyproject.toml`의 패키지 설정 등)은 [미정]이다. 정해지면 이 절에 적는다.
 2. **설정은 환경 변수로.** 모델명, `DATABASE_URL`, `PGVECTOR_COLLECTION` 등을 체인이 직접 읽는다. API는 DB 접속 정보를 알지 않는다.
-3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 원문 Markdown 파일명(확장자 제외)이다.
+3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 도감번호 3자리다. Solar 질문 CLI는 아직 내보내지 않는다(후속 G8).
 4. **동작 확인 기록.** 툴·체인 테스트 통과, 사용한 `index_version` 기록(langchain-rag 스킬의 완료 조건).
 
 ## 4. 연결 절차

@@ -5,7 +5,7 @@
 #   BASE          서버 주소 (기본 http://127.0.0.1:8000)
 #   MAX_MESSAGES  서버의 API_MAX_MESSAGES 값 (기본 20). 초과 요청이 400인지 본다
 #   CORS_ORIGIN   허용됐어야 하는 프론트 origin. 지정하면 preflight를 확인한다
-#   DOC_ID        서버의 API_DOCUMENTS_DIR에 있는 문서 id. 지정하면 documents 정상 조회를 확인한다
+#   DOC_ID        서버의 API_DOCUMENTS_DIR에 있는 문서 id(도감번호 3자리, 예: 001). 지정하면 documents 정상 조회를 확인한다
 # 서버는 ANSWER_BACKEND=mock으로 떠 있어야 한다 (LLM 호출·비용 없음).
 # 성공 응답은 {"success": true, "data": {...}}, 에러 응답은 {"success": false, "error_code", "message"}다 (R7).
 # 결과: 항목마다 PASS / FAIL / INFO. FAIL이 하나라도 있으면 종료 코드 1.
@@ -146,9 +146,9 @@ else
     info "DOC_ID 미지정. documents 정상 조회 검사를 건너뜀"
   fi
   code=$(req GET "$DOCUMENTS/bad.id")
-  check_error "GET $DOCUMENTS/bad.id (허용 문자 밖)" 400 "$code" VALIDATION_ERROR
-  code=$(req GET "$DOCUMENTS/no_such_document_zz")
-  check_error "GET $DOCUMENTS/no_such_document_zz" 404 "$code" DOCUMENT_NOT_FOUND
+  check_error "GET $DOCUMENTS/bad.id (형식 밖)" 400 "$code" VALIDATION_ERROR
+  code=$(req GET "$DOCUMENTS/999")
+  check_error "GET $DOCUMENTS/999 (없는 번호)" 404 "$code" DOCUMENT_NOT_FOUND
 fi
 
 # 6. 없는 경로

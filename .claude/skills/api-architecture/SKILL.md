@@ -57,7 +57,7 @@ api/
 | `Message` | `role`(user \| assistant), `content` |
 | `ConversationLimits` | 메시지 수 한도 값 객체 (환경 변수 값은 container가 넘김) |
 | `Answer` | `text`, `mode`(mock \| llm \| rag), `sources` |
-| `Source` | `ref`, `chunk_id`, `source_ref_id` (RAG 값 그대로. `source_ref_id`는 원문 Markdown 파일명) |
+| `Source` | `ref`, `chunk_id`, `source_ref_id` (RAG 값 그대로. `source_ref_id`는 도감번호 3자리) |
 | `DocumentStore` | documents 슬라이스 포트. `get(source_ref_id) -> str` ([연결 가이드](../../../docs/references/api-rag-integration.md)) |
 
 ## 5. 포트: AnswerGenerator

@@ -104,9 +104,9 @@ uv run python -m unittest discover -s tests                            # 실패 
 ```bash
 export APP=api.main:app HEALTH_PATH=/health PORT=8000 LOG="$TMPDIR/api.log" PIDFILE="$TMPDIR/api.pid"
 export ANSWER_BACKEND=mock API_CORS_ORIGINS=http://localhost:5173    # 검증 설정: LLM 비용 없음
-export API_DOCUMENTS_DIR=data/synthetic/pilot                          # documents 확인용 파일럿 문서
+export API_DOCUMENTS_DIR=solar_handoff/documents                       # documents 확인용 Solar 원문
 bash .claude/skills/fastapi-run/scripts/run_server.sh start
-BASE=http://127.0.0.1:$PORT CORS_ORIGIN=http://localhost:5173 DOC_ID=bulbasaur_red_blue bash .claude/skills/api-invariants/scripts/smoke.sh
+BASE=http://127.0.0.1:$PORT CORS_ORIGIN=http://localhost:5173 DOC_ID=001 bash .claude/skills/api-invariants/scripts/smoke.sh
 bash .claude/skills/fastapi-run/scripts/run_server.sh stop
 ```
 
@@ -117,7 +117,7 @@ bash .claude/skills/fastapi-run/scripts/run_server.sh stop
 | `POST /api/v1/chat` 정상 질문 | 200, `data.answer`(문자열), `data.sources`(목록), `data.mode`(mock\|llm\|rag) |
 | 빈 `messages`, 메시지 `MAX_MESSAGES + 1`개, JSON이 아닌 본문 | 400 `VALIDATION_ERROR` + 공통 에러 형식 (`MAX_MESSAGES`는 서버의 `API_MAX_MESSAGES`, 기본 20) |
 | `GET /api/v1/suggestion` 기본, `?level=bad` | 200 `data.level`=beginner, 400 `VALIDATION_ERROR` |
-| `GET /api/v1/documents/{DOC_ID}`, 허용 문자 밖 id, 없는 id | 200 `data.markdown`(문자열), 400 `VALIDATION_ERROR`, 404 `DOCUMENT_NOT_FOUND` (`DOC_ID` 미지정이면 200 항목은 INFO) |
+| `GET /api/v1/documents/{DOC_ID}`, 형식 밖 id, 없는 번호(999) | 200 `data.markdown`(문자열), 400 `VALIDATION_ERROR`, 404 `DOCUMENT_NOT_FOUND` (`DOC_ID` 미지정이면 200 항목은 INFO) |
 | 없는 경로 | 404 + 공통 에러 형식 |
 | CORS (`CORS_ORIGIN` 지정 시) | 허용 origin은 그 값이 돌아오고 다른 origin은 허용 헤더 없음 |
 

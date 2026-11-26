@@ -73,7 +73,7 @@
 | `ANSWER_BACKEND` | `mock` | `answer_backend` | chat | `mock`·`llm` 밖이면 앱 시작 실패 (container) |
 | `API_CORS_ORIGINS` | (빈 값) | `cors_origins: list[str]` (쉼표 구분, 앞뒤 공백 제거, 빈 항목 제외) | 공통 | 비어 있으면 CORS 미들웨어를 붙이지 않는다. `*`를 쓰지 않는다(R13) |
 | `API_MAX_MESSAGES` | `20` | `max_messages: int` | chat | 정수가 아니거나 1 미만이면 앱 시작 실패 |
-| `API_DOCUMENTS_DIR` | `data/synthetic/pilot` | `documents_dir: str` | documents | 시작 시 검사하지 않는다(요청 시 [documents](documents.md) 규칙) |
+| `API_DOCUMENTS_DIR` | `solar_handoff/documents` | `documents_dir: str` | documents | 시작 시 검사하지 않는다(요청 시 [documents](documents.md) 규칙) |
 | `OPENAI_CHAT_MODEL`, `OPENAI_REASONING_EFFORT`(기본 `low`), `OPENAI_API_KEY` | (기존 값) | — (container가 `llm` 분기에서만 읽음) | chat | `mock`이면 읽지 않는다 |
 
 - CORS: `allow_origins=settings.cors_origins`, `allow_methods=["GET", "POST"]`, `allow_headers=["Content-Type"]`.

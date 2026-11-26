@@ -24,7 +24,7 @@ description: Use when writing or fixing api/ code. Per-layer code patterns for s
    | `ANSWER_BACKEND` | `mock` | 답변 생성기 선택 `mock` \| `llm` (나중에 `rag`) |
    | `API_CORS_ORIGINS` | (빈 값) | 허용할 프론트 origin, 쉼표 구분 |
    | `API_MAX_MESSAGES` | `20` | 요청당 메시지 수 상한 (메시지 길이 한도는 두지 않는다, R11) |
-   | `API_DOCUMENTS_DIR` | `data/synthetic/pilot` | documents 슬라이스가 읽는 원문 Markdown 폴더 |
+   | `API_DOCUMENTS_DIR` | `solar_handoff/documents` | documents 슬라이스가 읽는 원문 Markdown 폴더 |
 
    모델명은 기존 `OPENAI_CHAT_MODEL`을 그대로 쓴다.
 

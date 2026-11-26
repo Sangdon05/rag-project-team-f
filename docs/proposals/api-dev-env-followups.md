@@ -55,4 +55,5 @@ PR #9(API 개발 환경 추가) 비판 리뷰에서 나온 지적이다. 다른 
 | G4 | PR 범위 | TODO | eval 문서 최신화(c900f45)가 API PR에 섞여 있다. 다음부터 별도 PR로 낸다 |
 | G5 | RAG 경계 목록 | TODO | 아직 없는 `pokedex`·`src/pokedex/`를 경계 규칙에 미리 넣었다. RAG 진입점이 정해지면 실제 이름으로 갱신 (연결 가이드 3절 [미정]) |
 | G7 | RAG 체인 `reasoning_effort` | TODO | `gpt-6-luna`는 `reasoning_effort=low`로 쓴다(팀 결정, temperature 0 유지). API `llm` 모드는 `OPENAI_REASONING_EFFORT`(기본 `low`)로 반영함. RAG 체인(langchain-rag 스킬 45행, 체인 코드)은 rag-developer가 같은 변수로 반영. 실제 키로 temperature 0과 함께 받아지는지 1회 확인 필요 |
+| G8 | Solar 질문 CLI 출처 | TODO | API는 `sources[].source_ref_id`를 도감번호 3자리(`001`)로 받아 `solar_handoff/documents/001_*.md`를 연다. Solar CLI 결과(`source_document`, `pokemon_id`)에서 이 값을 내보내도록 rag-developer가 반영 |
 | G6 | FSD 강도 | TODO | `fsd.cross_slice: off`. 다른 파트 합류 후 `warn`/`error` 결정 |

@@ -1,160 +1,167 @@
 ---
+type: plan
+id: 2026-11-26-api-endpoints
 title: API 엔드포인트 3종 구현 계획
-status: 구현 완료 (PR 대기)
+status: in_progress
+owner: orchestrator
+spec: 2026-11-26-api-endpoints
 created: 2026-11-26
-owner: 오케스트레이터
+updated: 2026-11-26
+approved_by: 오케스트레이터
+approved_at: 2026-11-26
+completed_at:
+archived_at:
+base_commit: f758951
 ---
 
 # API 엔드포인트 3종 구현 계획
 
-팀 명세(외부 문서)로 확정한 엔드포인트 3개를 `api/`에 구현하는 계획이다. 이 문서의 "확정 규격"은 설계안 작성(api-architect)의 입력이다.
-학습 프로젝트이므로 서비스용 제한(요청 크기, 타임아웃, 호출 횟수)은 두지 않고 동작 기준으로 판단한다.
+## 1. 개요
 
-## 1. 범위
+- 스펙: [2026-11-26-api-endpoints](../specs/2026-11-26-api-endpoints.md)
+- 목표: suggestion·chat·documents 엔드포인트를 mock·llm 모드로 동작시키고, 출처 `source_ref_id`(도감번호 3자리)로 Solar 원문까지 조회되게 한다.
+- 기준 커밋: f758951 (작성 시점 main)
+- 브랜치: `docs/api-ep-contracts` → `docs/api-design` → `feat/api-core` → `feat/api-chat` → `feat/api-documents` 순서로 쌓는다. 파일럿 메타데이터는 main 기준 `feat/source-ref-id`(워크트리 `../rag-project-team-f-source-ref`).
 
-- `GET /api/v1/suggestion`, `POST /api/v1/chat`, `GET /api/v1/documents/{source_ref_id}`, `GET /health`
-- 답변 생성은 `mock`·`llm`까지. `rag` 연결은 범위 밖이며 [연결 가이드](../references/api-rag-integration.md) 4절을 따른다.
+## 2. 작업 분해
 
-## 2. 결정
+| ID | 작업 | 담당 | 선행 | 산출물 | 완료 기준 | 상태 |
+| --- | --- | --- | --- | --- | --- | --- |
+| T-1 | 계약 문서를 확정 EP 명세에 맞춘다 (응답 형식, `Source`, 문서 저장소 포트, R7·R11, smoke) | 오케스트레이터 | - | `docs/references/api-rag-integration.md`, `.claude/skills/api-invariants/`, `.claude/skills/api-implementation/`, `.claude/skills/api-architecture/` | 지원: doc-sync ERROR 0 | done |
+| T-2 | health·suggestion·chat·documents 설계안 작성 | api-architect | T-1 | `docs/design/api/` | 지원: 설계안 4개 "검토 중", doc-sync ERROR 0 | done |
+| T-3 | 공통(shared, error_handlers, container, main) + health + suggestion 구현 | api-implementer | T-2 | `api/shared/`, `api/health/`, `api/suggestion/`, `api/main.py`, `api/container.py`, `api/error_handlers.py`, `api/tests/` | AC-1 | done |
+| T-4 | T-3 독립 리뷰·smoke | api-reviewer | T-3 | | AC-5 | done |
+| T-5 | chat 슬라이스 구현 (mock·llm) | api-implementer | T-3 | `api/chat/`, `api/tests/chat/` | AC-1 | done |
+| T-6 | T-5 독립 리뷰·smoke | api-reviewer | T-5 | | AC-5 | done |
+| T-7 | documents 슬라이스, 500 CORS·dotenv 보완, role 검증 수정, `reasoning_effort` | api-implementer | T-5 | `api/documents/`, `api/tests/documents/` | AC-1, AC-3 | done |
+| T-8 | T-7 독립 리뷰·smoke | api-reviewer | T-7 | | AC-5 | done |
+| T-9 | `source_ref_id` 도감번호 3자리로 계약·설계안·smoke 갱신 | 오케스트레이터 | T-8 | `docs/design/api/documents.md`, `docs/references/api-rag-integration.md`, `.claude/skills/api-invariants/SKILL.md` | 지원: doc-sync ERROR 0 | done |
+| T-10 | documents를 `<번호>_*.md` 조회로 바꾸고 기본 폴더를 `solar_handoff/documents`로 | api-implementer | T-9 | `api/documents/`, `api/tests/documents/`, `api/shared/settings.py`, `.env.example` | AC-1, AC-4 | todo |
+| T-11 | 파일럿 청크 `source_ref_id`를 도감번호 3자리로 | data-engineer | - | `scripts/helper/pilot_vector_index.py`, `tests/test_pilot_vector_index.py`, `.claude/skills/chunking/SKILL.md` | AC-6 | todo |
+| T-12 | 최종 변경 독립 리뷰·smoke (`DOC_ID=001`) | api-reviewer | T-10 | | AC-2, AC-5 | todo |
+| T-13 | PR 전 보안 점검 (두 브랜치) | security-reviewer | T-10, T-11 | | AC-8 | todo |
+| T-14 | 문서 동기화 검사 | 오케스트레이터 | T-10, T-11 | | AC-7 | todo |
 
-| 항목 | 결정 |
-| --- | --- |
-| 응답 형식 | 성공 `{"success": true, "data": {...}}`, 실패 `{"success": false, "error_code", "message"}` (모든 엔드포인트, `/health` 포함) |
-| 문서 ID 필드 | `source_ref_id`로 통일 (chat `sources[]`, documents 경로·응답) |
-| `source_ref_id` 값 | 원문 Markdown 파일명(확장자 제외). 허용 문자 `[A-Za-z0-9_-]`. 예: `bulbasaur_red_blue` |
-| 예시 ID | RAG가 주는 값을 그대로 쓴다. API는 형식을 바꾸지 않는다 |
-| 메시지 길이 | 한도 없음. 앞뒤 공백 제거 후 비어 있지만 않으면 된다 |
-| 메시지 수 | `API_MAX_MESSAGES` (기본 20) 유지 |
-| 출처 수 | 한도 없음. `API_MAX_SOURCES`를 두지 않는다 |
-| `ref` 번호 | 체인이 정한 값을 그대로 쓴다. answer의 `[n]`과 같은 값 |
-| 400 `error_code` | 스키마 위반과 대화 규칙 위반 모두 `VALIDATION_ERROR` (슬라이스 전용 400 코드를 두지 않는다) |
-| PR 나누기 | 계약 문서 → RAG 메타데이터 → 공통+health+suggestion → chat → documents |
+- 담당: `.claude/agents/`에 있는 에이전트 이름, 또는 `오케스트레이터`·`디렉터`·`팀원`·`사용자`.
+- 선행: 먼저 끝나야 하는 작업 ID (쉼표 구분, 없으면 `-`).
+- 산출물: 이 작업이 쓰는 파일·폴더 (백틱, 쉼표 구분). 같은 단계의 작업끼리 겹치면 안 된다.
+- 완료 기준: 스펙의 AC ID. 스펙 AC에 직접 대응하지 않는 지원 작업은 `지원: <확인 조건>`으로 쓴다.
+- 상태: `todo` | `doing` | `done` | `blocked` | `cancelled`.
 
-## 3. 확정 규격
+## 3. 병렬 실행
 
-### 공통
-
-| HTTP | error_code | 조건 |
-| --- | --- | --- |
-| 400 | `VALIDATION_ERROR` | 요청 형식·값 오류 (FastAPI 기본 422를 400으로 바꾼다) |
-| 404 | `NOT_FOUND` | 없는 경로 (Starlette 기본 `{"detail"}`을 공통 형식으로 바꾼다) |
-| 405 | `METHOD_NOT_ALLOWED` | 허용하지 않는 메서드 |
-| 500 | `INTERNAL_ERROR` | 처리하지 못한 예외. 스택·원문 오류를 응답에 넣지 않는다 |
-
-### `GET /health`
-
-- 응답 `{"success": true, "data": {"status": "ok"}}`. 외부 호출 없음.
-
-### `GET /api/v1/suggestion`
-
-- query `level`: `beginner`(P1, 기본값) / `novice`(P2) / `expert`(P3). 대소문자 구분. 허용값 밖이거나 빈 값이면 400.
-- 응답 `data`: `level`(적용된 등급), `suggestions[]`(`id`, `text`). 0개일 수 있다.
-- 후보는 fake 데이터(포켓몬 질문)이며 제공자 포트 뒤에 둔다. 평가셋과 무관하다.
-
-### `POST /api/v1/chat`
-
-- 요청 `messages[]`(`role`: `user` | `assistant`, `content`). 1개 이상 `API_MAX_MESSAGES`개 이하. 첫·마지막은 user, 중간은 교대. content는 앞뒤 공백 제거 후 비어 있으면 안 된다.
-- 서버는 대화를 저장하지 않는다. 클라이언트가 매 요청에 대화 전체를 보낸다.
-- 응답 `data`: `answer`(비어 있지 않음, 근거 문장 뒤 `[n]`), `mode`(`mock` | `llm` | `rag`), `sources[]`(`ref`, `chunk_id`, `source_ref_id`).
-- "근거가 부족해 확인할 수 없다"는 200. 생성기 실패는 502 `ANSWER_GENERATION_FAILED`.
-
-### `GET /api/v1/documents/{source_ref_id}`
-
-- chat `sources[].source_ref_id`로 호출한다. 문서 원본은 RAG 데이터이며 API는 그대로 전달한다.
-- 응답 `data`: `source_ref_id`, `markdown`(원문 그대로, HTML 변환 없음).
-- 400 `VALIDATION_ERROR`: `[A-Za-z0-9_-]` 밖의 문자 포함. 404 `DOCUMENT_NOT_FOUND`: 형식은 맞지만 파일 없음. 502 `DOCUMENT_SOURCE_FAILED`: 저장소 읽기 실패.
-- 문서 위치는 환경 변수 `API_DOCUMENTS_DIR`. 파일은 `<API_DOCUMENTS_DIR>/<source_ref_id>.md`.
-
-## 4. 기존 문서와 충돌 (1단계에서 처리)
-
-| 파일 | 내용 | 처리 |
-| --- | --- | --- |
-| `docs/references/api-rag-integration.md` §2 | `Source`에 `ref` 없음, HTTP 계약이 공통 형식 아님, 문서 저장소 포트 없음 | 갱신 |
-| `.claude/skills/api-invariants/SKILL.md` R7, R11, §10 | 502가 답변 생성기만, 길이 한도 규칙, smoke 표가 최상위 `answer` | 갱신 |
-| `.claude/skills/api-invariants/scripts/smoke.sh` | 최상위 `answer`·`sources`·`mode` 검사, documents 검사 없음 | `data.*` 검사, documents 항목 추가 |
-| `.claude/skills/api-implementation/SKILL.md`, `references/testing.md` | `API_MAX_MESSAGE_CHARS`, 슬라이스 전용 400 코드, 공통 형식 없는 응답 | 갱신 |
-| `.claude/skills/api-architecture/SKILL.md` §4 | `Source`에 `ref` 없음, 길이 한도 | 갱신 |
-| `.claude/skills/chunking/SKILL.md:120`, `scripts/helper/pilot_vector_index.py:144` | `source_ref_id` = `{청크 JSON 경로}#{chunk_id}` | 2단계(data-engineer) |
-
-## 5. 단계
-
-### 1단계 — 오케스트레이터: 계약 문서 (PR ①)
-
-4절 표의 문서 행을 고친다. 코드 없음. 게이트: `check_docs.py --base HEAD` ERROR 0, security-check 통과.
-
-### 2단계 — data-engineer: `source_ref_id` 값 형식 (PR ②, 1단계와 병렬)
+`workdocs.py waves`가 계산한 단계를 붙인다. 같은 단계의 작업은 동시에 발주할 수 있다.
 
 ```
-task: 청크 메타데이터 source_ref_id를 원문 Markdown 파일명(확장자 제외)으로 바꾼다
-agent: data-engineer
-inputs: .claude/skills/chunking/SKILL.md (메타데이터 표), scripts/helper/pilot_vector_index.py, data/synthetic/pilot/ (schema_version 3)
-outputs: 위 두 파일, 관련 테스트
-done_when: 파일럿 청크 10개의 source_ref_id가 모두 bulbasaur_red_blue, uv run python -m unittest discover -s tests 통과
-constraints: data/processed/ 수정 금지, chunk_id 규칙 유지, eval/ 열람 금지
+단계 1: T-1(오케스트레이터), T-11(data-engineer)
+단계 2: T-2(api-architect)
+단계 3: T-3(api-implementer)
+단계 4: T-4(api-reviewer), T-5(api-implementer)
+단계 5: T-6(api-reviewer), T-7(api-implementer)
+단계 6: T-8(api-reviewer)
+단계 7: T-9(오케스트레이터)
+단계 8: T-10(api-implementer)
+단계 9: T-12(api-reviewer), T-13(security-reviewer), T-14(오케스트레이터)
 ```
 
-151마리 Markdown 파일명 규칙도 이 단계에서 정한다(권장 `{영문명}_red_blue`, 허용 문자 `[A-Za-z0-9_-]`).
+## 4. 발주서
 
-### 3단계 — api-architect: 설계안 (1단계 머지 후)
-
-```
-task: health, suggestion, chat, documents 설계안을 이 계획의 확정 규격대로 작성한다
-agent: api-architect
-inputs: docs/plans/2026-11-26-api-endpoints.md 3절, docs/references/api-rag-integration.md, .claude/skills/api-invariants/SKILL.md
-outputs: docs/design/api/{health,suggestion,chat,documents}.md, docs/design/api/README.md 표
-done_when: 네 설계안 상태 "검토 중", doc-sync ERROR 0
-constraints: docs/design/api/만 수정
-```
-
-설계안의 "확정"은 팀원이 정한다.
-
-### 4단계 — api-implementer → api-reviewer: 슬라이스별 구현 (PR ③ ④ ⑤)
-
-| PR | 범위 |
-| --- | --- |
-| ③ | `api/shared/`(응답 형식, 예외, 설정), `error_handlers.py`, `container.py`, `main.py`, health, suggestion |
-| ④ | chat: `Conversation` 검증(개수, role, 교대, 빈 값), mock·llm 생성기, 502 |
-| ⑤ | documents: `DocumentStore` 포트, 파일 구현체, `API_DOCUMENTS_DIR`(`.env.example`, environment.md, README 함께) |
+T-1~T-8은 스펙 작성 전에 같은 내용으로 발주·완료했다(7절). 남은 작업:
 
 ```
-task: <슬라이스> 설계안대로 구현한다
+task: documents를 도감번호 3자리 source_ref_id로 <API_DOCUMENTS_DIR>/<번호>_*.md를 찾게 바꾸고 기본 폴더를 solar_handoff/documents로 한다 (T-10)
 agent: api-implementer
-inputs: docs/design/api/<slice>.md
-outputs: api/<slice>/, api/tests/
-done_when: api-invariants §7 게이트 통과, §10 smoke(mock) PASS
-constraints: data/, scripts/, eval/ 수정 금지, 실제 LLM 호출 금지
+inputs: docs/design/api/documents.md (T-9 갱신본), solar_handoff/documents/ (main f758951)
+outputs: api/documents/, api/tests/documents/, api/shared/settings.py, .env.example, docs/references/environment.md, README.md
+done_when: AC-1 api-invariants §7 게이트 통과, AC-4 `uv run python -m unittest api.tests.documents.test_documents_api` OK이고 001 요청이 solar_handoff/documents/001_이상해씨.md 내용과 같음
+constraints: solar_handoff/·data/·eval/·.claude/·설계안 수정 금지, 커밋 금지
 ```
 
-구현 뒤 api-reviewer에게 같은 슬라이스의 독립 리뷰를 발주한다(APPROVE 전 머지 금지).
+```
+task: 파일럿 청크 source_ref_id를 도감번호 3자리(pokemon_id zero-pad)로 바꾼다 (T-11)
+agent: data-engineer
+inputs: scripts/helper/pilot_vector_index.py, .claude/skills/chunking/SKILL.md, data/synthetic/pilot/ (schema_version 3)
+outputs: 위 파일과 tests/test_pilot_vector_index.py
+done_when: AC-6 `uv run python -m unittest tests.test_pilot_vector_index` OK, 10개 청크 모두 001
+constraints: data/processed/·solar_handoff/·eval/ 수정 금지, chunk_id·document_id 규칙 유지
+```
 
-### 5단계 — 오케스트레이터: 마무리
+```
+task: T-10 결과 독립 리뷰와 smoke (T-12)
+agent: api-reviewer
+inputs: feat/api-documents 최신 커밋, docs/design/api/documents.md
+outputs: 리뷰 보고
+done_when: AC-2 api-invariants §10 smoke(DOC_ID=001) 결과: 모두 PASS, AC-5 APPROVE
+constraints: 읽기 전용
+```
 
-- PR마다 doc-sync `--strict`, security-reviewer 점검.
-- [연결 가이드](../references/api-rag-integration.md) 6절 체크리스트 갱신. `rag` 행은 예정 유지.
-- 확인: `GET /api/v1/documents/bulbasaur_red_blue` → 200 (`API_DOCUMENTS_DIR=data/synthetic/pilot`).
+```
+task: feat/api-documents, feat/source-ref-id PR 전 보안 점검 (T-13)
+agent: security-reviewer
+inputs: 두 브랜치, base origin/main
+outputs: 분류 보고
+done_when: AC-8 ERROR 0
+constraints: 읽기 전용
+```
 
-## 6. 완료 조건
+## 5. 검증과 보고
 
-- 엔드포인트 4개가 3절 규격대로 응답한다(smoke와 curl로 상태 코드·`error_code` 확인).
-- PR ①~⑤가 게이트 통과와 리뷰 APPROVE 뒤 머지된다.
-- 파일럿 청크의 `source_ref_id`로 documents 조회가 성공한다.
+- 하위 에이전트 보고: 각 에이전트 정의의 보고 형식 (`status`, `changed_files`, `checks`의 evidence, `refused`, `downstream_impact`).
+- 오케스트레이터 검토: `AGENTS.md` 보고 검토 절차. evidence 명령을 직접 다시 실행하고 결과를 7절에 남긴다.
+- 읽기 전용 에이전트(리뷰어 등)의 판정은 보고 원문 요약을 7절에 남기고, 그 AC의 확인 방법은 `보고: <에이전트>`로 쓴다.
+- 사용자 보고: 작업이 끝나거나 막힐 때 아래 형식으로 보고한다. 보고는 알림이며 승인 요청이 아니다. 스펙 변경이 필요할 때만 `next`에 사용자 결정 요청을 쓴다.
+
+```
+plan: 2026-11-26-api-endpoints
+done: [T-n, ...]
+blocked: [T-n: 이유와 필요한 결정]
+ac: [AC-n: pass | fail | not_run — 근거]
+next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사용자 결정 요청)
+```
+
+## 6. 위험과 대응
+
+| 위험 | 대응 |
+| --- | --- |
+| Solar 문서 폴더에 같은 번호 파일이 둘 이상 생김 | 저장소가 모호함으로 보고 502 `DOCUMENT_SOURCE_FAILED`. 파일명 규칙은 RAG 쪽 원본 |
+| Solar CLI가 아직 `source_ref_id`를 내보내지 않아 rag 모드에서 출처 조회가 안 됨 | 범위 밖. 후속 목록 G7 옆에 rag-developer 항목으로 남긴다 |
+| 쌓인 브랜치를 슬라이스별 PR로 나눌 때 중간 PR의 문서 검사 실패 | 각 커밋에서 패키지·환경 변수 문서를 같이 갱신했다. PR 전에 브랜치마다 doc-sync를 다시 돌린다 |
 
 ## 7. 진행 기록
 
-| 단계 | 브랜치 | 커밋 | 결과 |
+| 날짜 | 작업 | 내용 | 근거 |
 | --- | --- | --- | --- |
-| 1 계약 문서 | `docs/api-ep-contracts` | b096b09 | doc-sync ERROR 0, security ERROR 0 |
-| 2 `source_ref_id` | `feat/source-ref-id` (main 기준, 별도) | dff952e | 파일럿 10청크 `bulbasaur_red_blue`, tests 103 OK |
-| 3 설계안 | `docs/api-design` | 81a6581, cc17162 | 네 설계안 "검토 중" |
-| 4-③ 공통·health·suggestion | `feat/api-core` | 16d1ac7 | api-reviewer APPROVE |
-| 4-④ chat | `feat/api-chat` | 95938ae | api-reviewer APPROVE |
-| 4-⑤ documents + 공통 보완 + role 수정 + `reasoning_effort` | `feat/api-documents` | 698f707, 9e697a9, 21fd77f | api-reviewer APPROVE, smoke 14항목 PASS |
+| 2026-11-26 | T-1 | 계약 문서 갱신, smoke 가짜 서버로 good 12 PASS / old 4 FAIL 확인 | `docs/api-ep-contracts` 739c6a1 |
+| 2026-11-26 | T-2 | 설계안 4개 작성(api-architect), 오케스트레이터 커밋 | `docs/api-design` 9c8f8d8, 211f290 |
+| 2026-11-26 | T-3 | 게이트 4개 통과(api 30, tests 101 OK) | `feat/api-core` 47f66e3 |
+| 2026-11-26 | T-4 | api-reviewer APPROVE, 주의 3건(500 CORS, dotenv, `API_DOCUMENTS_DIR` 문서) → T-7로 반영 | 리뷰 보고 |
+| 2026-11-26 | T-5 | 게이트 통과(api 62 OK) | `feat/api-chat` 84953be |
+| 2026-11-26 | T-6 | api-reviewer APPROVE, 주의 1건(role 비문자열 TypeError) → T-7로 반영 | 리뷰 보고 |
+| 2026-11-26 | T-7 | documents·보완 3건·role 수정·`reasoning_effort`, 게이트 통과(api 88 OK), security ERROR 0·WARN 0 | `feat/api-documents` a38df67, 500dd5a, 925d38d |
+| 2026-11-26 | T-8 | api-reviewer APPROVE, smoke 14항목 PASS | 리뷰 보고 |
+| 2026-11-26 | T-9 | documents·chat·health 설계안, 연결 가이드, api-invariants §10·smoke(`DOC_ID=001`, 없는 번호 999), 스킬 표를 도감번호 3자리로 갱신. 후속 G8 추가. doc-sync ERROR 0 | `feat/api-documents` |
+| 2026-11-26 | - | origin/main(f758951) 기준 rebase(`--update-refs`), 충돌 README·environment.md 해결 | `git log origin/main..feat/api-documents` |
 
-브랜치는 1 → 3 → ③ → ④ → ⑤ 순서로 쌓여 있다. ③의 `environment.md` 패키지 행(fastapi·uvicorn·httpx)은 ⑤ 커밋에 들어가 있어 ③만 따로 PR하면 doc-sync ERROR가 난다.
+## 8. 결정 기록
 
-추가 결정: llm 모드 `OPENAI_REASONING_EFFORT`(기본 `low`), temperature 0 유지. RAG 체인 반영과 실제 키 확인은 [후속 목록](../proposals/api-dev-env-followups.md) G7.
+디렉터의 판단: 계획 확정, 작업 추가·변경·취소, 막힌 작업 처리. 사용자 확인은 필요 없다(스펙 변경이 따르면 스펙 절차).
 
-## 8. 위험
+| 날짜 | 결정 | 결정자 | 근거 |
+| --- | --- | --- | --- |
+| 2026-11-26 | T-1~T-8은 spec-plan 스킬 머지 전에 수행한 작업이라 완료 상태로 기록한다 | 오케스트레이터 | main f758951에 spec-plan 머지 |
+| 2026-11-26 | T-9의 `documents.md` 갱신은 결정 반영만이므로 api-architect 대신 오케스트레이터가 한다 | 오케스트레이터 | 사용자 결정(도감번호 3자리)의 기계적 반영 |
 
-- 2단계가 늦어지면 ⑤는 파일명을 직접 넣는 테스트로 완료하고, chat → documents 연결 확인은 `rag` 연결 때로 미룬다(mock·llm은 `sources`가 비어 있다).
-- api-implementation 스킬의 예시 코드는 1단계에서 문서만 고친다. 실제 동작 확인은 ③ ④ 구현의 게이트에서 한다.
+## 9. 완료 판정
+
+| AC | 결과 | 근거 | 확인자 |
+| --- | --- | --- | --- |
+| AC-1 | | | |
+| AC-2 | | | |
+| AC-3 | | | |
+| AC-4 | | | |
+| AC-5 | | | |
+| AC-6 | | | |
+| AC-7 | | | |
+| AC-8 | | | |
+
+결과: `pass` | `fail` | `waived`. `waived`는 사용자 결정이 필요하며 근거 칸에 결정자·날짜를 적는다. 확인자는 그 AC를 맡은 담당이 아니어야 한다(예외: `명령:` AC는 오케스트레이터·디렉터가 다시 실행해 확인 가능). 취소한 작업의 AC도 판정한다.
