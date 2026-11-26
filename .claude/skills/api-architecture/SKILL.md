@@ -50,11 +50,12 @@ api/
 
 | 이름 | 뜻 |
 | --- | --- |
-| `Conversation` | 한 요청의 대화. `create(raw, limits)`가 빈 대화·순서·role·수·길이를 검증 (R3, R11) |
+| `Conversation` | 한 요청의 대화. `create(raw, limits)`가 빈 대화·빈 메시지·순서·role·수를 검증 (R3, R11) |
 | `Message` | `role`(user \| assistant), `content` |
-| `ConversationLimits` | 메시지 수·길이 한도 값 객체 (환경 변수 값은 container가 넘김) |
+| `ConversationLimits` | 메시지 수 한도 값 객체 (환경 변수 값은 container가 넘김) |
 | `Answer` | `text`, `mode`(mock \| llm \| rag), `sources` |
-| `Source` | `chunk_id`, `source_ref_id` (RAG 청크 메타데이터 이름 그대로) |
+| `Source` | `ref`, `chunk_id`, `source_ref_id` (RAG 값 그대로. `source_ref_id`는 원문 Markdown 파일명) |
+| `DocumentStore` | documents 슬라이스 포트. `get(source_ref_id) -> str` ([연결 가이드](../../../docs/references/api-rag-integration.md)) |
 
 ## 5. 포트: AnswerGenerator
 

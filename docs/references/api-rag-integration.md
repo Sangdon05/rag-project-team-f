@@ -34,7 +34,8 @@ class AnswerGenerator(ABC):
 | `Answer` | `text: str` | 비어 있으면 안 됨 |
 | | `mode: "mock" \| "llm" \| "rag"` | 생성 방식 |
 | | `sources: tuple[Source, ...]` | 근거. 근거가 없으면 빈 목록 |
-| `Source` | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 이름 그대로 |
+| `Source` | `ref: int` | 출처 번호. `text` 안의 `[n]`과 같은 값이며 체인이 정한다. API는 번호를 바꾸거나 목록을 자르지 않는다 |
+| | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 값 그대로. `source_ref_id`는 원문 Markdown 파일명(확장자 제외, 허용 문자 `[A-Za-z0-9_-]`)이며 문서 조회 키로 쓴다 |
 
 실패 규약:
 
@@ -42,7 +43,30 @@ class AnswerGenerator(ABC):
 - "근거가 부족해 확인할 수 없다"는 실패가 아니라 정상 답변이다. 체인이 그런 답을 내면 `text`에 담고 `sources`는 빈 목록으로 돌려준다.
 - 체인 안에서 대화 기록을 저장하지 않는다. 대화 맥락은 매 요청의 `messages`로만 받는다.
 
-HTTP 쪽 계약(프론트와의 계약)은 `POST /api/v1/chat` 요청 `{"messages": [{"role", "content"}]}`, 응답 `{"answer", "sources": [{"chunk_id", "source_ref_id"}], "mode"}`이다. 세부 명세는 설계안([목록](../design/api/README.md))이 원본이다.
+### 문서 저장소 포트
+
+출처 원문을 돌려주는 두 번째 경계다. API 쪽 포트(`api/documents/domain/store.py`):
+
+```python
+class DocumentStore(ABC):
+    async def get(self, source_ref_id: str) -> str: ...   # 원문 Markdown
+```
+
+- 구현체는 `<API_DOCUMENTS_DIR>/<source_ref_id>.md`를 읽는다. API는 파일을 읽기만 하고 고치지 않는다.
+- 파일이 없으면 `DocumentNotFoundError` → 404 `DOCUMENT_NOT_FOUND`. 읽기 실패는 `DocumentSourceError` → 502 `DOCUMENT_SOURCE_FAILED`.
+- 문서 파일 위치·이름 규칙은 RAG 쪽(chunking 스킬)이 원본이다. 바뀌면 `API_DOCUMENTS_DIR`만 바꾼다.
+
+### HTTP 계약
+
+프론트와의 계약이다. 모든 응답은 공통 형식 `{"success": true, "data": {...}}` / `{"success": false, "error_code", "message"}`이다.
+
+| 엔드포인트 | `data` |
+| --- | --- |
+| `POST /api/v1/chat` (요청 `{"messages": [{"role", "content"}]}`) | `{"answer", "mode", "sources": [{"ref", "chunk_id", "source_ref_id"}]}` |
+| `GET /api/v1/documents/{source_ref_id}` | `{"source_ref_id", "markdown"}` |
+| `GET /api/v1/suggestion?level=` | `{"level", "suggestions": [{"id", "text"}]}` (RAG와 무관) |
+
+세부 명세는 설계안([목록](../design/api/README.md))이 원본이다. 설계안 작성 전 확정 규격은 [API 엔드포인트 계획](../plans/2026-11-26-api-endpoints.md) 3절에 있다.
 
 ## 3. 연결 전에 RAG 쪽이 준비할 것
 
@@ -51,7 +75,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 1. **import 가능한 진입점.** API 어댑터가 부를 함수 또는 객체 하나. 예: `answer(question: str, history: list[dict]) -> {"answer": str, "sources": [...]}` (비동기면 더 좋다).
    - 지금 체인 코드는 패키지가 아니다. 진입점의 위치(예: `src/pokedex/`)와 import 방법(루트 `pyproject.toml`의 패키지 설정 등)은 [미정]이다. 정해지면 이 절에 적는다.
 2. **설정은 환경 변수로.** 모델명, `DATABASE_URL`, `PGVECTOR_COLLECTION` 등을 체인이 직접 읽는다. API는 DB 접속 정보를 알지 않는다.
-3. **출처 형식.** 답변 근거를 `chunk_id`, `source_ref_id`로 돌려준다.
+3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 원문 Markdown 파일명(확장자 제외)이다.
 4. **동작 확인 기록.** 툴·체인 테스트 통과, 사용한 `index_version` 기록(langchain-rag 스킬의 완료 조건).
 
 ## 4. 연결 절차

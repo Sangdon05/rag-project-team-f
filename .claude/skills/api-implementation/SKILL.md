@@ -23,8 +23,8 @@ description: Use when writing or fixing api/ code. Per-layer code patterns for s
    | --- | --- | --- |
    | `ANSWER_BACKEND` | `mock` | 답변 생성기 선택 `mock` \| `llm` (나중에 `rag`) |
    | `API_CORS_ORIGINS` | (빈 값) | 허용할 프론트 origin, 쉼표 구분 |
-   | `API_MAX_MESSAGES` | `20` | 요청당 메시지 수 상한 |
-   | `API_MAX_MESSAGE_CHARS` | `2000` | 메시지 하나의 글자 수 상한 |
+   | `API_MAX_MESSAGES` | `20` | 요청당 메시지 수 상한 (메시지 길이 한도는 두지 않는다, R11) |
+   | `API_DOCUMENTS_DIR` | `data/synthetic/pilot` | documents 슬라이스가 읽는 원문 Markdown 폴더 |
 
    모델명은 기존 `OPENAI_CHAT_MODEL`을 그대로 쓴다.
 
@@ -62,6 +62,15 @@ class UpstreamError(ApiError):       # 502 답변 생성기 등 외부 의존 �
     error_code = "UPSTREAM_ERROR"
 ```
 
+```python
+# api/shared/responses.py — 성공 응답 형식 (R7). presentation만 import한다
+class SuccessResponse(BaseModel, Generic[T]):
+    success: Literal[True] = True
+    data: T
+```
+
+- router는 `SuccessResponse[XxxData]`를 `response_model`로 쓰고 `SuccessResponse(data=...)`를 돌려준다. `/health`도 같은 형식이다.
+
 - `api/shared/settings.py`는 `os.environ`에서 위 변수를 읽어 frozen `Settings` dataclass를 만든다(`Settings.from_env()`). pydantic-settings는 쓰지 않는다(설치돼 있지 않다).
 - `api/error_handlers.py`의 `register_exception_handlers(app)`가 네 가지를 공통 형식으로 바꾼다.
 
@@ -82,11 +91,7 @@ from api.shared.exceptions import InvalidInputError, UpstreamError
 
 
 class InvalidConversationError(InvalidInputError):
-    error_code = "INVALID_CONVERSATION"        # 빈 대화, 역할·순서 오류
-
-
-class ConversationTooLongError(InvalidInputError):
-    error_code = "CONVERSATION_TOO_LONG"       # 메시지 수·길이 초과 (R11)
+    pass                                       # 빈 대화, 역할·순서 오류, 메시지 수 초과 (R11). error_code는 VALIDATION_ERROR 그대로 (R7)
 
 
 class AnswerGenerationError(UpstreamError):
@@ -98,7 +103,6 @@ class AnswerGenerationError(UpstreamError):
 @dataclass(frozen=True)
 class ConversationLimits:
     max_messages: int
-    max_message_chars: int
 
 
 @dataclass(frozen=True)
@@ -107,7 +111,7 @@ class Conversation:
 
     @classmethod
     def create(cls, raw: list[tuple[str, str]], limits: ConversationLimits) -> "Conversation":
-        # 빈 대화 / 수 초과 / 알 수 없는 role / 빈 메시지 / 길이 초과 / 마지막이 user가 아님 → 슬라이스 예외
+        # 빈 대화 / 수 초과 / 알 수 없는 role / 빈 메시지 / 첫·마지막이 user가 아님 / 교대 깨짐 → 슬라이스 예외
         ...
 
     @property
@@ -115,7 +119,7 @@ class Conversation:
         return self.messages[-1].content
 ```
 
-- `Answer(text, mode, sources)`와 `Source(chunk_id, source_ref_id)`는 frozen dataclass, `AnswerMode`는 `StrEnum`(`mock`, `llm`, `rag`)이다. 빈 답변은 `__post_init__`에서 막는다.
+- `Answer(text, mode, sources)`와 `Source(ref, chunk_id, source_ref_id)`는 frozen dataclass, `AnswerMode`는 `StrEnum`(`mock`, `llm`, `rag`)이다. 빈 답변은 `__post_init__`에서 막는다.
 - 포트 `AnswerGenerator.generate(conversation) -> Answer`는 [api-architecture §5](../api-architecture/SKILL.md)와 [연결 가이드](../../../docs/references/api-rag-integration.md)를 따른다.
 
 ## infrastructure
@@ -168,8 +172,8 @@ class AskService:
 
 ## presentation
 
-- `schemas.py`: `ChatRequest(messages: list[MessageIn])`, `MessageIn.role`은 `Literal["user", "assistant"]`. `ChatResponse(answer, sources, mode)`와 `from_domain(answer)`. 필드마다 `Field(..., description=...)`를 쓴다.
-- 스키마는 형식만 본다(타입, 필수 여부, role 값). 메시지 수·길이 같은 규칙은 도메인이 본다. 둘 다 400이지만 `error_code`가 다르다(`VALIDATION_ERROR` / 슬라이스 코드).
+- `schemas.py`: `ChatRequest(messages: list[MessageIn])`, `MessageIn.role`은 `Literal["user", "assistant"]`. `ChatData(answer, mode, sources)`와 `from_domain(answer)`, 응답 모델은 `SuccessResponse[ChatData]`. 필드마다 `Field(..., description=...)`를 쓴다.
+- 스키마는 형식만 본다(타입, 필수 여부, role 값). 메시지 수·순서 같은 규칙은 도메인이 본다. 둘 다 400 `VALIDATION_ERROR`다(R7).
 - `dependencies.py`: `provide_ask_service()` 플레이스홀더([layered-architecture §4.3](../layered-architecture/SKILL.md)).
 - `router.py`:
 
@@ -177,14 +181,14 @@ class AskService:
 router = APIRouter(prefix="/api/v1", tags=["chat"])
 
 
-@router.post("/chat", response_model=ChatResponse)
-async def chat(body: ChatRequest, service: Annotated[AskService, Depends(provide_ask_service)]) -> ChatResponse:
+@router.post("/chat", response_model=SuccessResponse[ChatData])
+async def chat(body: ChatRequest, service: Annotated[AskService, Depends(provide_ask_service)]) -> SuccessResponse[ChatData]:
     answer = await service.ask(body.to_raw())
-    return ChatResponse.from_domain(answer)
+    return SuccessResponse(data=ChatData.from_domain(answer))
 ```
 
 - router에서 `try/except`로 예외를 바꾸지 않는다(R6).
-- health는 `GET /health` → `{"status": "ok"}`만 둔다. 외부 호출을 하지 않는다(LLM 키가 없어도 200).
+- health는 `GET /health` → `{"success": true, "data": {"status": "ok"}}`만 둔다. 외부 호출을 하지 않는다(LLM 키가 없어도 200).
 
 ## 조립
 
@@ -201,7 +205,7 @@ def create_answer_generator(settings: Settings) -> AnswerGenerator:
 
 def wire_dependencies(app: FastAPI, settings: Settings) -> None:
     service = AskService(generator=create_answer_generator(settings),
-                         limits=ConversationLimits(settings.max_messages, settings.max_message_chars))
+                         limits=ConversationLimits(settings.max_messages))
     app.dependency_overrides.update({provide_ask_service: lambda: service})
 ```
 

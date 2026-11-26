@@ -24,7 +24,7 @@ PR #9(API 개발 환경 추가) 비판 리뷰에서 나온 지적이다. 다른 
 | S8 | `check_layers.py` | TODO | domain이 `container.py`·`main.py`·서비스 루트 모듈을 import해도 잡지 않는다. `importlib`·속성 접근 경유 import도 놓친다 |
 | S9 | `check_layers.py` | TODO | 프로파일 값 형식 검증 없음. `fsd`가 문자열이면 예외로 종료 코드 1, 리스트 자리에 문자열이면 검사가 조용히 약해진다. `--root`가 있어도 `root` 키를 요구한다 |
 | S10 | `layer-profile.json` | TODO | 접두어 일치가 `_`만 인정해 `psycopg2`를 놓친다. 목록에 추가하거나 일치 규칙을 문서화 |
-| S11 | `smoke.sh` | TODO | 메시지 수 초과 검사: `MAX_MESSAGES`가 홀수면 user가 연속돼 순서 오류 400으로도 통과한다. 교대 순서로 만들고 `error_code`도 확인. `openapi.json`이 JSON이 아니면 FAIL이 아니라 "미구현"으로 넘어간다 |
+| S11 | `smoke.sh` | 일부 완료 (docs/api-ep-contracts) | 교대 순서·`error_code` 확인은 반영. 남은 것: `openapi.json`이 JSON이 아닐 때 처리. 원문: 메시지 수 초과 검사: `MAX_MESSAGES`가 홀수면 user가 연속돼 순서 오류 400으로도 통과한다. 교대 순서로 만들고 `error_code`도 확인. `openapi.json`이 JSON이 아니면 FAIL이 아니라 "미구현"으로 넘어간다 |
 | S12 | 검증 재현성 | TODO | PR 본문의 검증 결과(unittest 12개, smoke 9항목, 위반 검출)를 재현할 파일이 저장소에 없다. layer-check·smoke 자체 테스트 fixture를 커밋 |
 
 ## 2. 문서 정합성
@@ -32,13 +32,13 @@ PR #9(API 개발 환경 추가) 비판 리뷰에서 나온 지적이다. 다른 
 | # | 대상 | 상태 | 내용 |
 | --- | --- | --- | --- |
 | D1 | 연결 가이드 ↔ `api-implementation`·`api-architecture` | TODO | 가이드의 `Conversation.history`·공백 제거가 예시 코드·용어표에 없다. 포트 시그니처가 세 곳에 반복된다. 가이드 하나만 원본으로 두고 나머지는 링크 |
-| D2 | `Source` 계약 | TODO | `chunk_id`, `source_ref_id`만 있다. chunking 스킬의 필수 항목 `document_id`, `source_loc` 추가 여부를 RAG 담당과 결정 |
+| D2 | `Source` 계약 | 완료 (docs/api-ep-contracts) | `ref`, `chunk_id`, `source_ref_id`로 확정. `source_ref_id`는 원문 Markdown 파일명. 원문: `chunk_id`, `source_ref_id`만 있다. chunking 스킬의 필수 항목 `document_id`, `source_loc` 추가 여부를 RAG 담당과 결정 |
 | D3 | `api-invariants` §7 게이트 4 | TODO | "skip 수는 base와 같음"을 에이전트가 측정할 수 없다(브랜치 변경 금지, 환경 의존 skip). 발주서가 기준 수를 주거나 "새 skip 데코레이터 없음"으로 바꾼다 |
 | D4 | `api-reviewer.md` | TODO | 보고 형식이 `fastapi-run §4`를 가리키지만 보고 형식은 §5 |
 | D5 | `error_handlers.py` 역할 | TODO | 문서(api-architecture, fsd-architecture)는 app(조립), 프로파일은 shared로 검사. 하나로 맞춘다 |
 | D6 | `layer-profile.json` `rule_ids` | TODO | `구조`→R1, `슬라이스`→R5가 규칙 뜻과 다르다. 구조·슬라이스 규칙 ID를 새로 두거나 비운다 |
 | D7 | 보고 어휘 | TODO | `not_run`(implementer) / `미구현`(reviewer) / 심각도 `미구현` 포함 여부가 문서마다 다르다. api-invariants에서 하나로 정한다 |
-| D8 | 기본값 중복 | TODO | `API_MAX_MESSAGES=20`·`2000`이 네 곳에 있다. §10이 smoke에 `MAX_MESSAGES`를 넘기지 않는다. 원본 한 곳과 doc-map coupling |
+| D8 | 기본값 중복 | 일부 완료 (docs/api-ep-contracts) | 메시지 길이 한도(`2000`)는 삭제. `API_MAX_MESSAGES=20` 중복은 남음. 원문: `API_MAX_MESSAGES=20`·`2000`이 네 곳에 있다. §10이 smoke에 `MAX_MESSAGES`를 넘기지 않는다. 원본 한 곳과 doc-map coupling |
 | D9 | `api-architect.md` | TODO | `uv run`(`.venv` 생성)을 쓰게 하면서 환경 변경·저장소 밖 파일 생성을 금지한다. api-invariants §7의 `.venv` 예외를 같이 적거나 `--no-sync` 사용 |
 | D10 | 패키지 설명 | TODO | "pydantic-settings 미설치"는 사실과 다르다(`uv.lock`에 전이 의존). `httpx`도 전이 의존이므로 첫 구현에서 `uv add --dev httpx` |
 | D11 | `layered-architecture` | TODO | 공통 스킬에 프로젝트 표현("답변 생성기 계약", "연결 가이드")과 FastAPI 전용 조립 규칙(§4.4)이 남아 있다. 중립 예시로 바꾸고 FastAPI 예시임을 표시 |
