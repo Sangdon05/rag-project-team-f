@@ -32,18 +32,25 @@ SPEC_BODY = """
 | AC-1 | 계약 파일 검증 | 명령: `validate_contract.py` | exit 0 | REQ-1 |
 | AC-2 | doc-sync 통과 | 명령: `check_docs.py --strict` | ERROR 0 | REQ-2 |
 
-## 7. 미결 사항
+{inquiry}"""
 
-| ID | 질문 | 선택지·기본값 | 결정 | 상태 |
-| --- | --- | --- | --- | --- |
-| Q-1 | 형식은? | JSON(기본) | {decision} | {qstate} |
+INQUIRY = """
+## 문의
 
-## 8. 결정 기록
+### Q-1. 계약 형식
 
-| 날짜 | 결정 | 결정자 | 근거 |
-| --- | --- | --- | --- |
-| 2026-11-26 | 스펙 승인 | user | 채팅 확인 |
-{decisions}
+- 배경: 3절 REQ-1
+- 선택지: JSON (추천) / YAML
+- 의견: JSON으로 하되
+  주석이 필요하면 별도 문서로
+- 상태: {q1}
+
+### Q-2. 필수 키 수
+
+- 배경: 6절
+- 선택지: 5개 / 7개
+- 의견: {{{{사용자가 작성}}}}
+- 상태: open
 """
 
 PLAN_BODY = """
@@ -61,7 +68,6 @@ PLAN_BODY = """
 
 | 날짜 | 결정 | 결정자 | 근거 |
 | --- | --- | --- | --- |
-| 2026-11-26 | 계획 승인 | user | 채팅 확인 |
 
 ## 9. 완료 판정
 
@@ -111,12 +117,12 @@ class WorkDocsTests(unittest.TestCase):
     spec_id = f"{TODAY}-sample"
     plan_id = f"{TODAY}-sample"
 
-    def write_spec(self, status="clarifying", qstate="resolved", decisions="", approved=False, ac2="AC-2"):
+    def write_spec(self, status="clarifying", inquiry=False, approved=False, ac2="AC-2"):
         head = fm(type="spec", id=self.spec_id, title="예시", status="clarifying", owner="orchestrator",
-                  created=TODAY, updated=TODAY, approved_by="", approved_at="", approved_hash="",
+                  created=TODAY, updated=TODAY, approved_by="", approved_at="",
                   completed_at="", archived_at="", related="[]")
-        body = SPEC_BODY.format(decision="JSON" if qstate == "resolved" else "", qstate=qstate,
-                                decisions=decisions).replace("| AC-2 |", f"| {ac2} |")
+        body = SPEC_BODY.format(inquiry=INQUIRY.format(q1="resolved") if inquiry else "").replace(
+            "| AC-2 |", f"| {ac2} |")
         self.write(f"docs/specs/{self.spec_id}.md", head + body)
         if approved or status == "approved":
             r = self.run_wd("approve", "spec", self.spec_id, "--by", "user")
@@ -125,7 +131,7 @@ class WorkDocsTests(unittest.TestCase):
     def write_plan(self, tasks, verdict=(), status="approved"):
         head = fm(type="plan", id=self.plan_id, title="예시 계획", status="draft", owner="orchestrator",
                   spec=self.spec_id, created=TODAY, updated=TODAY, approved_by="", approved_at="",
-                  approved_hash="", completed_at="", archived_at="", base_commit="abc1234")
+                  completed_at="", archived_at="", base_commit="abc1234")
         self.write(f"docs/plans/{self.plan_id}.md",
                    head + PLAN_BODY.format(spec=self.spec_id, tasks="\n".join(tasks), verdict="\n".join(verdict)))
         if status != "draft":
@@ -165,13 +171,33 @@ class WorkDocsTests(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("approved가 아님", r.stderr)
 
-    def test_approve_refuses_open_question_and_restores_file(self):
-        self.write_spec(qstate="open")
+    def test_approve_refuses_inquiry_section_and_restores_file(self):
+        self.write_spec(inquiry=True)
         before = self.read(f"docs/specs/{self.spec_id}.md")
         r = self.run_wd("approve", "spec", self.spec_id, "--by", "user")
         self.assertEqual(r.returncode, 1)
-        self.assertIn("Q-1", r.stdout)
+        self.assertIn("미결 문의 ['Q-2']", r.stdout)
         self.assertEqual(self.read(f"docs/specs/{self.spec_id}.md"), before)
+        # 모두 resolved여도 문의 절이 남아 있으면 최종본이 아니다
+        p = self.root / f"docs/specs/{self.spec_id}.md"
+        p.write_text(before.replace("- 상태: open", "- 상태: resolved"), encoding="utf-8")
+        r = self.run_wd("approve", "spec", self.spec_id, "--by", "user")
+        self.assertIn("문의 절이 남음", r.stdout)
+        # 본문에 반영하고 문의 절을 지우면 승인된다
+        text = p.read_text(encoding="utf-8")
+        p.write_text(text[: text.index("## 문의")], encoding="utf-8")
+        self.assertEqual(self.run_wd("approve", "spec", self.spec_id, "--by", "user").returncode, 0)
+
+    def test_questions_lists_opinions(self):
+        self.write_spec(inquiry=True)
+        r = self.run_wd("questions", self.spec_id)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("Q-1  resolved", r.stdout)
+        self.assertIn("의견 있음", r.stdout)
+        self.assertIn("주석이 필요하면 별도 문서로", r.stdout)  # 여러 줄 의견
+        self.assertIn("Q-2  open", r.stdout)
+        self.assertIn("의견 없음", r.stdout)  # 자리표시만 있으면 빈 의견
+        self.assertIn("남은 문의 1개 ['Q-2']", r.stdout)
 
     def test_approve_then_plan_from_template(self):
         self.write_spec()
@@ -229,13 +255,12 @@ class WorkDocsTests(unittest.TestCase):
         self.assertEqual(r.returncode, 1)
         self.assertIn("수행 담당 'data-engineer'", r.stdout)
 
-    def test_waived_needs_user_decision(self):
+    def test_waived_needs_evidence(self):
         self.write_spec(status="approved", approved=True)
-        verdict = ["| AC-1 | waived | 범위 제외 | 사용자 |", self.GOOD_VERDICT[1]]
-        self.write_plan(self.GOOD_TASKS, verdict, status="in_progress")
-        self.assertIn("사람(결정자)의 결정이 없음", self.run_wd("archive", self.spec_id).stdout)
-        self.write_spec(status="approved", approved=True,
-                        decisions=f"| {TODAY} | AC-1 이번 범위 제외 | 사용자 | 일정 |")
+        self.write_plan(self.GOOD_TASKS, ["| AC-1 | waived | | 사용자 |", self.GOOD_VERDICT[1]], status="in_progress")
+        self.assertIn("AC-1 근거·확인자가 비어 있음", self.run_wd("archive", self.spec_id).stdout)
+        self.write_plan(self.GOOD_TASKS, [f"| AC-1 | waived | 사용자 결정 {TODAY}: 다음 작업 | 사용자 |",
+                                          self.GOOD_VERDICT[1]], status="in_progress")
         self.assertEqual(self.run_wd("archive", self.spec_id, "--dry-run").returncode, 0)
 
     def test_archive_moves_sets_frontmatter_and_relinks(self):
@@ -267,10 +292,6 @@ class WorkDocsTests(unittest.TestCase):
         self.write_spec(status="approved", approved=True)
         self.write_plan([t.replace("done", "todo") for t in self.GOOD_TASKS])
         r = self.run_wd("cancel", "spec", self.spec_id, "--reason", "우선순위 변경")
-        self.assertIn("사용자 결정이 필요", r.stderr)
-        self.write_spec(status="approved", decisions=f"| {TODAY} | 스펙 취소 | user | 우선순위 |")
-        self.write_plan([t.replace("done", "todo") for t in self.GOOD_TASKS])
-        r = self.run_wd("cancel", "spec", self.spec_id, "--reason", "우선순위 변경")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         for rel in (f"docs/archives/specs/{self.spec_id}.md", f"docs/archives/plans/{self.plan_id}.md"):
             text = self.read(rel)
@@ -294,26 +315,34 @@ class WorkDocsTests(unittest.TestCase):
         r = self.run_wd("approve", "spec", self.spec_id, "--by", "user")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
-    def test_approve_needs_person_and_decision_row(self):
+    def test_approve_spec_needs_person(self):
         self.write_spec()
-        r = self.run_wd("approve", "spec", self.spec_id, "--by", "api-reviewer")
-        self.assertIn("사람이 아님", r.stderr)
-        r = self.run_wd("approve", "spec", self.spec_id, "--by", "sangdon")
-        self.assertIn("승인 행이 없음", r.stderr)
-        self.run_wd("approve", "spec", self.spec_id, "--by", "user")
+        for who in ("api-reviewer", "오케스트레이터", "디렉터"):
+            self.assertIn("사람이 아님", self.run_wd("approve", "spec", self.spec_id, "--by", who).stderr)
+        self.assertEqual(self.run_wd("approve", "spec", self.spec_id, "--by", "sangdon").returncode, 0)
         r = self.run_wd("approve", "spec", self.spec_id, "--by", "user")
         self.assertIn("clarifying으로 되돌리고", r.stderr)
 
-    def test_editing_ac_after_approval_blocks_archive(self):
+    def test_human_edits_are_allowed(self):
+        # 사람은 승인된 스펙·보관 문서를 직접 고칠 수 있다: 구조가 맞으면 검사는 통과한다
         self.write_spec(status="approved")
         self.write_plan(self.GOOD_TASKS, self.GOOD_VERDICT, status="in_progress")
         p = self.root / f"docs/specs/{self.spec_id}.md"
-        text = p.read_text(encoding="utf-8")
-        p.write_text("\n".join(l for l in text.splitlines() if not l.startswith("| AC-2 ")) + "\n",
+        p.write_text(p.read_text(encoding="utf-8").replace("청크 계약 파일이 있다", "청크 계약 파일이 저장소에 있다"),
                      encoding="utf-8")
-        r = self.run_wd("archive", self.spec_id, "--dry-run")
-        self.assertEqual(r.returncode, 1)
-        self.assertIn("approved_hash 불일치", r.stdout)
+        self.assertEqual(self.run_wd("check", "--strict").returncode, 0)
+        self.assertEqual(self.run_wd("archive", self.spec_id).returncode, 0)
+        a = self.root / f"docs/archives/specs/{self.spec_id}.md"
+        a.write_text(a.read_text(encoding="utf-8").replace("저장소에 있다", "저장소 루트에 있다"), encoding="utf-8")
+        self.assertEqual(self.run_wd("check", "--strict").returncode, 0)
+
+    def test_inquiry_left_after_approval_is_warning_only(self):
+        self.write_spec(status="approved")
+        p = self.root / f"docs/specs/{self.spec_id}.md"
+        p.write_text(p.read_text(encoding="utf-8") + INQUIRY.format(q1="resolved"), encoding="utf-8")
+        r = self.run_wd("check")
+        self.assertEqual(r.returncode, 0)
+        self.assertIn("WARN  [spec]", r.stdout)
 
     def test_cancelled_task_does_not_drop_its_ac(self):
         self.write_spec(status="approved")
@@ -331,23 +360,13 @@ class WorkDocsTests(unittest.TestCase):
         self.assertIn("AC-1 확인자", out)
         self.assertNotIn("AC-2 확인자", out)  # 명령: AC는 오케스트레이터가 다시 실행해 확인 가능
 
-    def test_waived_matches_exact_ac_id(self):
-        self.write_spec(status="approved", decisions=f"| {TODAY} | AC-10 범위 제외 | user | x |")
-        verdict = ["| AC-1 | waived | 범위 제외 | user |", self.GOOD_VERDICT[1]]
-        self.write_plan(self.GOOD_TASKS, verdict, status="in_progress")
-        self.assertIn("AC-1 waived", self.run_wd("archive", self.spec_id, "--dry-run").stdout)
-
-    def test_archived_doc_edit_detected_and_no_warn_for_readonly(self):
+    def test_no_warn_for_readonly_agent_outputs(self):
         self.write_spec(status="approved")
         tasks = self.GOOD_TASKS[:2] + ["| T-3 | 리뷰 | api-reviewer | T-1, T-2 | - | 지원: APPROVE | done |"]
         self.write_plan(tasks, self.GOOD_VERDICT, status="in_progress")
         self.assertNotIn("산출물 경로가 없음", self.run_wd("check").stdout)
         self.assertEqual(self.run_wd("archive", self.spec_id).returncode, 0)
         self.assertEqual(self.run_wd("check", "--strict").returncode, 0)
-        p = self.root / f"docs/archives/specs/{self.spec_id}.md"
-        p.write_text(p.read_text(encoding="utf-8").replace("청크 계약 파일이", "청크 계약 파일은"), encoding="utf-8")
-        r = self.run_wd("check")
-        self.assertIn("archived_hash 불일치", r.stdout)
 
     def test_plan_is_director_judgement_without_hitl(self):
         self.write_spec(status="approved")

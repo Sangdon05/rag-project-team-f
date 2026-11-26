@@ -6,6 +6,7 @@
     uv run python .claude/skills/spec-plan/scripts/workdocs.py check [--strict]
     uv run python .claude/skills/spec-plan/scripts/workdocs.py waves <plan-id>
     uv run python .claude/skills/spec-plan/scripts/workdocs.py approve spec <id> --by <사용자> | approve plan <id> [--by 디렉터]
+    uv run python .claude/skills/spec-plan/scripts/workdocs.py questions <spec-id>
     uv run python .claude/skills/spec-plan/scripts/workdocs.py start <plan-id>
     uv run python .claude/skills/spec-plan/scripts/workdocs.py archive <spec-id> [--dry-run]
     uv run python .claude/skills/spec-plan/scripts/workdocs.py cancel spec|plan <id> --reason "..." [--dry-run]
@@ -18,7 +19,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import datetime as dt
 import os
 import re
@@ -46,6 +46,7 @@ REQUIRED = {
 NAME_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 TASK_STATUSES = {"todo", "doing", "done", "blocked", "cancelled"}
+APPROVING: dict[str, bool] = {}
 HUMAN_ASSIGNEES = {"오케스트레이터", "디렉터", "팀원", "사용자"}  # 에이전트가 아닌 담당
 DIRECTORS = {"오케스트레이터", "디렉터"}  # 계획 승인·작업 판단 (HITL 아님)
 VERDICTS = {"pass", "fail", "waived"}
@@ -186,18 +187,50 @@ def ids(cell: str, prefix: str) -> list[str]:
     return re.findall(rf"\b{prefix}-\d+\b", cell)
 
 
+INQUIRY_HEAD = re.compile(r"^## 문의\b.*$", re.M)
+Q_HEAD = re.compile(r"^### (Q-\d+)\.?\s*(.*)$", re.M)
+
+
+def inquiry_section(body: str) -> str:
+    """스펙의 '## 문의' 절 (다음 '## ' 제목 전까지). 없으면 빈 문자열."""
+    m = INQUIRY_HEAD.search(body)
+    if not m:
+        return ""
+    nxt = re.search(r"^## ", body[m.end():], re.M)
+    return body[m.start(): m.end() + (nxt.start() if nxt else len(body) - m.end())]
+
+
+def questions(body: str) -> list[dict]:
+    """'### Q-n. 제목' 블록의 '- 키: 값' 줄을 읽는다. 의견은 다음 키 줄 전까지 여러 줄을 허용한다."""
+    sec = inquiry_section(body)
+    heads = list(Q_HEAD.finditer(sec))
+    out = []
+    for i, h in enumerate(heads):
+        block = sec[h.end(): heads[i + 1].start() if i + 1 < len(heads) else len(sec)]
+        q = {"ID": h.group(1), "제목": h.group(2).strip()}
+        key = None
+        for line in block.splitlines():
+            m = re.match(r"^- ([^:：]+)[:：]\s*(.*)$", line)
+            if m:
+                key = m.group(1).strip()
+                q[key] = m.group(2).strip()
+            elif key and line.strip() and not line.startswith("#"):
+                q[key] = (q[key] + "\n" + line.strip()).strip()
+        q["의견"] = re.sub(r"\{\{[^}]*\}\}", "", q.get("의견", "")).strip()
+        out.append(q)
+    return out
+
+
 def spec_parts(doc: Doc) -> dict:
     return {
         "req": table(doc.body, "ID", "요구사항"),
         "ac": table(doc.body, "ID", "기준"),
-        "q": table(doc.body, "ID", "질문"),
-        "decisions": table(doc.body, "날짜", "결정"),
+        "q": questions(doc.body),
     }
 
 
 def plan_parts(doc: Doc) -> dict:
-    return {"tasks": table(doc.body, "ID", "작업"), "verdict": table(doc.body, "AC", "결과"),
-            "decisions": table(doc.body, "날짜", "결정")}
+    return {"tasks": table(doc.body, "ID", "작업"), "verdict": table(doc.body, "AC", "결과")}
 
 
 def agent_names() -> set[str]:
@@ -213,28 +246,6 @@ def read_only_agents() -> set[str]:
         if tools and not re.search(r"\b(Write|Edit)\b", tools):
             out.add(p.stem)
     return out
-
-
-def contract_hash(d: "Doc") -> str:
-    """승인 대상: 스펙은 요구사항·완료 기준 표, 계획은 작업의 ID·작업·담당·선행·산출물·완료 기준(상태 제외)."""
-    if d.type == "spec":
-        p = spec_parts(d)
-        rows = [[r.get(k, "") for k in ("ID", "요구사항", "구분")] for r in p["req"]]
-        rows += [[a.get(k, "") for k in ("ID", "기준", "확인 방법", "기대 결과", "요구사항")] for a in p["ac"]]
-    else:
-        rows = [[t.get(k, "") for k in ("ID", "작업", "담당", "선행", "산출물", "완료 기준")]
-                for t in plan_parts(d)["tasks"]]
-    return hashlib.sha256(repr(rows).encode("utf-8")).hexdigest()[:12]
-
-
-def body_hash(text: str) -> str:
-    lines, body = split_frontmatter(text)
-    keep = [l for l in lines if not l.startswith("archived_hash:")]
-    return hashlib.sha256(("\n".join(keep) + body).encode("utf-8")).hexdigest()[:12]
-
-
-def decision_rows(d: "Doc") -> list[dict]:
-    return table(d.body, "날짜", "결정")
 
 
 def is_person(name: str) -> bool:
@@ -308,14 +319,8 @@ def check_doc(d: Doc, docs: list[Doc]) -> None:
     if d.status not in ("draft", "clarifying", "cancelled"):
         if not (d.fm.get("approved_by") and d.fm.get("approved_at")):
             errors.append(f"[approval] {where}: status={d.status}이면 approved_by·approved_at이 필요")
-        if "{{" in d.body:
+        if "{{" in d.body.replace(inquiry_section(d.body), ""):
             errors.append(f"[template] {where}: 채우지 않은 {{{{...}}}} 자리표시가 남음")
-        if d.fm.get("approved_hash") != contract_hash(d):
-            what = "요구사항·완료 기준" if d.type == "spec" else "작업 분해(상태 제외)"
-            errors.append(f"[approval] {where}: 승인 후 {what}이 바뀜 (approved_hash 불일치) — "
-                          "변경 이력을 남기고 사용자 재승인(approve)을 받는다")
-    if d.archived and d.fm.get("archived_hash") != body_hash(d.text):
-        errors.append(f"[archive] {where}: 보관 후 내용이 바뀜 (archived_hash 불일치) — 보관 문서는 고치지 않는다")
     n_warn = len(warns)
     (check_spec if d.type == "spec" else check_plan)(d, docs)
     if d.archived:  # 보관 문서는 고칠 수 없으므로 WARN을 남기지 않는다
@@ -330,11 +335,12 @@ def check_spec(d: Doc, docs: list[Doc]) -> None:
         return
     if not reqs or not acs:
         errors.append(f"[spec] {where}: 요구사항(REQ-n)·완료 기준(AC-n) 표가 비어 있음")
-    for q in p["q"]:
-        if q.get("상태") != "resolved" and q["ID"].startswith("Q-"):
-            errors.append(f"[spec] {where}: {q['ID']}가 resolved가 아님 — 미결 사항이 남으면 승인하지 않는다")
-        elif q["ID"].startswith("Q-") and not q.get("결정"):
-            errors.append(f"[spec] {where}: {q['ID']} 결정 칸이 비어 있음")
+    if inquiry_section(d.body):
+        open_q = [q["ID"] for q in p["q"] if q.get("상태") != "resolved"]
+        msg = (f"미결 문의 {open_q}" if open_q else "문의 절이 남음") + \
+            " — 답을 1~6절에 반영하고 '## 문의' 절을 지워 최종본만 남긴다"
+        # 승인 시에는 막고, 승인 뒤 사람이 고친 경우에는 알리기만 한다
+        (errors if APPROVING.get(d.id) else warns).append(f"[spec] {where}: {msg}")
     covered = set()
     for a in acs.values():
         refs = ids(a.get("요구사항", ""), "REQ")
@@ -420,7 +426,6 @@ def check_plan_done(d: Doc, spec: Doc, tasks: list[dict], verdict: list[dict], s
             errors.append(f"[done] {where}: {t['ID']} 상태가 {t.get('상태')}")
     # 작업을 cancelled로 바꿔도 그 AC는 빠지지 않는다: 스펙의 모든 AC를 판정한다
     rows = {v["AC"]: v for v in verdict if v["AC"].startswith("AC-")}
-    decisions = spec_parts(spec)["decisions"]
     for ac in sorted(spec_acs, key=lambda x: int(x.split("-")[1])):
         v = rows.get(ac)
         if not v:
@@ -430,9 +435,6 @@ def check_plan_done(d: Doc, spec: Doc, tasks: list[dict], verdict: list[dict], s
             errors.append(f"[done] {where}: {ac} 결과 '{v.get('결과')}' — pass 또는 waived여야 완료")
         if not v.get("근거") or not v.get("확인자"):
             errors.append(f"[done] {where}: {ac} 근거·확인자가 비어 있음")
-        if v.get("결과") == "waived" and not any(
-                ac in ids(r.get("결정", ""), "AC") and is_person(r.get("결정자", "")) for r in decisions):
-            errors.append(f"[done] {where}: {ac} waived인데 스펙 결정 기록에 사람(결정자)의 결정이 없음")
         confirmer = v.get("확인자", "")
         assignees = {t.get("담당", "") for t in tasks if ac in ids(t.get("완료 기준", ""), "AC")}
         for a in assignees - {"사용자", "팀원"}:
@@ -512,7 +514,6 @@ def move_docs(moves: list[tuple[Doc, dict]], dry: bool) -> None:
     tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split())
     for old, new in mapping.items():
         text = relink(old.read_text(encoding="utf-8"), old.parent, mapping, new_dir=new.parent)
-        text = set_fm(text, {"archived_hash": body_hash(text)})
         old.write_text(text, encoding="utf-8")
         new.parent.mkdir(parents=True, exist_ok=True)
         if old.relative_to(ROOT).as_posix() in tracked:
@@ -537,7 +538,7 @@ def cmd_new(a) -> int:
         if not spec:
             sys.exit(f"중단: 스펙 '{a.spec}'이 없음")
         if spec.status not in ("approved",):
-            sys.exit(f"중단: 스펙 {spec.id}가 approved가 아님 ({spec.status}) — HITL로 미결 사항을 먼저 해결한다")
+            sys.exit(f"중단: 스펙 {spec.id}가 approved가 아님 ({spec.status}) — 사용자와 문의를 해결하고 승인받는다")
         rel = Path(os.path.relpath(spec.path, dest.parent)).as_posix()
         head = "-"
         for ref in ("origin/main", "main", "HEAD"):
@@ -584,17 +585,14 @@ def cmd_approve(a) -> int:
     if a.kind == "spec":  # HITL은 스펙에만: 사람의 승인 행이 있어야 한다
         if not is_person(a.by):
             sys.exit(f"중단: --by '{a.by}'는 사람이 아님. 스펙 승인은 사용자·팀원만 한다")
-        if not any("승인" in r.get("결정", "") and r.get("결정자", "").strip() == a.by for r in decision_rows(d)):
-            sys.exit(f"중단: {d.rel} 결정 기록에 '{a.by}'의 승인 행이 없음 "
-                     f"(| 날짜 | ... 승인 | {a.by} | 근거 |). 사용자 확인을 받은 뒤 기록한다")
     elif a.by in agent_names():
         sys.exit(f"중단: --by '{a.by}'는 하위 에이전트. 계획은 오케스트레이터·디렉터가 승인한다")
     status = "approved" if d.status in ("draft", "clarifying", "approved") else d.status
     upd = {"status": status, "approved_by": a.by, "approved_at": today(), "updated": today()}
     original = d.text
     d.save(upd)
-    d.save({"approved_hash": contract_hash(d)})
     errors.clear()
+    APPROVING[d.id] = True
     check_doc(d, all_docs())
     if errors:
         d.path.write_text(original, encoding="utf-8")
@@ -617,6 +615,26 @@ def cmd_list(a) -> int:
                 x.id for x in docs if x.type == "plan" and x.fm.get("spec") == d.id)
             date = d.fm.get("archived_at") if a.archived else d.fm.get("updated")
             print(f"  {d.id}  {d.status}  {date}  {d.fm.get('title', '')}" + (f"  ↔ {link}" if link else ""))
+    return 0
+
+
+def cmd_questions(a) -> int:
+    """스펙 문의 절의 진행 상황: 의견이 달린 것, 아직 비어 있는 것."""
+    d = find(all_docs(), a.id, "spec")
+    if not d:
+        sys.exit(f"스펙 '{a.id}'가 없음")
+    qs = questions(d.body)
+    if not qs:
+        print(f"{d.rel}: 문의 절 없음" + (" (남은 '## 문의' 제목 확인)" if inquiry_section(d.body) else ""))
+        return 0
+    for q in qs:
+        state = q.get("상태", "open")
+        answered = "의견 있음" if q["의견"] else "의견 없음"
+        print(f"{q['ID']}  {state:<8} {answered}  {q['제목']}")
+        if q["의견"]:
+            print("    " + q["의견"].replace("\n", "\n    "))
+    left = [q["ID"] for q in qs if q.get("상태") != "resolved"]
+    print(f"\n남은 문의 {len(left)}개 {left}" if left else "\n모두 resolved — 본문에 반영하고 '## 문의' 절을 지운 뒤 승인한다")
     return 0
 
 
@@ -673,9 +691,6 @@ def cmd_cancel(a) -> int:
         sys.exit(f"활성 {a.kind} '{a.id}'가 없음")
     d_ = today()
     upd = {"status": "cancelled", "cancel_reason": a.reason, "archived_at": d_, "updated": d_}
-    if d.type == "spec" and not any("취소" in r.get("결정", "") and is_person(r.get("결정자", ""))
-                                    for r in decision_rows(d)):
-        sys.exit(f"중단: 스펙 취소는 사용자 결정이 필요하다. {d.rel} 결정 기록에 사람의 취소 결정 행을 쓴 뒤 실행한다")
     targets = [d]
     if d.type == "spec":
         targets += [x for x in docs if x.type == "plan" and x.fm.get("spec") == d.id and not x.archived]
@@ -698,6 +713,7 @@ def main() -> int:
     p = sp.add_parser("approve"); p.add_argument("kind", choices=["spec", "plan"]); p.add_argument("id")
     p.add_argument("--by", help="스펙: 승인한 사용자(필수). 계획: 기본 오케스트레이터")
     p = sp.add_parser("start"); p.add_argument("id")
+    p = sp.add_parser("questions"); p.add_argument("id")
     p = sp.add_parser("archive"); p.add_argument("id"); p.add_argument("--dry-run", action="store_true")
     p = sp.add_parser("cancel"); p.add_argument("kind", choices=["spec", "plan"]); p.add_argument("id"); p.add_argument("--reason", required=True)
     p.add_argument("--dry-run", action="store_true")
@@ -707,7 +723,7 @@ def main() -> int:
         return run_check(a.strict)
     if a.cmd == "list":
         return cmd_list(a)
-    return {"new": cmd_new, "waves": cmd_waves, "approve": cmd_approve, "start": cmd_start,
+    return {"new": cmd_new, "waves": cmd_waves, "approve": cmd_approve, "start": cmd_start, "questions": cmd_questions,
             "archive": cmd_archive, "cancel": cmd_cancel}[a.cmd](a)
 
 

@@ -9,7 +9,6 @@ created: {{date}}
 updated: {{date}}
 approved_by:
 approved_at:
-approved_hash:
 completed_at:
 archived_at:
 base_commit: {{base_commit}}
@@ -95,4 +94,4 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | --- | --- | --- | --- |
 | AC-1 | | | |
 
-결과: `pass` | `fail` | `waived`. `waived`는 해당 AC ID를 적은 사람의 결정이 스펙 결정 기록에 있어야 한다. 확인자는 그 AC를 맡은 담당이 아니어야 한다(예외: `명령:` AC는 오케스트레이터·디렉터가 다시 실행해 확인 가능). 취소한 작업의 AC도 판정한다.
+결과: `pass` | `fail` | `waived`. `waived`는 사용자 결정이 필요하며 근거 칸에 결정자·날짜를 적는다. 확인자는 그 AC를 맡은 담당이 아니어야 한다(예외: `명령:` AC는 오케스트레이터·디렉터가 다시 실행해 확인 가능). 취소한 작업의 AC도 판정한다.
