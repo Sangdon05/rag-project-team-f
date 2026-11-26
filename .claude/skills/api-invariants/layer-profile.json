@@ -7,12 +7,12 @@
   "assembly_files": ["main.py", "container.py"],
   "forbidden_packages": {
     "domain": ["fastapi", "starlette", "pydantic", "uvicorn", "httpx", "dotenv",
-               "langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"],
+               "langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts", "solar_handoff"],
     "application": ["fastapi", "starlette", "uvicorn",
-                    "langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"],
+                    "langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts", "solar_handoff"],
     "infrastructure": ["fastapi", "starlette"],
-    "presentation": ["langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"],
-    "shared": ["langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"]
+    "presentation": ["langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts", "solar_handoff"],
+    "shared": ["langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts", "solar_handoff"]
   },
   "domain_shared_allowed": ["exceptions"],
   "http_exception_forbidden": ["domain", "application", "presentation"],

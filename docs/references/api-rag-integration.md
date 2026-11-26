@@ -117,6 +117,6 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 - [ ] 설계안에 `rag` 백엔드와 에러·타임아웃 명세 반영
 - [x] `RagAnswerGenerator` + 테스트 (fake 체인)
 - [x] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동 (API 엔드포인트 계획 smoke로 확인)
-- [ ] api-invariants 완료 게이트, smoke 통과
+- [x] api-invariants 완료 게이트, smoke 통과 (2026-11-26 main 3945d46: 게이트 4개 통과, mock smoke 모두 PASS, `rag` 실제 호출 2회 200)
 - [x] `.env.example`, environment.md, README 환경 변수 설명 갱신
 - [x] 이 문서 1절 표의 `rag` 행을 실제 구현으로 갱신

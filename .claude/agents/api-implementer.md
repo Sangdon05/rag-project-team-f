@@ -25,7 +25,7 @@ skills:
 
 ## 하지 않는 것
 
-- `scripts/`, `data/`, `src/pokedex/`(RAG 체인), `eval/`, `results/`, `.claude/`, 설계안을 고치지 않는다. 바꿀 점은 보고서에 적는다.
+- `scripts/`, `data/`, `src/pokedex/`(RAG 체인), `solar_handoff/`(Solar 대화 서비스), `eval/`, `results/`, `.claude/`, 설계안을 고치지 않는다. 바꿀 점은 보고서에 적는다.
 - `eval/`을 열거나 목록을 조회하지 않는다. 평가셋 정답을 mock 응답, 프롬프트, 테스트 기대값에 넣지 않는다(R16).
 - `pyproject.toml`·`uv.lock`을 손으로 고치지 않는다. 별도 `uv init`이나 서비스용 `pyproject.toml`을 만들지 않는다.
 - 테스트에서 실제 LLM·네트워크를 부르지 않는다. 검사를 통과시키려고 테스트를 skip하거나 규칙·스크립트를 바꾸지 않는다(R15).
