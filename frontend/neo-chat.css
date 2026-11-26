@@ -1,4 +1,5 @@
 /* Chat is an independent transparent layer. neo.css and all scenery rules stay intact. */
+.nx-chat-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; }
 .nx-home[data-chat="on"] .nx-home-dialogue { visibility: hidden; }
 .nx-home-visual[data-locked] { height: var(--nx-visual-height); min-height: 0; }
 .nx-chat-overlay { position: absolute; inset: var(--px) var(--px) auto; height: var(--nx-chat-height); z-index: 2; pointer-events: none; background: transparent; }

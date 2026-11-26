@@ -132,6 +132,8 @@ test("chronological sorting preserves the caller's array and orders same-time li
 test("storage fails explicitly when IndexedDB is unavailable; invalid records never reach storage", async () => {
   const store = createConversationStore({ indexedDB: null });
   await assert.rejects(store.load("P1"), /IndexedDB/);
+  await assert.rejects(store.clearPersona("P1"), /IndexedDB/);
+  await assert.rejects(store.clearPersona("P4"), /persona/);
   await assert.rejects(store.save(record(1, "user", { request_status: "unknown" })), /status/);
   await assert.rejects(store.save(record(1, "user", { persona_id: "P4" })), /persona/);
   await assert.rejects(store.save(record(1, "user", { created_at: "yesterday" })), /created_at/);
