@@ -63,7 +63,7 @@ class LlmGeneratorTest(unittest.IsolatedAsyncioTestCase):
 ## API
 
 ```python
-SETTINGS = Settings(answer_backend="mock", cors_origins=["http://localhost:5173"], max_messages=20, documents_dir="data/synthetic/pilot")
+SETTINGS = Settings(answer_backend="mock", cors_origins=["http://localhost:5173"], max_messages=20, documents_dir="solar_handoff/documents")
 
 
 class ChatApiTest(unittest.IsolatedAsyncioTestCase):

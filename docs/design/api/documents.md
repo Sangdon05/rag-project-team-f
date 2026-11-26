@@ -42,9 +42,9 @@
 
 | 예외 | 기반 | 상태 | `error_code` | 발생 조건 |
 | --- | --- | --- | --- | --- |
-| `InvalidSourceRefIdError` | `InvalidInputError` | 400 | `VALIDATION_ERROR` | `source_ref_id`에 허용 문자 밖 문자가 있음 |
+| `InvalidSourceRefIdError` | `InvalidInputError` | 400 | `VALIDATION_ERROR` | `source_ref_id`가 도감번호 3자리(`[0-9]{3}`)가 아님 |
 | `DocumentNotFoundError` | `NotFoundError` | 404 | `DOCUMENT_NOT_FOUND` | 형식은 맞지만 `<API_DOCUMENTS_DIR>/<source_ref_id>_*.md`에 맞는 파일이 없음 |
-| `DocumentSourceError` | `UpstreamError` | 502 | `DOCUMENT_SOURCE_FAILED` | 저장소 읽기 실패: 같은 번호 파일이 둘 이상(모호), 문서 폴더가 없거나 폴더가 아님, 권한 오류 등 `OSError`, UTF-8 디코딩 실패, 대상이 파일이 아님 |
+| `DocumentSourceError` | `UpstreamError` | 502 | `DOCUMENT_SOURCE_FAILED` | 저장소 읽기 실패: 같은 번호 파일이 둘 이상(모호), 문서 폴더가 없거나 폴더가 아님, 폴더 읽기·파일 읽기 권한 오류 등 `OSError`, UTF-8 디코딩 실패, 대상이 파일이 아님 |
 
 메시지(고정 문구, 경로·원문 오류 비노출):
 
@@ -72,7 +72,7 @@ class DocumentStore(ABC):
 `FileDocumentStore.get(source_ref_id)`:
 
 1. `base_dir`가 폴더가 아니면(없음 포함) `DocumentSourceError`. 문서 폴더 설정 오류를 404로 숨기지 않기 위해서다.
-2. `matches = sorted(base_dir.glob(f"{source_ref_id}_*.md"))`. 0개면 `DocumentNotFoundError`, 2개 이상이면 `DocumentSourceError`(같은 번호 파일이 여럿, 모호). 1개면 `path = matches[0]`.
+2. `os.scandir(base_dir)`로 이름이 `f"{source_ref_id}_"`로 시작하고 `.md`로 끝나는 항목을 모은다(`Path.glob`은 폴더 읽기 `OSError`를 삼켜 빈 결과를 내므로 쓰지 않는다. 권한 오류가 404로 숨지 않게 한다). 0개면 `DocumentNotFoundError`, 2개 이상이면 `DocumentSourceError`(같은 번호 파일이 여럿, 모호). 1개면 `path = matches[0]`.
 3. `path.read_bytes()`를 `asyncio.to_thread`로 읽고 `bytes.decode("utf-8")`로 바꾼다. `read_text`의 줄바꿈 변환을 피해 원문 그대로 돌려준다.
 4. 예외 변환:
 
@@ -116,7 +116,7 @@ class DocumentService:
 - path 파라미터는 presentation에서 `str`로만 받는다(정규식 `Path(pattern=...)`을 쓰지 않는다). 형식 검증은 도메인 `SourceRefId.create`가 하며 위반은 `InvalidSourceRefIdError` → 400 `VALIDATION_ERROR`.
 - **`/`가 들어간 id는 라우트에 매칭되지 않는다.** Starlette 기본 path 변환기는 `[^/]+`라서 `/api/v1/documents/a/b`는 이 라우트가 아니고, 맞는 경로가 없어 404 `NOT_FOUND`(공통)가 된다. `%2F`로 인코딩해도 Starlette가 디코딩된 경로로 매칭하므로 같은 404 `NOT_FOUND`다. `DOCUMENT_NOT_FOUND`·`VALIDATION_ERROR`가 아니다.
 - 빈 id(`/api/v1/documents/`)도 매칭되지 않아 404 `NOT_FOUND`다.
-- `.`, 공백, `%2E` 같은 다른 허용 밖 문자는 라우트에 매칭된 뒤 도메인에서 400 `VALIDATION_ERROR`다(예: `bulbasaur.md`, `..`).
+- 3자리 숫자가 아닌 id(`1`, `001.md`, 공백, `%2E%2E`→`..` 등)는 라우트에 매칭된 뒤 도메인에서 400 `VALIDATION_ERROR`다.
 
 응답 `data` (`DocumentData`, `SuccessResponse[DocumentData]`):
 
@@ -136,7 +136,7 @@ class DocumentService:
 | 404 | `DOCUMENT_NOT_FOUND` | 형식은 맞지만 파일 없음 |
 | 404 | `NOT_FOUND` | id에 `/`가 들어가거나 비어 있어 라우트에 매칭되지 않음 (공통) |
 | 405 | `METHOD_NOT_ALLOWED` | GET 외 메서드 |
-| 502 | `DOCUMENT_SOURCE_FAILED` | 문서 폴더 없음, 읽기 권한·디코딩 실패 등 저장소 읽기 실패 |
+| 502 | `DOCUMENT_SOURCE_FAILED` | 같은 번호 파일이 둘 이상, 문서 폴더 없음, 폴더·파일 읽기 권한·디코딩 실패 등 저장소 읽기 실패 |
 | 500 | `INTERNAL_ERROR` | 처리 못 한 예외. 원문 비노출 |
 
 예시 (`API_DOCUMENTS_DIR=solar_handoff/documents`):
@@ -202,7 +202,7 @@ api/documents/
 
 | 질문 | 임시 기본값 |
 | --- | --- |
-| 대소문자만 다른 id (`Bulbasaur_red_blue`) | API는 변환하지 않는다. macOS 기본 파일 시스템(대소문자 무시)에서는 200, Linux에서는 404가 될 수 있다. 파일명 규칙(소문자)은 RAG 쪽이 정하고 API는 그대로 둔다 |
+| 한글 파일명의 유니코드 정규화(NFC/NFD) | 번호 접두어(`001_`)로만 찾으므로 영향이 없다 |
 | `API_DOCUMENTS_DIR`가 없을 때 시작 실패로 할지 | 시작은 성공, 요청 시 502 `DOCUMENT_SOURCE_FAILED` (mock 모드 서버가 문서 없이도 떠야 함) |
 | 응답 `Content-Type`을 `text/markdown`으로 줄지 | 아니오. 공통 JSON 형식의 `data.markdown` 문자열 |
 | symlink를 따라갈지 | 따라간다(기본 동작). 문서 폴더는 저장소 안 커밋된 파일이므로 별도 제한 없음 |

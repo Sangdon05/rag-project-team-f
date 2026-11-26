@@ -38,9 +38,11 @@ base_commit: f758951
 | T-9 | `source_ref_id` 도감번호 3자리로 계약·설계안·smoke 갱신 | 오케스트레이터 | T-8 | `docs/design/api/documents.md`, `docs/references/api-rag-integration.md`, `.claude/skills/api-invariants/SKILL.md` | 지원: doc-sync ERROR 0 | done |
 | T-10 | documents를 `<번호>_*.md` 조회로 바꾸고 기본 폴더를 `solar_handoff/documents`로 | api-implementer | T-9 | `api/documents/`, `api/tests/documents/`, `api/shared/settings.py`, `.env.example` | AC-1, AC-4 | todo |
 | T-11 | 파일럿 청크 `source_ref_id`를 도감번호 3자리로 | data-engineer | - | `scripts/helper/pilot_vector_index.py`, `tests/test_pilot_vector_index.py`, `.claude/skills/chunking/SKILL.md` | AC-6 | done |
-| T-12 | 최종 변경 독립 리뷰·smoke (`DOC_ID=001`) | api-reviewer | T-10 | | AC-2, AC-5 | todo |
-| T-13 | PR 전 보안 점검 (두 브랜치) | security-reviewer | T-10, T-11 | | AC-8 | todo |
-| T-14 | 문서 동기화 검사 | 오케스트레이터 | T-10, T-11 | | AC-7 | todo |
+| T-12 | 최종 변경 독립 리뷰·smoke (`DOC_ID=001`) | api-reviewer | T-10 | | AC-2, AC-5 | done |
+| T-13 | PR 전 보안 점검 (두 브랜치) | security-reviewer | T-10, T-11 | | AC-8 | done |
+| T-14 | 문서 동기화 검사 | 오케스트레이터 | T-10, T-11 | | AC-7 | done |
+| T-15 | T-12 주의 반영: 폴더 읽기 권한 오류를 502로(`os.scandir`), OpenAPI path 설명 갱신 | api-implementer | T-12 | `api/documents/` | AC-1, AC-4 | todo |
+| T-16 | T-15 재리뷰 | api-reviewer | T-15 | | AC-5 | todo |
 
 - 담당: `.claude/agents/`에 있는 에이전트 이름, 또는 `오케스트레이터`·`디렉터`·`팀원`·`사용자`.
 - 선행: 먼저 끝나야 하는 작업 ID (쉼표 구분, 없으면 `-`).
@@ -62,6 +64,8 @@ base_commit: f758951
 단계 7: T-9(오케스트레이터)
 단계 8: T-10(api-implementer)
 단계 9: T-12(api-reviewer), T-13(security-reviewer), T-14(오케스트레이터)
+단계 10: T-15(api-implementer)
+단계 11: T-16(api-reviewer)
 ```
 
 ## 4. 발주서
@@ -141,6 +145,10 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | 2026-11-26 | T-8 | api-reviewer APPROVE, smoke 14항목 PASS | 리뷰 보고 |
 | 2026-11-26 | T-9 | documents·chat·health 설계안, 연결 가이드, api-invariants §10·smoke(`DOC_ID=001`, 없는 번호 999), 스킬 표를 도감번호 3자리로 갱신. 후속 G8 추가. doc-sync ERROR 0 | `feat/api-documents` |
 | 2026-11-26 | T-11 | 파일럿 5판 10청크 `source_ref_id` 모두 `001`, `tests.test_pilot_vector_index` 14 OK, tests 127 OK(skipped=1), doc-sync ERROR 0, security ERROR 0. 이전 파일명 방식 커밋과 합쳐 한 커밋으로 정리 | `feat/source-ref-id` f479d1b |
+| 2026-11-26 | T-10 | 도감번호 3자리 조회, 기본 폴더 `solar_handoff/documents`. 게이트 재실행: layer-check 위반 0, import OK, api 89 OK, tests OK(skipped=1), AC-3·AC-4 테스트 OK | `feat/api-documents` befa2ed |
+| 2026-11-26 | T-12 | api-reviewer APPROVE, smoke 14항목 PASS(`DOC_ID=001`), curl 001·151 200, 형식 위반 400, 999·000 404, 같은 번호 두 파일 502. 주의 4건(폴더 권한 오류가 `Path.glob`에서 삼켜져 404, OpenAPI path 설명, 설계안·스킬 잔여 문구) | 리뷰 보고 |
+| 2026-11-26 | T-13 | security-reviewer: 두 브랜치 ERROR 0·WARN 0, `security: allow` 3줄 정당 | 보안 보고 |
+| 2026-11-26 | T-14 | doc-sync(base origin/main) `feat/api-documents` ERROR 0·WARN 5, `feat/source-ref-id` ERROR 0·WARN 6 (모두 coupling, 대상 문서에 바뀐 내용 없음) | 명령 출력 |
 | 2026-11-26 | - | origin/main(f758951) 기준 rebase(`--update-refs`), 충돌 README·environment.md 해결 | `git log origin/main..feat/api-documents` |
 
 ## 8. 결정 기록
@@ -150,6 +158,7 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | 날짜 | 결정 | 결정자 | 근거 |
 | --- | --- | --- | --- |
 | 2026-11-26 | T-1~T-8은 spec-plan 스킬 머지 전에 수행한 작업이라 완료 상태로 기록한다 | 오케스트레이터 | main f758951에 spec-plan 머지 |
+| 2026-11-26 | T-12 주의 중 설계안·스킬 문구는 오케스트레이터가 고치고, 동작 문제(권한 오류 404)와 OpenAPI 설명은 T-15·T-16을 추가해 처리한다 | 오케스트레이터 | 리뷰 보고 |
 | 2026-11-26 | T-9의 `documents.md` 갱신은 결정 반영만이므로 api-architect 대신 오케스트레이터가 한다 | 오케스트레이터 | 사용자 결정(도감번호 3자리)의 기계적 반영 |
 
 ## 9. 완료 판정
