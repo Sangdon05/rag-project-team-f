@@ -66,7 +66,7 @@ class DocumentStore(ABC):
 | `GET /api/v1/documents/{source_ref_id}` | `{"source_ref_id", "markdown"}` |
 | `GET /api/v1/suggestion?level=` | `{"level", "suggestions": [{"id", "text"}]}` (RAG와 무관) |
 
-세부 명세는 설계안([목록](../design/api/README.md))이 원본이다. 설계안 작성 전 확정 규격은 [API 엔드포인트 계획](../plans/2026-11-26-api-endpoints.md) 3절에 있다.
+세부 명세는 설계안([목록](../design/api/README.md))이 원본이다. 요구사항 원본은 [API 엔드포인트 스펙](../archives/specs/2026-11-26-api-endpoints.md) 3절이다(완료·보관).
 
 ## 3. 연결 전에 RAG 쪽이 준비할 것
 
@@ -106,7 +106,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 - [ ] 3절 준비 항목 4개 충족
 - [ ] 설계안에 `rag` 백엔드와 에러·타임아웃 명세 반영
 - [ ] `RagAnswerGenerator` + 테스트 (fake 체인)
-- [x] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동 (API 엔드포인트 계획 PR ③~⑤ smoke로 확인)
+- [x] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동 (API 엔드포인트 계획 smoke로 확인)
 - [ ] api-invariants 완료 게이트, smoke 통과
 - [ ] `.env.example`, environment.md, README 환경 변수 설명 갱신
 - [ ] 이 문서 1절 표의 `rag` 행을 "예정"에서 실제 상태로 갱신

@@ -2,7 +2,7 @@
 
 상태: 검토 중
 
-입력 원본: [API 엔드포인트 계획](../../plans/2026-11-26-api-endpoints.md) 2절 결정, 3절 확정 규격. 규칙 번호(R*)는 [api-invariants](../../../.claude/skills/api-invariants/SKILL.md)를 가리킨다.
+입력 원본: [API 엔드포인트 스펙](../../archives/specs/2026-11-26-api-endpoints.md) 3절 요구사항. 규칙 번호(R*)는 [api-invariants](../../../.claude/skills/api-invariants/SKILL.md)를 가리킨다.
 
 이 문서는 health 슬라이스와 함께 **모든 슬라이스가 쓰는 공통 사항**(0절)을 정의한다. 다른 설계안은 0절을 링크하고 다시 쓰지 않는다.
 
@@ -27,7 +27,7 @@
 | 405 | `METHOD_NOT_ALLOWED` | 경로는 있으나 허용하지 않는 메서드 | `StarletteHTTPException(405)` |
 | 500 | `INTERNAL_ERROR` | 처리하지 못한 예외 | `Exception` |
 
-- 슬라이스 전용 400 코드는 두지 않는다. 400은 모두 `VALIDATION_ERROR`다(계획 2절).
+- 슬라이스 전용 400 코드는 두지 않는다. 400은 모두 `VALIDATION_ERROR`다(스펙 REQ-1·REQ-3).
 - 슬라이스 전용 404·502 코드(`DOCUMENT_NOT_FOUND`, `ANSWER_GENERATION_FAILED`, `DOCUMENT_SOURCE_FAILED`)는 각 설계안에 있다.
 
 ### 0.3 공용 파일 (`api/shared/`, 조립 파일)
@@ -77,7 +77,7 @@
 | `OPENAI_CHAT_MODEL`, `OPENAI_REASONING_EFFORT`(기본 `low`), `OPENAI_API_KEY` | (기존 값) | — (container가 `llm` 분기에서만 읽음) | chat | `mock`이면 읽지 않는다 |
 
 - CORS: `allow_origins=settings.cors_origins`, `allow_methods=["GET", "POST"]`, `allow_headers=["Content-Type"]`.
-- 요청 크기·타임아웃·호출 횟수 제한은 두지 않는다(계획 머리말, R11).
+- 요청 크기·타임아웃·호출 횟수 제한은 두지 않는다(스펙 1절, R11).
 
 ### 0.6 공통 테스트 (`api/tests/test_common.py`)
 

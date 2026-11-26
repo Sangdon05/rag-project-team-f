@@ -2,7 +2,7 @@
 
 상태: 검토 중
 
-입력 원본: [API 엔드포인트 계획](../../plans/2026-11-26-api-endpoints.md) 3절 `GET /api/v1/suggestion`. 응답 형식·공통 에러·기반 예외·설정은 [health 설계안 0절(공통)](health.md#0-공통)을 따른다.
+입력 원본: [API 엔드포인트 스펙](../../archives/specs/2026-11-26-api-endpoints.md) 3절 요구사항, `GET /api/v1/suggestion`. 응답 형식·공통 에러·기반 예외·설정은 [health 설계안 0절(공통)](health.md#0-공통)을 따른다.
 
 ## 1. 목적과 범위
 

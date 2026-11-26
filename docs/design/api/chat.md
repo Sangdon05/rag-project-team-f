@@ -2,7 +2,7 @@
 
 상태: 검토 중
 
-입력 원본: [API 엔드포인트 계획](../../plans/2026-11-26-api-endpoints.md) 2절 결정, 3절 `POST /api/v1/chat`. 생성기 계약 원본: [API–RAG 연결 가이드](../../references/api-rag-integration.md) 2절(R9). 응답 형식·공통 에러·기반 예외·설정은 [health 설계안 0절(공통)](health.md#0-공통)을 따른다.
+입력 원본: [API 엔드포인트 스펙](../../archives/specs/2026-11-26-api-endpoints.md) 3절 요구사항, `POST /api/v1/chat`. 생성기 계약 원본: [API–RAG 연결 가이드](../../references/api-rag-integration.md) 2절(R9). 응답 형식·공통 에러·기반 예외·설정은 [health 설계안 0절(공통)](health.md#0-공통)을 따른다.
 
 ## 1. 목적과 범위
 
@@ -11,7 +11,7 @@
 - 서버는 대화를 저장하지 않는다. 클라이언트가 매 요청에 대화 전체를 보낸다(R10).
 - 생성기는 `mock`(기본)·`llm`까지 구현한다. `rag`는 범위 밖이며 [연결 가이드](../../references/api-rag-integration.md) 4절 절차로 나중에 추가한다. 추가해도 이 설계안의 router·서비스·응답 스키마는 바뀌지 않는다.
 - 포켓몬 지식(상성, 데이터 조회, 질문 분기)을 API에 구현하지 않는다. 답변 내용은 모두 생성기를 거친다(R9).
-- 메시지 길이 한도, 출처 개수 한도는 두지 않는다(계획 2절).
+- 메시지 길이 한도, 출처 개수 한도는 두지 않는다(스펙 REQ-1·REQ-3).
 
 ## 2. 용어
 
@@ -46,7 +46,7 @@
 
 | 타입 | 필드 | 규칙 |
 | --- | --- | --- |
-| `Source` (frozen) | `ref: int`, `chunk_id: str`, `source_ref_id: str` | 검증·변환하지 않는다. 값은 생성기(RAG)가 정한 그대로(계획 2절 "예시 ID", "`ref` 번호") |
+| `Source` (frozen) | `ref: int`, `chunk_id: str`, `source_ref_id: str` | 검증·변환하지 않는다. 값은 생성기(RAG)가 정한 그대로(스펙 REQ-3) |
 | `Answer` (frozen) | `text: str`, `mode: AnswerMode`, `sources: tuple[Source, ...] = ()` | `__post_init__`: `text`가 앞뒤 공백 제거 후 비어 있으면 `AnswerGenerationError`. `sources` 개수 한도·순서 변경·번호 재부여 없음 |
 
 ### 3.2 규칙 위반과 예외
@@ -58,7 +58,7 @@
 | `InvalidConversationError` | `InvalidInputError` | 400 | `VALIDATION_ERROR` | 메시지 0개, `max_messages` 초과, 첫·마지막이 user 아님, 교대 깨짐, 알 수 없는 role, 빈 content |
 | `AnswerGenerationError` | `UpstreamError` | 502 | `ANSWER_GENERATION_FAILED` | 생성기가 답을 만들지 못함(네트워크, 모델, SDK 오류), 빈 답변 |
 
-- `InvalidConversationError`는 `error_code`를 바꾸지 않는다. 400은 모두 `VALIDATION_ERROR`다(계획 2절). 구분은 `message`로 한다.
+- `InvalidConversationError`는 `error_code`를 바꾸지 않는다. 400은 모두 `VALIDATION_ERROR`다(스펙 REQ-1·REQ-3). 구분은 `message`로 한다.
 - "근거가 부족해 확인할 수 없다"는 정상 답변(200)이다. 생성기가 `text`에 담고 `sources`는 빈 목록이다.
 
 ## 4. 포트와 구현체
@@ -233,13 +233,13 @@ api/chat/
 
 | 파일 | 제안 |
 | --- | --- |
-| `docs/references/api-rag-integration.md` §2 `Message` 행 | "앞뒤 공백 제거, 길이 한도 검증 완료" → "앞뒤 공백 제거, 빈 값·개수·순서 검증 완료". 계획 2절에서 메시지 길이 한도를 없앴는데 문구가 남아 있다 |
+| `docs/references/api-rag-integration.md` §2 `Message` 행 | "앞뒤 공백 제거, 길이 한도 검증 완료" → "앞뒤 공백 제거, 빈 값·개수·순서 검증 완료". 스펙 REQ-3에서 메시지 길이 한도를 없앴는데 문구가 남아 있다 |
 
 ## 10. 질문
 
 | 질문 | 임시 기본값 |
 | --- | --- |
 | 요청 본문의 정의되지 않은 필드(`messages[].name` 등) | 무시 (pydantic 기본). 400으로 막지 않음 |
-| `rag` 모드에서 `source_ref_id`가 도감번호 3자리가 아니면 | API는 검증·변환하지 않고 그대로 전달(계획 2절). 이 경우 documents 조회는 400이 되므로 RAG 쪽 메타데이터 규칙으로 막는다 |
+| `rag` 모드에서 `source_ref_id`가 도감번호 3자리가 아니면 | API는 검증·변환하지 않고 그대로 전달(스펙 REQ-1·REQ-3). 이 경우 documents 조회는 400이 되므로 RAG 쪽 메타데이터 규칙으로 막는다 |
 | `answer`의 `[n]`과 `sources[].ref` 불일치 | API는 검사하지 않는다(체인 책임, 연결 가이드 3절 3) |
 | mock 응답에 질문을 몇 자까지 넣을지 | 앞 100자 |

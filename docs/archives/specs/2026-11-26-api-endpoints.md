@@ -2,14 +2,14 @@
 type: spec
 id: 2026-11-26-api-endpoints
 title: API 엔드포인트 3종 (suggestion, chat, documents)
-status: approved
+status: done
 owner: orchestrator
 created: 2026-11-26
 updated: 2026-11-26
 approved_by: 사용자
 approved_at: 2026-11-26
-completed_at:
-archived_at:
+completed_at: 2026-11-26
+archived_at: 2026-11-26
 related: []
 ---
 
@@ -31,7 +31,7 @@ related: []
 
 제외:
 
-- `rag` 답변 생성기 연결 ([연결 가이드](../references/api-rag-integration.md) 4절, RAG 진입점 준비 후)
+- `rag` 답변 생성기 연결 ([연결 가이드](../../references/api-rag-integration.md) 4절, RAG 진입점 준비 후)
 - Solar 질문 CLI가 `source_ref_id`를 내보내도록 바꾸는 일 (rag-developer 후속)
 - 실제 OpenAI 키로 llm 모드 호출 확인
 
@@ -52,7 +52,7 @@ related: []
 ## 4. 제약
 
 - 바꾸면 안 되는 것: `data/processed/` 해시 고정 파일, `eval/`, `solar_handoff/` 내용(읽기만), 청크 `chunk_id`·`document_id` 규칙
-- 따를 가드레일: `AGENTS.md` 가드레일 절, [api-invariants](../../.claude/skills/api-invariants/SKILL.md) R1~R16, [chunking](../../.claude/skills/chunking/SKILL.md)
+- 따를 가드레일: `AGENTS.md` 가드레일 절, [api-invariants](../../../.claude/skills/api-invariants/SKILL.md) R1~R16, [chunking](../../../.claude/skills/chunking/SKILL.md)
 
 ## 5. 입력과 산출물
 
