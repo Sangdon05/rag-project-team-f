@@ -25,6 +25,7 @@ PR #9(API 개발 환경 추가) 비판 리뷰에서 나온 지적이다. 다른 
 | S9 | `check_layers.py` | TODO | 프로파일 값 형식 검증 없음. `fsd`가 문자열이면 예외로 종료 코드 1, 리스트 자리에 문자열이면 검사가 조용히 약해진다. `--root`가 있어도 `root` 키를 요구한다 |
 | S10 | `layer-profile.json` | TODO | 접두어 일치가 `_`만 인정해 `psycopg2`를 놓친다. 목록에 추가하거나 일치 규칙을 문서화 |
 | S11 | `smoke.sh` | 일부 완료 (docs/api-ep-contracts) | 교대 순서·`error_code` 확인은 반영. 남은 것: `openapi.json`이 JSON이 아닐 때 처리. 원문: 메시지 수 초과 검사: `MAX_MESSAGES`가 홀수면 user가 연속돼 순서 오류 400으로도 통과한다. 교대 순서로 만들고 `error_code`도 확인. `openapi.json`이 JSON이 아니면 FAIL이 아니라 "미구현"으로 넘어간다 |
+| S13 | `doc-sync/scripts/check_docs.py` `check_deps_docs` | TODO | `dependencies\s*=\s*\[(.*?)\]`가 `psycopg[binary,pool]`의 `]`에서 끝나 뒤 패키지(`pydantic`, `python-dotenv`, `ragas`, `uvicorn`)를 검사하지 않는다. TOML 파서(`tomllib`)로 읽도록 고친다 |
 | S12 | 검증 재현성 | TODO | PR 본문의 검증 결과(unittest 12개, smoke 9항목, 위반 검출)를 재현할 파일이 저장소에 없다. layer-check·smoke 자체 테스트 fixture를 커밋 |
 
 ## 2. 문서 정합성
