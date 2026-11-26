@@ -18,6 +18,22 @@
 .nx-chat-time { color: var(--text-2); }
 .nx-chat-status { font-size: var(--fs-12); margin: 6px 0 0; color: var(--text-2); }
 .nx-chat-error { color: var(--error); }
+.nx-embedding-status { display: inline-flex; align-items: center; vertical-align: middle; gap: 6px; min-width: 0; max-width: 100%; }
+.nx-embedding-label { min-width: 0; overflow-wrap: anywhere; animation: none; transform: none; }
+.nx-embedding-dot { display: inline-block; width: 8px; height: 8px; flex: 0 0 8px; border: 1px solid var(--ink); border-radius: 50%; background-color: #8193A4; transform-origin: center; }
+.nx-embedding-dot[data-family="openai"] { background-color: #2D9B66; }
+.nx-embedding-dot[data-family="kure"] { background-color: #D6A92A; }
+.nx-embedding-dot[data-family="solar"] { background-color: #D9534F; }
+.nx-embedding-dot.is-pulsing { animation: nx-embedding-heartbeat 1.7s ease-in-out infinite; }
+@keyframes nx-embedding-heartbeat {
+  0%, 35%, 100% { transform: scale(1); opacity: .55; }
+  10%, 25% { transform: scale(1.25); opacity: 1; }
+  17% { transform: scale(1); opacity: .75; }
+}
+body[data-motion="off"] .nx-embedding-dot.is-pulsing { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-embedding-dot.is-pulsing { animation: none; }
+}
 .nx-chat-sources { display: grid; gap: 5px; margin: 4px 0 0; padding: 0; list-style: none; }
 .nx-chat-source { width: 100%; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 7px 9px; text-align: left; font: inherit; font-size: var(--fs-12); cursor: pointer; overflow-wrap: anywhere; }
 .nx-chat-source small { display: block; color: var(--text-2); }

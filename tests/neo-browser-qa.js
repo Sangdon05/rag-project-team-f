@@ -1,5 +1,5 @@
 /** Explicit test transport, isolated real IndexedDB, and the production chat controller. */
-import { startNeoChat } from '../frontend/neo-chat.js?v=20261126-reset1';
+import { startNeoChat } from '../frontend/neo-chat.js?v=20261126-embedding1';
 import { createTeamApiClient } from '../frontend/neo-team-client.mjs';
 import { createConversationStore } from '../frontend/neo-conversation.mjs';
 import { getMateProfile } from '../frontend/mate-content.mjs';
@@ -86,7 +86,12 @@ async function fixtureFetch(url, init) {
     if (question.startsWith('DELAY')) await pause(250);
     const mode = question.startsWith('MOCK') ? 'mock' : question.startsWith('LLM') ? 'llm' : 'rag';
     const sources = mode === 'rag' && !question.startsWith('NOEVIDENCE') ? [{ ...source, ...(question.startsWith('DOCERROR') ? { source_ref_id: 'missing-doc' } : {}) }, { ref: 2, chunk_id: 'type-chart-electric', source_ref_id: 'gen1-type-chart' }] : [];
-    return response({ answer: sources.length ? '롱스톤은 바위·땅 타입이에요[1]. 전기 기술은 땅 타입에 효과가 없어요[2]. 이 답변의 근거는 아래에서 확인할 수 있어요[1].' : `${mode} 테스트 응답 · 제공된 출처가 없어요.`, mode, sources });
+    const embedding = question.startsWith('EMBED-OPENAI') ? { query_model: 'text-embedding-3-small', document_model: 'text-embedding-3-small' }
+      : question.startsWith('EMBED-KURE') ? { query_model: 'nlpai-lab/KURE-v1', document_model: 'nlpai-lab/KURE-v1' }
+      : question.startsWith('EMBED-UNKNOWN') ? { query_model: 'custom-fixture-model', document_model: 'custom-fixture-model' }
+      : { query_model: 'solar-embedding-2-query', document_model: 'solar-embedding-2-passage' };
+    return response({ answer: sources.length ? '롱스톤은 바위·땅 타입이에요[1]. 전기 기술은 땅 타입에 효과가 없어요[2]. 이 답변의 근거는 아래에서 확인할 수 있어요[1].' : `${mode} 테스트 응답 · 제공된 출처가 없어요.`, mode, sources,
+      ...(mode === 'rag' && !question.startsWith('EMBED-LEGACY') ? { embedding } : {}) });
   }
   throw new Error(`Unexpected fixture endpoint: ${parsed.pathname}`);
 }
@@ -165,6 +170,13 @@ async function run() {
     }
     const restoredRows = await store.load('P1');
     check('새로고침 후 출처와 mode 보존', restoredRows.some(m => m.role === 'assistant' && m.mode === 'rag' && m.sources.length === 2));
+    check('답변의 실제 임베딩 모델을 IndexedDB에 함께 저장', restoredRows.some(m => m.role === 'assistant' && m.embedding?.query_model === 'solar-embedding-2-query'));
+    if (!saved.embeddingRestore) {
+      sessionStorage.setItem(runKey, JSON.stringify({ ...saved, phase: 'embedding-restore', resetRestore: false, embeddingRestore: true, expectedA: restoredRows.length, report }));
+      await store.close(); location.reload(); return;
+    }
+    check('모델명과 색상은 실제 새로고침 후에도 답변 기록에서 복원', assistants().at(-1).querySelector('.nx-embedding-label')?.textContent === 'solar-embedding-2-query' && assistants().at(-1).querySelector('.nx-embedding-dot')?.dataset.family === 'solar');
+    check('모델 표시 복원을 위한 답변 API 추가 요청 없음', askRequests().length === 0);
     $('nx-chat-latest').click();
     document.body.dataset.motion = 'on';
     label.textContent = `통합 테스트 ${report.filter(r => r.pass).length}/${report.length} 통과 · 테스트 픽스처 · 실제 팀 API 아님`;
@@ -182,10 +194,14 @@ async function run() {
   const context = askRequests().at(-1).body.messages;
   check('최근 19개만 role 교대로 전송', context.length === 19 && context.every((m, i) => m.role === (i % 2 ? 'assistant' : 'user')) && context[0].content === '이전 질문 3');
   check('잘린 이전 기록까지 로컬에 보존', (await store.load('P3')).length === 26);
+  const legacyContext = assistants()[0];
+  check('이전 기록의 모델 정보를 현재 환경으로 추정하지 않음', legacyContext.querySelector('.nx-embedding-label')?.textContent === '임베딩 모델 정보 없음' && !legacyContext.querySelector('.nx-embedding-dot.is-pulsing'));
 
   await select('P1'); await send('롱스톤한테 전기쇼크 쎄?');
   const first = assistants()[0];
   check('실제 응답 구조와 출처 번호 연결', first.querySelectorAll('.nx-citation').length === 3 && first.querySelectorAll('.nx-chat-source').length === 2 && first.textContent.includes('rag'));
+  check('실제 Solar 질의 모델명과 문서 모델을 분리해서 표시', first.querySelector('.nx-embedding-label')?.textContent === 'solar-embedding-2-query' && first.querySelector('.nx-embedding-status')?.title.includes('solar-embedding-2-passage'));
+  check('움직임 끄기에서 임베딩 동그라미도 정지', getComputedStyle(first.querySelector('.nx-embedding-dot')).animationName === 'none');
   check('원문은 출처를 열기 전 요청하지 않음', docCalls === 0);
   first.querySelector('.nx-citation').click();
   await until(() => first.querySelector('.nx-document-content h1'), 'source Markdown');
@@ -207,6 +223,7 @@ async function run() {
     await send(`${mode} mode 확인`);
     const row = assistants().at(-1);
     check(`${mode} 출처 없는 응답 구분`, row.textContent.includes(mode === 'MOCK' ? 'mock' : mode === 'LLM' ? 'llm' : 'rag') && row.textContent.includes('제공된 출처 없음') && row.querySelectorAll('.nx-chat-source').length === 0);
+    if (mode !== 'NOEVIDENCE') check(`${mode}는 임베딩 모델을 표시하지 않음`, !row.querySelector('.nx-embedding-dot'));
   }
   for (const status of [400, 502, 500]) {
     const question = `ERR${status} 재시도 확인`; await send(question);
@@ -246,6 +263,15 @@ async function run() {
   check('이전 유저 지연 답변이 현재 화면에 표시되지 않음', messages().length === 2);
   await select('P1');
   check('지연 답변은 원래 A 대화에 저장', (await store.load('P1')).some(m => m.role === 'user' && m.content === 'DELAY A의 늦은 답변' && m.request_status === 'completed'));
+  for (const [question, family] of [['EMBED-OPENAI 모델 구분', 'openai'], ['EMBED-KURE 모델 구분', 'kure'], ['EMBED-UNKNOWN 모델 구분', 'unknown'], ['EMBED-LEGACY 모델 정보 없음', 'unknown']]) {
+    await send(question);
+    const row = assistants().at(-1), dot = row.querySelector('.nx-embedding-dot'), text = row.querySelector('.nx-embedding-label');
+    check(`${family} 모델의 색상 분류와 고정 텍스트`, dot?.dataset.family === family && getComputedStyle(text).animationName === 'none');
+    document.body.dataset.motion = 'on';
+    check(`${family}는 글자 대신 동그라미만 두근두근`, getComputedStyle(dot).animationName === (family === 'unknown' ? 'none' : 'nx-embedding-heartbeat') && getComputedStyle(text).animationName === 'none');
+    document.body.dataset.motion = 'off';
+  }
+
 
   const scroll = $('nx-chat-scroll');
   scroll.dispatchEvent(new WheelEvent('wheel', { deltaY: -120, bubbles: true })); scroll.scrollTop = 24; scroll.dispatchEvent(new Event('scroll'));
