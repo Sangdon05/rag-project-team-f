@@ -30,7 +30,7 @@
 | [fastapi-run](../../../.claude/skills/fastapi-run/SKILL.md) | api-reviewer | (공통) PID 파일 방식 FastAPI 서버 기동·종료. 앱 경로·설정·smoke는 서비스가 주입 |
 | [question-design](../../../.claude/skills/question-design/SKILL.md) | question-designer | '쎄?' 등 원표현과 세 인물의 v2 발화 프로필·질문 의도를 보존한 후보 제안, 답변 없는 입력 추출·출력 구조 검사, 사람 채택으로 전달 |
 
-2차 예정: rag-eval(Eval), testing(QA).
+2차 예정: testing(QA).
 
 ## 데이터 현황 (설계 근거)
 

@@ -28,7 +28,7 @@ security-reviewer는 읽기 전용이다. 검출은 스크립트가 결정적으
 API 에이전트는 설계(api-architect, opus/high) → 구현(api-implementer, sonnet/medium) → 리뷰·실행 검증(api-reviewer, sonnet/high)으로 나눈다. DB가 없어 실행 검증이 다른 작업과 섞이지 않으므로 리뷰와 실행 검증을 한 에이전트가 맡는다. 구현한 에이전트는 자기 결과를 판정하지 않는다.
 RAG와의 경계는 [API–RAG 연결 가이드](../api-rag-integration.md)가 원본이다. RAG 에이전트·스킬은 API를 알지 않는다. 체인 진입점·반환 형식이 바뀌면 오케스트레이터가 가이드를 고치고 api-implementer에게 어댑터 수정을 발주한다.
 
-2차 예정: Eval(rag-eval), QA(testing), Reviewer(계약 점검).
+2차 예정: QA(testing), Reviewer(RAG 쪽 계약 점검).
 
 ## 두 에이전트 사이의 계약
 
@@ -43,6 +43,20 @@ data-engineer                                rag-developer
   pgvector 컬렉션 {index_version} ──────▶   search_pokedex 툴
   runs/manifest.jsonl           ─────────▶   사용 버전 확인
 ```
+
+```
+팀원                                         eval
+  eval/dev.json, test.json, LOCK.json ───▶   잠금 verify → 평가 실행 (평가셋 수정 없음)
+  채점표의 사람 채점 칸            ◀──────▶   채점표 준비 / 채운 결과 집계
+  평가셋 수정·재잠금               ◀──────   eval/feedback/ 의견서 (정답표 의심 등)
+
+rag-developer                                eval
+  체인 트레이스 (langchain-rag 형식) ─────▶  results/{run_id}/ 원본 기록, 지표, 실패 분석
+  수정 발주 (오케스트레이터 경유)  ◀──────   실패 유형별 보고, 비교 보고서
+```
+
+- 트레이스 형식의 원본은 langchain-rag 스킬이고, eval은 [records.md](../../../.claude/skills/rag-eval/references/records.md)에서 그 형식을 읽는다.
+- 채택 판정은 eval이 아니라 오케스트레이터가 한다.
 
 - rag-developer는 데이터를 `src/pokedex/store.py` 하나로만 읽는다.
 - 정규화·청크 스키마가 바뀌면 `schema_version`을 올리고, rag-developer는 툴 테스트를 다시 돌린다.

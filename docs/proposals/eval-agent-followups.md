@@ -2,7 +2,7 @@
 
 eval 에이전트·rag-eval 스킬을 추가하면서 다른 에이전트·스킬·문서에 필요한 수정을 정리한다.
 eval 작업에서는 아래 항목을 직접 고치지 않는다(예외: #4, 사용자 지시로 반영). 담당자(또는 오케스트레이터)가 검토해 반영한다.
-상태는 main(PR #5 반영)과 이 브랜치를 대조한 결과다.
+상태는 main(PR #5 반영)과 이 브랜치를 대조한 결과다. 문서 동기화 항목(#1, #11~#14, #16~#18)은 chore/api-dev-env에서 갱신했다. RAG 에이전트·스킬의 동작을 바꾸는 항목(#2, #3, #8, #19~#21)은 담당자 결정이 필요해 그대로 둔다.
 
 ## 사용자 결정
 
@@ -17,7 +17,7 @@ eval 작업에서는 아래 항목을 직접 고치지 않는다(예외: #4, 사
 
 | # | 대상 | 상태 | 내용 |
 | --- | --- | --- | --- |
-| 1 | `AGENTS.md` 평가셋 섹션 | **미반영 (승인 대기)** | "사실형 정답은 `data/processed/`에서 자동 생성" 문구가 "평가셋은 사용자만 작성" 결정과 충돌. 아래 교체안 참고. 이 브랜치에서 수정을 시도했으나 AGENTS.md 쓰기 승인이 나지 않았다 |
+| 1 | `AGENTS.md` 평가셋 섹션 | **반영 (chore/api-dev-env)** — 아래 교체안대로 반영, `eval/README.md` 링크 | "사실형 정답은 `data/processed/`에서 자동 생성" 문구가 "평가셋은 사용자만 작성" 결정과 충돌. 아래 교체안 참고. 이 브랜치에서 수정을 시도했으나 AGENTS.md 쓰기 승인이 나지 않았다 |
 | 2 | `langchain-rag` 체인 구조 | 팀원 갱신으로 부분 해소 | A/B/C 검색 설정, 같은 조건 고정, dev로 설정 확정, 정답을 문서·프롬프트에 넣지 않음이 반영됨. 단 툴 선택 에이전트 구조는 유지 → "평가 대상 = 고정 RAG 체인" 결정과 다름. 아래 "확인 필요" 참고 |
 | 3 | `langchain-rag` 트레이스 형식 | 팀원 갱신으로 대부분 해소, 필드 3개 요청 | rag-eval은 팀원이 정한 트레이스를 원본으로 쓰도록 맞췄다 ([records.md](../../.claude/skills/rag-eval/references/records.md)). 추가 요청: 상태(`ok`/`no_evidence`/`error`/`timeout`)와 오류 내용 / 리라이트 원문·결과·fallback·시간 / `final` 항목의 `document_id`·`source_loc` |
 | 4 | `chunking` 메타데이터 | **반영 (이 브랜치)** | 팀원 갱신으로 `chunk_id`, `document_id`, `source_ref_id`가 이미 있음. 원문 위치를 바로 확인할 `source_loc`(Markdown 경로 + 절)을 추가하고 세 필드(`chunk_id`, `document_id`, `source_loc`)를 모든 청크의 필수로 명시 |
@@ -27,14 +27,14 @@ eval 작업에서는 아래 항목을 직접 고치지 않는다(예외: #4, 사
 | 8 | `rag-developer` 에이전트 | 일부 해소, 1건 요청 | 팀원 갱신: 채택 판정 금지, 독립 평가 전달. 추가 요청: `eval/` 읽기 금지(holdout 보호), 리라이터 입력에 정답 금지 |
 | 9 | `tool-calling` 범위 | #2 결정에 따름 | 현재 `search_pokedex`가 A/B/C 검색 설정을 따름 |
 | 10 | 문서 목록 | 일부 해소 | 팀원 갱신: `data/source_manifest.json`. 발제 항목(문서 ID, 제목, 출처, 이용 조건, 버전·수집 시점, 원문 위치)이 모두 있는지 확인 필요 |
-| 11 | `AGENTS.md` 실패 분석 표 | 미반영 | "툴 선택 실패", "정답 오류 → eval이 평가셋 수정" 삭제. rag-eval [failure-taxonomy](../../.claude/skills/rag-eval/references/failure-taxonomy.md)의 8개 유형 + "정답표 의심 → 사용자"로 교체 |
-| 12 | `AGENTS.md` 재현·실험 규칙 | 미반영 | 3회 반복은 dev에서만, 최종은 A/B/C 각 1회(60건) + C+RW 1회(20건), `retry`/`extra` 분리, 최종 후 설정 변경 금지 |
-| 13 | `AGENTS.md` 가드레일 | 미반영 | 평가셋은 사용자만 수정 / rag-developer `eval/` 읽기 금지 / 정답을 리라이터 입력·색인에 넣지 않음 / 실패 run 삭제·선별 보고 금지 |
-| 14 | `AGENTS.md` 기타 | 미반영 | 발주 양식 agent 목록에 `eval`, 개발 루프 "평가" 담당 `eval (2차)` → `eval`, "2차 예정"에서 eval 제거, 이정표 평가 행을 `eval/README.md`·rag-eval·`results/`로 |
+| 11 | `AGENTS.md` 실패 분석 표 | **반영 (chore/api-dev-env)** — failure-taxonomy 링크 + 담당 요약 표 | "툴 선택 실패", "정답 오류 → eval이 평가셋 수정" 삭제. rag-eval [failure-taxonomy](../../.claude/skills/rag-eval/references/failure-taxonomy.md)의 8개 유형 + "정답표 의심 → 사용자"로 교체 |
+| 12 | `AGENTS.md` 재현·실험 규칙 | 일부 반영 (chore/api-dev-env): dev 3회·최종 1회는 failure-taxonomy 링크로 반영. 최종 run 구성(60+20건), `retry`/`extra` 분리, 최종 후 설정 변경 금지는 미반영 | 3회 반복은 dev에서만, 최종은 A/B/C 각 1회(60건) + C+RW 1회(20건), `retry`/`extra` 분리, 최종 후 설정 변경 금지 |
+| 13 | `AGENTS.md` 가드레일 | 일부 반영 (chore/api-dev-env): 평가셋 팀원 소유, 정답을 리라이터 입력·검색 문서에 넣지 않음. rag-developer `eval/` 읽기 금지는 eval/README.md 링크로 대신함(rag-developer 정의는 #8). 실패 run 삭제·선별 보고 금지는 eval 에이전트 정의에만 있음 | 평가셋은 사용자만 수정 / rag-developer `eval/` 읽기 금지 / 정답을 리라이터 입력·색인에 넣지 않음 / 실패 run 삭제·선별 보고 금지 |
+| 14 | `AGENTS.md` 기타 | **반영 (chore/api-dev-env)** — 발주 양식에는 이미 `eval` 있음 | 발주 양식 agent 목록에 `eval`, 개발 루프 "평가" 담당 `eval (2차)` → `eval`, "2차 예정"에서 eval 제거, 이정표 평가 행을 `eval/README.md`·rag-eval·`results/`로 |
 | 15 | `vectordb` | 해당 없음 | 팀원 갱신 내용과 충돌 없음 |
-| 16 | agents README | 미반영 | 계약 다이어그램에 rag-developer → eval(트레이스), 사용자 ↔ eval(평가셋·의견서·채점), "2차 예정"에서 Eval 제거 |
-| 17 | skills README | 미반영 | "2차 예정"에서 rag-eval 제거, query-rewrite 추가 |
-| 18 | `doc-sync` 지도 | 미반영 | coupling 추가: `eval/README.md` → rag-eval / rag-eval `records.md` ↔ langchain-rag / `evalset_lock.py` → eval README·rag-eval·eval 에이전트 / chunking 규칙에 `eval/README.md` |
+| 16 | agents README | **반영 (chore/api-dev-env)** | 계약 다이어그램에 rag-developer → eval(트레이스), 사용자 ↔ eval(평가셋·의견서·채점), "2차 예정"에서 Eval 제거 |
+| 17 | skills README | 일부 반영 (chore/api-dev-env): "2차 예정"에서 rag-eval 제거. query-rewrite 스킬은 아직 없어 추가하지 않음 | "2차 예정"에서 rag-eval 제거, query-rewrite 추가 |
+| 18 | `doc-sync` 지도 | **반영 (chore/api-dev-env)** | coupling 추가: `eval/README.md` → rag-eval / rag-eval `records.md` ↔ langchain-rag / `evalset_lock.py` → eval README·rag-eval·eval 에이전트 / chunking 규칙에 `eval/README.md` |
 | 19 | `langchain-rag` 트레이스 (A 구성 후보) | 미반영 (시뮬레이션 발견) | A 구성은 `pre_rerank = null`이라 검색 누락과 순위 실패를 구분할 수 없다. A에서도 최종 k 이전의 vector 후보 목록을 기록 |
 | 20 | 평가 실행 인터페이스 (holdout) | 미반영 (시뮬레이션 발견) | 현재 트레이스에 `qid`가 있어 체인이 평가셋 문항 ID를 받는 구조. 실행기(eval 소유)가 질문만 체인에 넘기고 `qid`는 eval 쪽에서 붙이도록 인터페이스 합의. #8의 `eval/` 읽기 금지와 함께 반영 |
 | 21 | `langchain-rag` 인용 검증 | 미반영 (시뮬레이션 발견) | 검색 결과 밖의 청크를 인용해도 답이 맞으면 사람 채점은 통과하고 근거 적합만 0이 되는 사례 확인. 체인에서 인용 ⊆ `retrieval.final`을 검증 |
