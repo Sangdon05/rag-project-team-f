@@ -34,8 +34,12 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 | 툴 목록 | tool-calling 스킬 | langchain-rag 스킬, skills README |
 | 기준 데이터 | `data/processed/`, `data_integrity.py` | data-normalize 스킬, skills README |
 | 개발 루프·가드레일 | `AGENTS.md` | 에이전트 파일은 링크만 |
+| 평가셋 스키마·소유·잠금 규칙 | `eval/README.md` | rag-eval 스킬, eval 에이전트, AGENTS.md 평가셋 절 |
 | 페르소나·상황·질문 원문 | `docs/problem.md` | persona-question-generator 예시, question-design의 질문 전용 입력 패킷 |
 | 커밋 금지 파일·필수 무시 규칙 | `.gitignore` | security-check `rules.json` (`forbidden_paths`, `gitignore_probes`) |
+| 4계층·FSD 공통 원칙 | layered-architecture·fsd-architecture 스킬 (서비스 규칙을 담지 않음) | 서비스 적용 문서(api-architecture), layer-check 고정 규칙 |
+| API 규칙(R번호)·완료 게이트·주입값(프로파일, smoke, 실행 정보) | api-invariants 스킬 | api-architecture·api-implementation 스킬, api-* 에이전트, AGENTS.md 개발 루프 |
+| 답변 생성기 계약 (API ↔ RAG) | `docs/references/api-rag-integration.md` | api-architecture·api-implementation 스킬 |
 
 ## 언제 실행하는가
 

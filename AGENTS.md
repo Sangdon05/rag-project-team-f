@@ -21,7 +21,11 @@
 | 정제 데이터와 출처 관리                  | [.claude/skills/data-normalize/SKILL.md](.claude/skills/data-normalize/SKILL.md), `data/source_manifest.json`            |
 | 청크 메타데이터 계약                     | `contracts/chunk_schema.json` (예정, 초안은 chunking 스킬)                                                              |
 | 버전·실행 기록                           | `runs/manifest.jsonl` (예정)                                                                                            |
-| 평가셋·평가 결과·실패 분석               | `eval/` (예정, 2차 Eval 에이전트)                                                                                       |
+| 평가셋 (팀원 소유, 스키마·잠금)          | [eval/README.md](eval/README.md)                                                                                        |
+| 평가 실행·지표·실패 분석·비교 보고서     | [.claude/skills/rag-eval/SKILL.md](.claude/skills/rag-eval/SKILL.md), 실행 기록 `results/`                              |
+| API 규칙·완료 게이트 (FastAPI `api/`)    | [.claude/skills/api-invariants/SKILL.md](.claude/skills/api-invariants/SKILL.md)                                        |
+| API 설계안                               | [docs/design/api/README.md](docs/design/api/README.md)                                                                  |
+| API–RAG 연결 계약·절차                   | [docs/references/api-rag-integration.md](docs/references/api-rag-integration.md)                                        |
 
 ## 에이전트
 
@@ -32,10 +36,17 @@
 | [security-reviewer](.claude/agents/security-reviewer.md) | PR 전 보안 점검 실행·분류 보고 (읽기 전용)          | security-check                     |
 | [eval](.claude/agents/eval.md)                   | 평가 실행·기록·실패 분석·비교 보고서, 평가셋 의견서          | rag-eval                           |
 | [question-designer](.claude/agents/question-designer.md) | 질문 전용 패킷으로 페르소나별 질문 후보·조건 확인사항 제안 | question-design |
+| [api-architect](.claude/agents/api-architect.md) | FastAPI 슬라이스 설계안 작성 (`docs/design/api/`만 수정) | layered-architecture, fsd-architecture, api-invariants, api-architecture |
+| [api-implementer](.claude/agents/api-implementer.md) | 설계안대로 `api/` 슬라이스 4계층 구현, 완료 게이트 실행 | layered-architecture, api-invariants, api-architecture, api-implementation, layer-check |
+| [api-reviewer](.claude/agents/api-reviewer.md) | `api/` 변경 독립 리뷰·실행 검증 (읽기 전용) | layered-architecture, fsd-architecture, api-invariants, api-architecture, api-implementation, layer-check, fastapi-run |
 
 question-designer는 공식 평가셋 작성 전의 후보 제안 역할이다. v2 입력은 `problem.md`의 세 인물 발화 프로필을 포함하며, '쎄?' 같은 원표현과 기존 질문의 정보 요구를 함께 보존한다. 정답·허용 근거를 생성하거나 `eval/`을 읽고 수정하지 않는다. 후보 채택·정답 검수·평가셋 작성·잠금은 [평가셋 소유 규칙](eval/README.md)에 따라 팀원이 맡는다. 사용·검증·전달 절차는 [질문 설계 안내](docs/references/question-design.md)를 따른다.
 
-2차 예정: eval, qa, reviewer, backend(필요 시). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
+API 에이전트 세 개는 저장소 루트 `api/` 패키지(루트 `pyproject.toml` 공유)만 다룬다. DB·로그인·서버 쪽 대화 저장 없이 RAG를 중개하며, RAG 완성 전에는 mock 또는 검색 없는 LLM으로 답한다. RAG 연결은 [연결 가이드](docs/references/api-rag-integration.md)를 따른다.
+
+스킬은 공통과 서비스 전용으로 나눈다. 4계층(layered-architecture), FSD(fsd-architecture), 계층 검사(layer-check), 서버 실행(fastapi-run)은 특정 서비스·도메인 규칙을 담지 않는 공통 스킬이고, 서비스 규칙(금지 패키지, 에러 형식, 실행 정보, smoke)은 서비스 규칙 스킬(`api/`는 api-invariants)이 프로파일·환경 변수로 주입한다. FSD 슬라이스 간 규칙의 강도는 다른 파트가 합쳐진 뒤 정한다.
+
+2차 예정: qa(testing), reviewer(RAG 쪽 계약 점검). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
 
 ## 오케스트레이터의 역할
 
@@ -51,7 +62,7 @@ question-designer는 공식 평가셋 작성 전의 후보 제안 역할이다. 
 
 ```
 task: 한 문장 목표
-agent: data-engineer | rag-developer | security-reviewer | eval | question-designer
+agent: data-engineer | rag-developer | security-reviewer | eval | question-designer | api-architect | api-implementer | api-reviewer
 inputs: 경로 + schema_version / index_version
 outputs: 기대 산출물 경로
 done_when: 확인 가능한 완료 조건
@@ -80,35 +91,35 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 데이터  | data-engineer  | `verify_bundle()` 통과, 대상 ID·출처 검증, 문서 검토 상태 확인 |
 | 인덱스  | data-engineer  | 청크 누락 0, 이름 smoke test, sync 결과 manifest 기록 |
 | 툴·체인 | rag-developer  | 툴 단위 테스트 통과, 출처 포함 답변, 트레이스 생성    |
-| 평가    | eval (2차)     | 평가셋 전체 실행, run 결과 저장                       |
+| API     | api-implementer → api-reviewer | [api-invariants §7](.claude/skills/api-invariants/SKILL.md) 게이트 통과, smoke PASS, 리뷰 APPROVE |
+| 평가    | eval           | 평가셋 잠금 `verify` 통과, 평가셋 전체 실행, `results/{run_id}/` 저장 |
 | 채택    | 오케스트레이터 | 아래 실험 규칙 충족                                   |
-| 리뷰    | reviewer (2차) | 가드레일·계약 위반 없음                               |
+| 리뷰    | reviewer (2차, RAG 쪽) | 가드레일·계약 위반 없음 (`api/`는 API 행의 api-reviewer) |
 | 문서    | 오케스트레이터 | doc-sync 검사 ERROR 0, WARN 처리                      |
 | 보안    | security-reviewer | security-check 검사 ERROR 0, WARN 분류·처리        |
 
-### 평가셋 (Eval 정의 전 기준)
+### 평가셋
 
-- 유형: 단일 사실, 이름 해석(한글·별칭·오타), 수치·단위, 기술·습득, 상성, 비교, 집계·필터, 세대 구분, 서술형, 답할 수 없는 질문
-- 사실형 정답은 `data/processed/`에서 자동 생성한다. 서술형은 사람이 검수한다.
-- 문항마다 qid, 유형, 정답, 정답 출처 id를 기록한다. 검색 평가 대상은 허용 근거 청크 ID를 별도로 연결한다.
+- **평가셋은 팀원만 작성·수정한다.** 에이전트는 평가셋을 만들거나 고치지 않고 의견서(`eval/feedback/`)만 낸다.
+- 구성: 개발용 `eval/dev.json` 10문항, 최종 평가용 `eval/test.json` 20문항. 스키마와 소유 규칙은 [eval/README.md](eval/README.md)가 원본이다.
+- 문항마다 qid, 유형, 질문, 핵심 사실, 허용 근거(청크 ID·문서 ID·원문 위치)를 팀원이 기록한다.
+- 평가셋은 해시로 잠근다(`scripts/eval/evalset_lock.py`). `lock`은 팀원만 실행하고, 평가 전 `verify`가 실패하면 실행하지 않는다.
 
 ### 실패 분석
 
-트레이스로 단계별 산출물을 보고, 처음 실패한 단계를 원인으로 정한다.
+eval이 트레이스로 문항마다 처음 실패한 단계 하나를 정한다. 유형·판정 기준·넘길 곳의 원본은 [rag-eval 실패 분석](.claude/skills/rag-eval/references/failure-taxonomy.md)이다.
 
-| 실패 유형    | 수정 담당                                               |
-| ------------ | ------------------------------------------------------- |
-| 데이터 누락  | data-engineer                                           |
-| 검색 실패    | data-engineer (청킹·임베딩) 또는 rag-developer (k·필터) |
-| 툴 선택 실패 | rag-developer (툴 docstring)                            |
-| 생성 실패    | rag-developer (프롬프트)                                |
-| 정답 오류    | eval (평가셋 수정)                                      |
+| 실패 유형 | 수정 담당 |
+| --- | --- |
+| 호출 오류, 검색 미호출, 순위 실패, 근거 선택 실패, 생성 오류, 잘못된 인용, 근거 없음 대응 실패 | rag-developer |
+| 검색 누락 | data-engineer (청킹·텍스트 템플릿·임베딩) 또는 rag-developer (후보 수, 리라이트) |
+| 정답표 의심 | 팀원 (eval의 의견서를 보고 평가셋 수정·재잠금). 에이전트는 고치지 않는다 |
 
 ### 재현
 
 - temperature 0, 모델·임베딩 버전, index_version, config 해시를 고정한다.
 - 실패 qid 목록으로 해당 문항만 다시 돌릴 수 있게 한다.
-- 개발셋과 최종 평가셋은 분리한다. 3회 반복으로 불안정 실패를 구분하는 방식은 나중에 도입한다.
+- 개발셋과 최종 평가셋은 분리한다. 3회 반복으로 불안정 실패를 구분하는 것은 dev에서만 하고, 최종 평가는 1회 실행이 기준이다([rag-eval 실패 분석](.claude/skills/rag-eval/references/failure-taxonomy.md) "재현").
 
 ### 실험 규칙 (채택 판정)
 
@@ -126,12 +137,15 @@ constraints: 이번 작업에서 바꾸면 안 되는 것
 | 청크 템플릿·섹션, 임베딩 모델 변경 | 새 index_version 전체 빌드 → 평가               |
 | k·필터·프롬프트                    | 체인 테스트 → 평가                              |
 | 툴 추가·시그니처 변경              | 툴 테스트 → 평가                                |
+| 체인 진입점·반환 형식 변경         | 연결 가이드 갱신 → API 어댑터 수정 → API 게이트 |
+| `api/` 코드                        | API 게이트 → api-reviewer (RAG 평가 재실행 불필요) |
 
 ## 가드레일
 
 - `data/processed/`의 해시 고정 파일을 수정하지 않는다. 보강은 별도 파일로 한다.
 - 입력은 저장소에 커밋된 파일과 PokeAPI만 쓴다. 팀원과 공유되지 않는 개인 로컬 파일에 의존하지 않는다.
-- 평가셋 정답을 프롬프트, 코드, few-shot 예시에 넣지 않는다.
+- 평가셋 정답을 프롬프트, 코드, few-shot 예시, 쿼리 리라이터 입력, 검색 문서에 넣지 않는다.
+- 평가셋(`eval/dev.json`, `eval/test.json`, `eval/LOCK.json`)은 팀원만 작성·수정·잠금한다. 에이전트는 의견서만 낸다. `eval/` 열람 범위는 [eval/README.md](eval/README.md)를 따른다.
 - API 키·`.env`·비밀을 커밋하지 않는다. 키는 환경 변수로만 읽는다.
 - 대용량·생성물(`runs/`, DB 볼륨)을 커밋하지 않는다. 발제 제출용 실행·채점 기록(`results/`)은 커밋한다.
 - 패키지는 `uv add` / `uv remove`로만 관리한다. 모델명·DB 접속 정보는 환경 변수로 읽고 하드코딩하지 않는다.

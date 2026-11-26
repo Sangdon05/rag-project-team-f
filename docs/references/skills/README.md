@@ -21,9 +21,16 @@
 | [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도, 원본 문서 규칙, 동기화 검사 스크립트 |
 | [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |
 | [rag-eval](../../../.claude/skills/rag-eval/SKILL.md) | eval | 사용자 평가셋 검증·의견서, 실행 기록, 발제 지표, 사람 채점 집계, 실패 분석, 비교 보고서 |
+| [layered-architecture](../../../.claude/skills/layered-architecture/SKILL.md) | api-architect, api-implementer, api-reviewer | (공통) 4계층 책임·의존 방향·포트·DI 조립, 서비스가 주입할 항목 |
+| [fsd-architecture](../../../.claude/skills/fsd-architecture/SKILL.md) | api-architect, api-reviewer | (공통) FSD 슬라이스 구성·공개 API·슬라이스 간 규칙과 강도 설정 |
+| [api-invariants](../../../.claude/skills/api-invariants/SKILL.md) | api-architect, api-implementer, api-reviewer | `api/` 규칙 R1~R16과 완료 게이트 원본, 공통 스킬에 주입하는 프로파일·smoke·실행 정보 |
+| [api-architecture](../../../.claude/skills/api-architecture/SKILL.md) | api-architect, api-implementer, api-reviewer | `api/`가 공통 스킬을 적용하는 방식: 폴더, 슬라이스, `AnswerGenerator` 포트, 조립 |
+| [api-implementation](../../../.claude/skills/api-implementation/SKILL.md) | api-implementer, api-reviewer | 계층별 코드 패턴, 공통 에러 형식, mock·llm 생성기, unittest 작성법 |
+| [layer-check](../../../.claude/skills/layer-check/SKILL.md) | api-implementer, api-reviewer | (공통) 프로파일 기반 계층 import 방향·경계 자동 검사 스크립트 |
+| [fastapi-run](../../../.claude/skills/fastapi-run/SKILL.md) | api-reviewer | (공통) PID 파일 방식 FastAPI 서버 기동·종료. 앱 경로·설정·smoke는 서비스가 주입 |
 | [question-design](../../../.claude/skills/question-design/SKILL.md) | question-designer | '쎄?' 등 원표현과 세 인물의 v2 발화 프로필·질문 의도를 보존한 후보 제안, 답변 없는 입력 추출·출력 구조 검사, 사람 채택으로 전달 |
 
-2차 예정: rag-eval(Eval), testing(QA), api-server(Backend, 필요 시).
+2차 예정: testing(QA).
 
 ## 데이터 현황 (설계 근거)
 

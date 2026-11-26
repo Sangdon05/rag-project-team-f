@@ -14,6 +14,9 @@
 | [security-reviewer](../../../.claude/agents/security-reviewer.md) | security-check | 보안 점검 보고 (파일 수정 없음) |
 | [eval](../../../.claude/agents/eval.md) | rag-eval | `results/` 실행 기록·채점표·비교 보고서, `eval/feedback/` 의견서 |
 | [question-designer](../../../.claude/agents/question-designer.md) | question-design | 질문 전용 패킷을 바탕으로 한 `draft` 질문 후보 JSON (응답으로 반환) |
+| [api-architect](../../../.claude/agents/api-architect.md) | layered-architecture, fsd-architecture, api-invariants, api-architecture | `docs/design/api/<slice>.md` 설계안 (코드 수정 없음) |
+| [api-implementer](../../../.claude/agents/api-implementer.md) | layered-architecture, api-invariants, api-architecture, api-implementation, layer-check | `api/` 슬라이스 코드와 `api/tests/` 테스트 |
+| [api-reviewer](../../../.claude/agents/api-reviewer.md) | layered-architecture, fsd-architecture, api-invariants, api-architecture, api-implementation, layer-check, fastapi-run | 게이트·smoke 결과와 APPROVE/REQUEST_CHANGES 판정 (파일 수정 없음) |
 
 벡터 DB는 data-engineer가 맡는다. 청킹이 바뀌면 재인덱싱이 반드시 따라오므로 한 에이전트가 끝까지 맡는 편이 버전 관리가 단순하다. retriever 설정(k, 필터)은 rag-developer가 맡는다.
 청크는 승인된 포켓몬별 Markdown을 주제별로 나누고 원본 근거를 연결한다. 구체적인 섹션과 계약은 [chunking 스킬](../../../.claude/skills/chunking/SKILL.md)을 따른다.
@@ -22,7 +25,10 @@ BM25 인덱스의 생성·동기화 담당과 출력 계약은 구현 착수 전
 
 security-reviewer는 읽기 전용이다. 검출은 스크립트가 결정적으로 하고 모델은 WARN 분류만 하므로 haiku + low effort로 둔다. 수정은 오케스트레이터가 담당 에이전트에게 발주한다.
 
-2차 예정: Eval(rag-eval), QA(testing), Reviewer(계약 점검), Backend(api-server, 필요 시).
+API 에이전트는 설계(api-architect, opus/high) → 구현(api-implementer, sonnet/medium) → 리뷰·실행 검증(api-reviewer, sonnet/high)으로 나눈다. DB가 없어 실행 검증이 다른 작업과 섞이지 않으므로 리뷰와 실행 검증을 한 에이전트가 맡는다. 구현한 에이전트는 자기 결과를 판정하지 않는다.
+RAG와의 경계는 [API–RAG 연결 가이드](../api-rag-integration.md)가 원본이다. RAG 에이전트·스킬은 API를 알지 않는다. 체인 진입점·반환 형식이 바뀌면 오케스트레이터가 가이드를 고치고 api-implementer에게 어댑터 수정을 발주한다.
+
+2차 예정: QA(testing), Reviewer(RAG 쪽 계약 점검).
 
 ## 두 에이전트 사이의 계약
 
@@ -37,6 +43,20 @@ data-engineer                                rag-developer
   pgvector 컬렉션 {index_version} ──────▶   search_pokedex 툴
   runs/manifest.jsonl           ─────────▶   사용 버전 확인
 ```
+
+```
+팀원                                         eval
+  eval/dev.json, test.json, LOCK.json ───▶   잠금 verify → 평가 실행 (평가셋 수정 없음)
+  채점표의 사람 채점 칸            ◀──────▶   채점표 준비 / 채운 결과 집계
+  평가셋 수정·재잠금               ◀──────   eval/feedback/ 의견서 (정답표 의심 등)
+
+rag-developer                                eval
+  체인 트레이스 (langchain-rag 형식) ─────▶  results/{run_id}/ 원본 기록, 지표, 실패 분석
+  수정 발주 (오케스트레이터 경유)  ◀──────   실패 유형별 보고, 비교 보고서
+```
+
+- 트레이스 형식의 원본은 langchain-rag 스킬이고, eval은 [records.md](../../../.claude/skills/rag-eval/references/records.md)에서 그 형식을 읽는다.
+- 채택 판정은 eval이 아니라 오케스트레이터가 한다.
 
 - rag-developer는 데이터를 `src/pokedex/store.py` 하나로만 읽는다.
 - 정규화·청크 스키마가 바뀌면 `schema_version`을 올리고, rag-developer는 툴 테스트를 다시 돌린다.
