@@ -21,7 +21,7 @@ description: Use when writing or fixing api/ code. Per-layer code patterns for s
 
    | 변수 | 기본값 | 뜻 |
    | --- | --- | --- |
-   | `ANSWER_BACKEND` | `mock` | 답변 생성기 선택 `mock` \| `llm` \| `rag` (`rag` 설정은 [연결 가이드](../../../docs/references/api-rag-integration.md)) |
+   | `ANSWER_BACKEND` | `mock` | 답변 생성기 선택 `mock` \| `llm` \| `rag` |
    | `API_CORS_ORIGINS` | (빈 값) | 허용할 프론트 origin, 쉼표 구분 |
    | `API_MAX_MESSAGES` | `20` | 요청당 메시지 수 상한 (메시지 길이 한도는 두지 않는다, R11) |
    | `API_DOCUMENTS_DIR` | `solar_handoff/documents` | documents 슬라이스가 읽는 원문 Markdown 폴더 |
@@ -119,7 +119,7 @@ class Conversation:
         return self.messages[-1].content
 ```
 
-- `Answer(text, mode, sources)`와 `Source(ref, chunk_id, source_ref_id)`는 frozen dataclass, `AnswerMode`는 `StrEnum`(`mock`, `llm`, `rag`)이다. 빈 답변은 `__post_init__`에서 막는다.
+- `Answer(text, mode, sources=(), embedding=None)`과 `Source(ref, chunk_id, source_ref_id)`는 frozen dataclass, `AnswerMode`는 `StrEnum`(`mock`, `llm`, `rag`)이다. 빈 답변은 `__post_init__`에서 막는다. `embedding`은 RAG가 실제 질의·문서 임베딩 모델 정보를 제공할 때만 채운다.
 - 포트 `AnswerGenerator.generate(conversation) -> Answer`는 [api-architecture §5](../api-architecture/SKILL.md)와 [연결 가이드](../../../docs/references/api-rag-integration.md)를 따른다.
 
 ## infrastructure
@@ -138,7 +138,7 @@ class MockAnswerGenerator(AnswerGenerator):
 ```python
 # api/chat/infrastructure/llm_generator.py (요지)
 class LlmAnswerGenerator(AnswerGenerator):
-    """검색 없이 LLM이 답한다. RAG 연결 전 임시 모드 (mode=llm, sources 없음)."""
+    """검색 없이 LLM이 답하는 임시 모드 (mode=llm, sources=[])."""
 
     def __init__(self, model: BaseChatModel) -> None:   # 모델은 container가 넣는다. 테스트는 fake
         self.model = model
@@ -154,7 +154,7 @@ class LlmAnswerGenerator(AnswerGenerator):
         return Answer(text=text, mode=AnswerMode.LLM)
 ```
 
-- `SYSTEM_PROMPT`는 짧게 둔다: 영문 Red·Blue 151마리 기준, 다른 세대 값을 말하지 않음, 근거 문서가 없으니 확실하지 않으면 확인할 수 없다고 답함, 사용자 언어로 답함. 이 프롬프트는 RAG 연결 전 임시용이다. RAG 프롬프트는 rag-developer 담당이며 이 파일로 옮겨 오지 않는다.
+- `SYSTEM_PROMPT`는 짧게 둔다: 영문 Red·Blue 151마리 기준, 다른 세대 값을 말하지 않음, 근거 문서가 없으니 확실하지 않으면 확인할 수 없다고 답함, 사용자 언어로 답함. 이 프롬프트는 `llm` 모드에만 쓴다. RAG 프롬프트는 rag-developer 담당이며 이 파일로 옮겨 오지 않는다.
 - 생성기 안에서 `ChatOpenAI`를 만들지 않는다. 생성자로 받는다(R4).
 
 ## application
@@ -172,7 +172,8 @@ class AskService:
 
 ## presentation
 
-- `schemas.py`: `ChatRequest(messages: list[MessageIn])`, `MessageIn.role`은 `Literal["user", "assistant"]`. `ChatData(answer, mode, sources)`와 `from_domain(answer)`, 응답 모델은 `SuccessResponse[ChatData]`. 필드마다 `Field(..., description=...)`를 쓴다.
+- `schemas.py`: `ChatRequest(messages: list[MessageIn])`, `MessageIn.role`은 `Literal["user", "assistant"]`. `ChatData(answer, mode, sources, embedding=None)`와 `from_domain(answer)`, 응답 모델은 `SuccessResponse[ChatData]`. 필드마다 `Field(..., description=...)`를 쓴다.
+- 질의 임베딩을 호출하지 않는 등 실제 사용 정보가 없으면 HTTP 응답에서 `embedding`을 생략한다. `sources`는 비어 있어도 목록으로 반환한다. 기술 분류 근거(`move:{id}`)는 답변 본문에 표시하고, 번호 출처(`sources`)는 인용한 포켓몬 청크만 가리킨다. 세부 계약은 [API–RAG 연결 가이드](../../../docs/references/api-rag-integration.md)를 따른다.
 - 스키마는 형식만 본다(타입, 필수 여부, role 값). 메시지 수·순서 같은 규칙은 도메인이 본다. 둘 다 400 `VALIDATION_ERROR`다(R7).
 - `dependencies.py`: `provide_ask_service()` 플레이스홀더([layered-architecture §4.3](../layered-architecture/SKILL.md)).
 - `router.py`:
@@ -181,7 +182,7 @@ class AskService:
 router = APIRouter(prefix="/api/v1", tags=["chat"])
 
 
-@router.post("/chat", response_model=SuccessResponse[ChatData])
+@router.post("/chat", response_model=SuccessResponse[ChatData], response_model_exclude_none=True)
 async def chat(body: ChatRequest, service: Annotated[AskService, Depends(provide_ask_service)]) -> SuccessResponse[ChatData]:
     answer = await service.ask(body.to_raw())
     return SuccessResponse(data=ChatData.from_domain(answer))
@@ -195,17 +196,18 @@ async def chat(body: ChatRequest, service: Annotated[AskService, Depends(provide
 ```python
 # api/container.py (요지)
 def create_answer_generator(settings: Settings) -> AnswerGenerator:
-    if settings.answer_backend == "rag":            # 이 분기 안에서만 solar_handoff를 import한다
+    validate_answer_backend(settings)  # mock | llm | rag 외의 값은 시작 시 거부
+    if settings.answer_backend == "rag":
         from starlette.concurrency import run_in_threadpool
+        from api.chat.infrastructure.rag_generator import RagAnswerGenerator
         from solar_handoff.src.conversation import create_service
+
         return RagAnswerGenerator(create_service, run_in_threadpool)
-    if settings.answer_backend == "mock":
-        return MockAnswerGenerator()
     if settings.answer_backend == "llm":
-        from langchain_openai import ChatOpenAI       # llm 모드에서만 키가 필요하다
+        from langchain_openai import ChatOpenAI
         return LlmAnswerGenerator(ChatOpenAI(model=os.environ["OPENAI_CHAT_MODEL"], temperature=0,
                                                reasoning_effort=os.environ.get("OPENAI_REASONING_EFFORT", "low")))
-    raise RuntimeError(f"알 수 없는 ANSWER_BACKEND: {settings.answer_backend!r} (mock | llm | rag)")
+    return MockAnswerGenerator()
 
 
 def wire_dependencies(app: FastAPI, settings: Settings) -> None:

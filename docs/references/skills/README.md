@@ -16,8 +16,8 @@
 | [data-normalize](../../../.claude/skills/data-normalize/SKILL.md) | data-engineer | 해시 고정 데이터 보호, Red·Blue 정제 데이터·출처 검증, Solar 문서 생성 범위 |
 | [chunking](../../../.claude/skills/chunking/SKILL.md) | data-engineer | 포켓몬별 Markdown 청킹·근거 연결 및 Solar 제목 기반 청크 |
 | [vectordb](../../../.claude/skills/vectordb/SKILL.md) | data-engineer | 기존 pgvector 컬렉션 sync, 빈 볼륨 최초 Solar 스키마 초기화와 별도 벡터 복원·증분 적재 |
-| [tool-calling](../../../.claude/skills/tool-calling/SKILL.md) | rag-developer | 향후 정형 조회·상성·검색 툴 계약과 Solar CLI의 경계 |
-| [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | Solar 질문 CLI·검색·트레이스와 향후 에이전트 체인 |
+| [tool-calling](../../../.claude/skills/tool-calling/SKILL.md) | rag-developer | 현재 Solar 대화의 팀·기술·확인·무인수 검색 도구 계약과 향후 LangChain 도구 계획 |
+| [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | Solar 질문 CLI, 대화의 도구 선택·검색·서버 출처 렌더링과 운영 로그, 향후 LangChain 체인·평가용 트레이스 |
 | [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도와 동기화 검사, Docker 초기화·Solar 스키마 관련 문서 연결 점검 |
 | [spec-plan](../../../.claude/skills/spec-plan/SKILL.md) | 오케스트레이터 | 업무 스펙(HITL 승인)·작업 계획 형식과 frontmatter, 완료 기준 규칙, 활성·보관 문서 관리 스크립트 |
 | [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |
@@ -37,5 +37,5 @@
 
 - PokeAPI `/pokemon` 응답은 대부분 moves·sprites이고 핵심 필드는 약 0.4%다. 필요한 필드만 뽑아 쓴다.
 - 정규화: `data/processed/`의 해시 고정 파일과 별도 진화·진화 아이템 이름·획득처·머신 데이터. 파일별 범위와 검증은 [data-normalize 스킬](../../../.claude/skills/data-normalize/SKILL.md)을 따른다.
-- 상성 계산: `scripts/gen1_battle/gen1_battle_rules.py` — 툴로 재사용.
+- 상성 계산: 현재 대화의 `src/pokedex/store.py`는 `scripts/gen1_battle/gen1_battle_rules.py`의 해시 검증과 Red·Blue 상성표를 재사용한다.
 - 추가 데이터가 필요하면 현재 문서·질문 범위와 출처를 먼저 확인한다. 포켓몬별 Markdown과 청크는 [chunking 스킬](../../../.claude/skills/chunking/SKILL.md)을 따른다.
