@@ -114,14 +114,17 @@ class StartupTest(unittest.TestCase):
             create_app(Settings(answer_backend="unknown", cors_origins=[], max_messages=20))
 
     def test_known_backends_start(self):
+        # llm 분기는 ChatOpenAI를 만들기만 한다 (네트워크 호출 없음). 가짜 키·모델명으로 고정한다.
+        env = {"OPENAI_CHAT_MODEL": "test-model", "OPENAI_API_KEY": "sk-test-not-real"}
         for backend in ("mock", "llm"):
-            with self.subTest(backend=backend):
+            with self.subTest(backend=backend), mock.patch.dict(os.environ, env):
                 create_app(Settings(answer_backend=backend, cors_origins=[], max_messages=20))
 
     def test_openapi_lists_routes(self):
         paths = make_app(SETTINGS).openapi()["paths"]
         self.assertIn("/health", paths)
         self.assertIn("/api/v1/suggestion", paths)
+        self.assertIn("/api/v1/chat", paths)
 
 
 if __name__ == "__main__":

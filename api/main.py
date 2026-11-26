@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.chat.presentation.router import router as chat_router
 from api.container import wire_dependencies
 from api.error_handlers import register_exception_handlers
 from api.health.presentation.router import router as health_router
@@ -27,6 +28,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     wire_dependencies(app, settings)
     app.include_router(health_router)
     app.include_router(suggestion_router)
+    app.include_router(chat_router)
     return app
 
 
