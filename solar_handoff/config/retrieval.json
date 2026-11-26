@@ -1,0 +1,12 @@
+{
+  "candidate_limit": 20,
+  "final_limit": 5,
+  "rrf_k": 60,
+  "bm25_k1": 1.2,
+  "bm25_b": 0.75,
+  "tokenization": "NFKC-casefold Korean words and bigrams; ASCII alphanumeric words",
+  "reasoning_effort": "low",
+  "rewrite_prompt_version": "1",
+  "rerank_prompt_version": "1",
+  "answer_prompt_version": "2"
+}

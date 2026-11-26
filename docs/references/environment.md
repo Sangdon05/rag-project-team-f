@@ -45,11 +45,14 @@ docker compose ps            # STATUS가 healthy인지 확인
 | `OPENAI_API_KEY` | 각자 발급. 커밋·공유 금지 |
 | `OPENAI_CHAT_MODEL` | `gpt-6-luna` |
 | `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` |
+| `UPSTAGE_API_KEY` | Solar 임베딩 API 인증. 커밋·공유 금지 |
+| `UPSTAGE_EMBEDDING_MODEL` | Solar 문서 임베딩 모델 ID |
+| `UPSTAGE_QUERY_MODEL` | Solar 질문 임베딩 모델 ID. 문서 모델 ID와 다르고 인덱스 설정과 일치해야 한다 |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` / `POSTGRES_HOST` / `POSTGRES_PORT` | docker compose와 앱이 함께 사용 |
-| `DATABASE_URL` | `postgresql+psycopg://…` (psycopg 3 드라이버) |
-| `PGVECTOR_COLLECTION` | 필수. 사용할 컬렉션 = index_version. 미지정 시 기본 컬렉션 `langchain`에 섞인다 |
+| `DATABASE_URL` | 기존 SQLAlchemy와 Solar 전달본의 PostgreSQL 접속. Solar 작업 전 실제 대상과 권한을 확인 |
+| `PGVECTOR_COLLECTION` | 기존 컬렉션 방식에서 필수. 사용할 컬렉션 = index_version. 미지정 시 기본 컬렉션 `langchain`에 섞인다 |
 
-코드는 모델명과 접속 정보를 하드코딩하지 않고 환경 변수로 읽는다. 진입점에서 `load_dotenv()`를 한 번 호출한다.
+코드는 모델명과 접속 정보를 하드코딩하지 않고 환경 변수로 읽는다. 기존 진입점의 `load_dotenv()`와 달리 Solar 코드는 `.env`를 자동으로 읽지 않는다. Solar 환경 전달과 DB·비용 승인 경계는 [Solar 전달본](../../solar_handoff/README.md#환경과-안전-경계)을 따른다.
 
 ## 확인 명령
 

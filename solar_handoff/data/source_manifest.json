@@ -1,0 +1,447 @@
+{
+  "schema_version": 1,
+  "description": "공유 정제 JSON의 출처·무결성 목록. 이 파일과 data/processed만 있으면 목록과 정제 데이터를 열 수 있다.",
+  "generated_at_utc": "2026-11-24T02:40:50.911470+00:00",
+  "generated_time_note": "목록 작성 시각이며 데이터 수집 시각이 아니다.",
+  "path_base": "repository_root",
+  "scope_note": "red-blue 버전 그룹은 영문 Red와 Blue를 묶는다. encounters는 red와 blue를 따로 기록하며, 진화·머신·획득 및 피해 분류의 검토 범위를 Yellow나 일본판으로 확대하지 않는다. moves와 pokemon에는 다른 버전 그룹 또는 현재 데이터가 함께 있다.",
+  "identity_note": "ID는 파일별 고유 키를 이용하며 JSON 포인터는 RFC 6901 기준이다. 배열 인덱스는 재정렬 시 바뀌므로 해당 포인터의 identity_field가 ID와 일치하는지 확인한다. 다른 파일의 같은 개체는 source_id와 함께 구분한다.",
+  "availability_note": "pokeapi/ 경로는 과거 추적용 선택 정보이며 목록 열기나 정제 JSON 읽기에 필요하지 않다. 수집 원본과 추출 도구가 빠질 수 있어 전체 재생성이나 원본 대조를 보장하지 않는다.",
+  "rights_note": "데이터 및 Pokémon 관련 권리와 재배포 조건은 별도 확인이 필요하다.",
+  "sources": {
+    "pokeapi_v2": {
+      "kind": "dynamic_api",
+      "url": "https://pokeapi.co/api/v2/",
+      "description": "PokéAPI v2 리소스 주소. 데이터는 변경될 수 있으며 현재 응답이 과거 수집 결과와 동일하다는 보장은 없다."
+    },
+    "pokeapi_api_data_evolution": {
+      "kind": "pinned_static_repository",
+      "commit": "508fd7c3a7d54ac175e00afe420b11a5af983bd6",
+      "url": "https://github.com/PokeAPI/api-data/tree/508fd7c3a7d54ac175e00afe420b11a5af983bd6/data/api/v2",
+      "description": "진화 추출에 사용된 고정 정적 종·진화체인 데이터. 라이브 API 응답으로 간주하지 않는다."
+    },
+    "pokered_pinned": {
+      "kind": "pinned_community_disassembly",
+      "commit": "ba9c0568f64ae602fadda577a08c66639f93082a",
+      "url": "https://github.com/pret/pokered/tree/ba9c0568f64ae602fadda577a08c66639f93082a",
+      "description": "영문 Red/Blue 커뮤니티 디스어셈블리. 공식 자료가 아니며 정적 소스 검토는 게임 실행 검증이 아니다."
+    },
+    "unknown_original": {
+      "kind": "unknown",
+      "description": "정확한 원본 스냅샷, 수집 시각 또는 생성 과정이 확인되지 않은 부분."
+    },
+    "bulbapedia": {
+      "kind": "community_wiki",
+      "url": "https://bulbapedia.bulbagarden.net/",
+      "license": "CC BY-NC-SA 2.5",
+      "description": "영문 포켓몬 커뮤니티 위키. 장소 문서의 Korean 이름 항목을 고정 판(oldid)으로 인용했다. 공식 자료가 아니다."
+    },
+    "pokemon_fandom_ko": {
+      "kind": "community_wiki",
+      "url": "https://pokemon.fandom.com/ko/",
+      "license": "CC BY-SA (Fandom)",
+      "description": "한국어 포켓몬 위키(Fandom). 맵 정보상자의 이름·영칭과 본문을 고정 판(oldid)으로 인용했다. 공식 자료가 아니다."
+    }
+  },
+  "processed_files": [
+    {
+      "source_id": "processed:encounters_red_blue",
+      "path": "data/processed/encounters_red_blue.json",
+      "bytes": 1522067,
+      "sha256": "d308cc1f07c10fb376ee0d1118fbf064c23f3f9ea3ddb95d7e71a721de369a1c",
+      "description": "포켓몬별 종 서식환경과 Red/Blue 버전별 API 등장·획득 기록. 빈 기록은 획득 불가를 뜻하지 않는다.",
+      "source_refs": [
+        "pokeapi_v2"
+      ],
+      "identity": {
+        "scheme": "pokemon:{id}",
+        "array_pointer": "/pokemon",
+        "identity_field": "id",
+        "record_count": 151,
+        "pointer_pattern": "/pokemon/{array_index}"
+      },
+      "example": {
+        "id": "pokemon:1",
+        "pointer": "/pokemon/0",
+        "identity_field": "id",
+        "identity_value": 1
+      },
+      "notes": [
+        "서식환경은 장소가 아니며 한국어 장소명은 누락될 수 있다."
+      ],
+      "optional_historical_manifest": {
+        "path": "pokeapi/sources/encounters_red_blue/manifest.json",
+        "sha256": "dc98cb369b81eacc4eaeadd873d2c1ca5b56417e9d3cac199faff40a36ed7366",
+        "optional": true,
+        "response_count": 421,
+        "retrieval_time_range_utc": [
+          "2026-11-24T01:22:13.421004+00:00",
+          "2026-11-24T01:22:49.138937+00:00"
+        ],
+        "manifest_created_at_utc": "2026-11-24T01:22:49.197831+00:00"
+      }
+    },
+    {
+      "source_id": "processed:evolution_items_red_blue",
+      "path": "data/processed/evolution_items_red_blue.json",
+      "bytes": 5009,
+      "sha256": "69d4632ebea6a200346aea7129677fd45a661eaaf4e3e123340f6f7dd63e9fbc",
+      "description": "Red/Blue 아이템 진화에 쓰이는 돌의 PokeAPI id, 영어·현재 한국어 이름과 사용처 진화 관계.",
+      "source_refs": [
+        "pokeapi_v2"
+      ],
+      "identity": {
+        "scheme": "item:{name}",
+        "array_pointer": "/items",
+        "identity_field": "name",
+        "record_count": 5,
+        "pointer_pattern": "/items/{array_index}"
+      },
+      "example": {
+        "id": "item:moon-stone",
+        "pointer": "/items/0",
+        "identity_field": "name",
+        "identity_value": "moon-stone"
+      },
+      "notes": [
+        "현재 한국어 이름은 영문 원판의 역사적 번역이 아니다. API 값을 띄어쓰기 등 변형 없이 그대로 쓴다.",
+        "원본 API 응답 스냅샷은 보존하지 않는다. 수집 날짜만 기록하며, API 값이 바뀌면 재생성 결과가 달라질 수 있다.",
+        "used_in[].evolution_pointer는 입력 파일의 evolves_to 관계를 가리키며 from_id·to_id로 확인한다.",
+        "재생성 스크립트는 scripts/helper/extract_evolution_items_red_blue.py, 검증 테스트는 tests/test_evolution_items_red_blue.py다."
+      ],
+      "api_retrieval": {
+        "retrieved_local_date": "2026-11-24",
+        "response_count": 5,
+        "snapshot_preserved": false
+      },
+      "input_processed": {
+        "source_id": "processed:evolutions_red_blue",
+        "sha256": "24c720a0d25a8ecd57cbbc5d737ce1a277ec8f6147481bdb3131eaea6007e4e4"
+      },
+      "source_paths": [
+        "https://pokeapi.co/api/v2/item/{name}/"
+      ]
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "path": "data/processed/evolutions_red_blue.json",
+      "bytes": 383123,
+      "sha256": "24c720a0d25a8ecd57cbbc5d737ce1a277ec8f6147481bdb3131eaea6007e4e4",
+      "description": "Red/Blue 포켓몬별 진화 단계와 경로. 고정된 게임 진화표와 정적 API 데이터의 방법을 대조했다.",
+      "source_refs": [
+        "pokeapi_api_data_evolution",
+        "pokered_pinned"
+      ],
+      "identity": {
+        "scheme": "pokemon:{id}",
+        "array_pointer": "/records",
+        "identity_field": "id",
+        "record_count": 151,
+        "pointer_pattern": "/records/{array_index}"
+      },
+      "example": {
+        "id": "pokemon:1",
+        "pointer": "/records/0",
+        "identity_field": "id",
+        "identity_value": 1
+      },
+      "notes": [
+        "버전 그룹은 API 진화 방법의 유효 기간을 단정하는 근거가 아니다."
+      ],
+      "optional_historical_manifest": {
+        "path": "pokeapi/sources/evolution_red_blue/manifest.json",
+        "sha256": "6fe466ef38cdb59919b8fe483ce515b74c8354a69392ae44202757b442f488e4",
+        "optional": true,
+        "manifest_retrieved_at_utc": "2026-11-24T01:23:33.601868+00:00"
+      },
+      "source_paths": [
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/pokemon/evos_moves.asm",
+        "https://raw.githubusercontent.com/PokeAPI/api-data/508fd7c3a7d54ac175e00afe420b11a5af983bd6/data/api/v2/evolution-chain/{id}/index.json",
+        "https://raw.githubusercontent.com/PokeAPI/api-data/508fd7c3a7d54ac175e00afe420b11a5af983bd6/data/api/v2/pokemon-species/{id}/index.json"
+      ]
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "path": "data/processed/location_names_ko_red_blue.json",
+      "bytes": 230417,
+      "sha256": "f33fc190766a80cab3602f1f2a4617b11c3117d637bc2ba40686173c7b31247f",
+      "description": "Red/Blue 장소 식별자(PokeAPI location·location_area, pokered 지도 ID)와 한국어판 공식 장소명 대응표. 사용자 승인(approved, 전체 168항목, 홍련섬 결정 포함).",
+      "source_refs": [
+        "bulbapedia",
+        "pokemon_fandom_ko"
+      ],
+      "identity": {
+        "scheme": "location_name:{id}",
+        "array_pointer": "/entries",
+        "identity_field": "id",
+        "record_count": 168,
+        "pointer_pattern": "/entries/{array_index}"
+      },
+      "example": {
+        "id": "location_name:pokeapi_location:pallet-town",
+        "pointer": "/entries/36",
+        "identity_field": "id",
+        "identity_value": "pokeapi_location:pallet-town"
+      },
+      "notes": [
+        "Red·Blue에는 한국어판이 없어 칸토가 나오는 한국어판 게임(하트골드·소울실버, 레츠고! 피카츄·이브이 등)의 명칭을 출처 위키에서 확인했다.",
+        "composed 항목의 층·방·구역 수식어는 팀이 붙인 것이며 공식 명칭이 아니다. confidence·review_status는 파일 notes를 따른다. 사용자 승인 범위·결정은 파일 review 메타에 있다.",
+        "식별자 목록은 encounters_red_blue.json과 machine_acquisition_red_blue.json에서 뽑는다. 재생성 스크립트는 scripts/helper/build_location_names_ko_red_blue.py, 검증 테스트는 tests/test_location_names_ko_red_blue.py.",
+        "출처 문서 원문 스냅샷은 보존하지 않는다. URL의 oldid로 같은 판을 다시 열 수 있다."
+      ]
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "path": "data/processed/machine_acquisition_red_blue.json",
+      "bytes": 173722,
+      "sha256": "b4bebce1654caf1bc0def46bd4a36a754c0452f5042d222a7b408bf4057306ed",
+      "description": "TM/HM별 게임 내 획득 장소·방법의 부분 추출과 근거.",
+      "source_refs": [
+        "pokered_pinned"
+      ],
+      "identity": {
+        "scheme": "machine:{code}",
+        "array_pointer": "/machines",
+        "identity_field": "code",
+        "record_count": 55,
+        "pointer_pattern": "/machines/{array_index}"
+      },
+      "example": {
+        "id": "machine:TM01",
+        "pointer": "/machines/0",
+        "identity_field": "code",
+        "identity_value": "TM01"
+      },
+      "notes": [
+        "55개 모두에 하나 이상의 경로가 있으나 경로와 접근 조건 전체를 검증한 것은 아니다.",
+        "입력 machines_red_blue.json은 별도 처리 산출물이다."
+      ],
+      "optional_historical_manifest": {
+        "path": "pokeapi/sources/machine_acquisition_red_blue/manifest.json",
+        "sha256": "72cdc635beb45638eab3bc2b9bc6745a7d7c0847193535770b1ec45c40b4dad3",
+        "optional": true,
+        "archive_sha256": "e44f7858e57aaf2e81eaf8bf90592a048e34cde1b89fd25a8ebed33622de4fd6",
+        "retrieved_local_date": "2026-11-24"
+      },
+      "input_processed": {
+        "source_id": "processed:machines_red_blue",
+        "sha256": "4ddcb121d75239b43b8af960705d47b900ddd81d171dd4c674265bd2d3d99abb"
+      },
+      "source_paths": [
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm",
+        "https://github.com/pret/pokered/tree/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects",
+        "https://github.com/pret/pokered/tree/ba9c0568f64ae602fadda577a08c66639f93082a/scripts",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm"
+      ]
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "path": "data/processed/machines_red_blue.json",
+      "bytes": 28268,
+      "sha256": "4ddcb121d75239b43b8af960705d47b900ddd81d171dd4c674265bd2d3d99abb",
+      "description": "Red/Blue TM/HM 코드, 기술, 아이템 및 현재 한국어 명칭.",
+      "source_refs": [
+        "pokeapi_v2",
+        "pokered_pinned"
+      ],
+      "identity": {
+        "scheme": "machine:{code}",
+        "array_pointer": "/machines",
+        "identity_field": "code",
+        "record_count": 55,
+        "pointer_pattern": "/machines/{array_index}"
+      },
+      "example": {
+        "id": "machine:TM01",
+        "pointer": "/machines/0",
+        "identity_field": "code",
+        "identity_value": "TM01"
+      },
+      "notes": [
+        "현재 한국어 이름은 영문 원판의 역사적 번역이 아니다.",
+        "API 원본과 고정 게임표 55개 코드·기술 쌍을 대조한 기록이다."
+      ],
+      "optional_historical_manifest": {
+        "path": "pokeapi/sources/machines_red_blue/manifest.json",
+        "sha256": "fca2a5bb825cf38fb1b0653b378ce62ef5d94a784b3eef93ce5b9bd1858400a4",
+        "optional": true,
+        "response_count": 277,
+        "retrieval_time_range_utc": [
+          "2026-11-24T02:16:42.264562+00:00",
+          "2026-11-24T02:17:03.854407+00:00"
+        ],
+        "response_bundle_sha256": "74d2b21d2b65979b5d136b642d77542d6d1108b2458c697d18702008be0ed737"
+      },
+      "source_paths": [
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm"
+      ]
+    },
+    {
+      "source_id": "processed:moves",
+      "path": "data/processed/moves.json",
+      "bytes": 7581539,
+      "sha256": "617fde5ccf1d1de9b4afb8c3bb7eba0b7ce33d766001efea39c315196c2059bf",
+      "description": "기술별 버전 그룹 값, 변경 이력 및 현재 API 속성.",
+      "source_refs": [
+        "pokeapi_v2",
+        "unknown_original"
+      ],
+      "identity": {
+        "scheme": "move:{id}",
+        "array_pointer": "",
+        "identity_field": "id",
+        "record_count": 165,
+        "pointer_pattern": "/{array_index}"
+      },
+      "example": {
+        "id": "move:1",
+        "pointer": "/0",
+        "identity_field": "id",
+        "identity_value": 1
+      },
+      "notes": [
+        "current_only는 1세대 사실로 검증된 값이 아니다.",
+        "과거 이력이 없는 값의 현재 값 대체는 잠정적이다."
+      ]
+    },
+    {
+      "source_id": "processed:pokemon",
+      "path": "data/processed/pokemon.json",
+      "bytes": 3758164,
+      "sha256": "d0010f89c3408e3a3b9e8bf80303c40bdd9f42199783b8e143419f2dc69ea716",
+      "description": "포켓몬 이름, 1세대와 현재 타입·능력치, 버전 그룹별 습득 기술.",
+      "source_refs": [
+        "pokeapi_v2",
+        "unknown_original"
+      ],
+      "identity": {
+        "scheme": "pokemon:{id}",
+        "array_pointer": "",
+        "identity_field": "id",
+        "record_count": 151,
+        "pointer_pattern": "/{array_index}"
+      },
+      "example": {
+        "id": "pokemon:1",
+        "pointer": "/0",
+        "identity_field": "id",
+        "identity_value": 1
+      },
+      "notes": [
+        "1세대 능력치는 과거값과 현재값 대체가 섞여 있다. special은 과거값이다.",
+        "각 레코드의 stats_gen1_reference는 파일 경로·해시만 제공하고 출처 커밋은 자체적으로 명시하지 않는다.",
+        "source_file은 이전 로컬 원본 경로로 선택사항이다."
+      ]
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "path": "data/processed/red_blue_move_damage_classification.json",
+      "bytes": 463990,
+      "sha256": "bf11f3e438176111d68c0972025bf674580aae27e7d97226a9262f3db511c89b",
+      "description": "기술의 직접 피해 분류와 정적 코드 검토 근거.",
+      "source_refs": [
+        "pokered_pinned"
+      ],
+      "identity": {
+        "scheme": "move:{id}",
+        "array_pointer": "/moves",
+        "identity_field": "id",
+        "record_count": 165,
+        "pointer_pattern": "/moves/{array_index}"
+      },
+      "example": {
+        "id": "move:1",
+        "pointer": "/moves/0",
+        "identity_field": "id",
+        "identity_value": 1
+      },
+      "notes": [
+        "unknown 2개는 미확정이며 간접 피해와 직접 피해를 구분한다.",
+        "moves.json의 현재 Red/Blue Soft-Boiled와 Rest PP는 각각 10이다. 기존 입력 해시와 현재 파일은 다르나 이 메타데이터만으로 전체 변경 내역은 확정할 수 없다."
+      ],
+      "source_paths": [
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/move_constants.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/moves/effects_pointers.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/moves/moves.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/core.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/effects.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/one_hit_ko.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/battle/residual_effects_1.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/battle/residual_effects_2.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/battle/set_damage_effects.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/battle/always_happen_effects.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/battle/special_effects.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/conversion.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/drain_hp.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/focus_energy.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/haze.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/heal.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/leech_seed.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/mist.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/paralyze.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/pay_day.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/recoil.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/reflect_light_screen.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/substitute.asm",
+        "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/battle/move_effects/transform.asm"
+      ],
+      "legacy_input": {
+        "field": "/local_moves_sha256",
+        "original_moves_sha256": "6feb67be40416bed65e170d21df2e8c97bede3e237fe32d6b582a444964e042e",
+        "current_moves_sha256": "617fde5ccf1d1de9b4afb8c3bb7eba0b7ce33d766001efea39c315196c2059bf",
+        "note": "기존 메타데이터의 입력 해시는 현재 처리 파일 해시와 다르며 현재 파일의 해시로 간주하면 안 된다. 원본 파일의 제공 여부는 확인되지 않았다."
+      }
+    },
+    {
+      "source_id": "processed:type_chart",
+      "path": "data/processed/type_chart.json",
+      "bytes": 4046,
+      "sha256": "278f2a56276cb242020d26a66ac28b3f7e6303d06264ca22e5a9e6c9e1a107c2",
+      "description": "타입별 공격 타입 → 방어 타입의 배율 표.",
+      "source_refs": [
+        "unknown_original"
+      ],
+      "identity": {
+        "scheme": "type_matchup:{attack_type}:{defense_type}",
+        "pointer_pattern": "/{attack_type}/{defense_type}",
+        "count": 225
+      },
+      "example": {
+        "id": "type_matchup:normal:ghost",
+        "pointer": "/normal/ghost",
+        "value": 0
+      },
+      "notes": [
+        "정확한 원본과 생성 과정은 이 파일만으로 확인되지 않는다.",
+        "표의 배율은 기술별 특수 효과를 모두 표현하지 않는다."
+      ]
+    },
+    {
+      "source_id": "processed:types",
+      "path": "data/processed/types.json",
+      "bytes": 1851,
+      "sha256": "f75cd12064eef9e6ffec367a59aef40e068952f8a6a7e677b2fb2db87ab8c514",
+      "description": "1세대 타입 ID와 한국어·영어 이름.",
+      "source_refs": [
+        "pokeapi_v2",
+        "unknown_original"
+      ],
+      "identity": {
+        "scheme": "type:{id}",
+        "array_pointer": "",
+        "identity_field": "id",
+        "record_count": 15,
+        "pointer_pattern": "/{array_index}"
+      },
+      "example": {
+        "id": "type:1",
+        "pointer": "/0",
+        "identity_field": "id",
+        "identity_value": 1
+      },
+      "notes": [
+        "리소스 URL은 보존되어 있으나 이 파일의 원본 수집 시각은 확인되지 않는다."
+      ]
+    }
+  ]
+}

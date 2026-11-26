@@ -12,18 +12,21 @@ WARN : 함께 바뀌어야 할 수 있는 문서가 이번 변경에 없음. 확
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 import re
 import subprocess
 import sys
 from fnmatch import fnmatch
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[4]
 MAP = Path(__file__).resolve().parents[1] / "doc-map.json"
 
 errors: list[str] = []
 warns: list[str] = []
+historical_unresolved: list[str] = []
+historical_resolved: list[str] = []
 
 
 def git(*args: str) -> list[str]:
@@ -60,13 +63,53 @@ def normpath(p: str) -> str:
 
 
 # 1. 링크 ---------------------------------------------------------------
-def check_links(files: list[str]) -> None:
+def historical_allowance(cfg: dict) -> Counter[tuple[str, str]]:
+    """승인된 정확한 보고서 경로/링크 쌍만 인스턴스별로 허용한다."""
+    allowed: Counter[tuple[str, str]] = Counter()
+    report_root = (ROOT / "solar_handoff/reports").resolve()
+    if not report_root.is_relative_to(ROOT.resolve()):
+        errors.append("[historical-link] 보고서 디렉터리가 저장소 밖을 가리킴")
+        return allowed
+    entries = cfg.get("historical_missing_links", [])
+    if not isinstance(entries, list):
+        errors.append("[historical-link] 예외 목록은 배열이어야 함")
+        return allowed
+    for entry in entries:
+        if not isinstance(entry, list) or len(entry) != 2 or not all(isinstance(x, str) and x for x in entry):
+            errors.append(f"[historical-link] 잘못된 예외 항목: {entry!r}")
+            continue
+        report, link = entry
+        path = PurePosixPath(report)
+        if ("\\" in report or path.is_absolute() or path.as_posix() != report
+                or any(part in (".", "..") or ":" in part for part in report.split("/"))
+                or not report.startswith("solar_handoff/reports/") or not report.endswith(".md")
+                or not (ROOT / report).resolve().is_relative_to(report_root)):
+            errors.append(f"[historical-link] 허용되지 않는 보고서 경로: {report!r}")
+            continue
+        allowed[(report, link)] += 1
+    return allowed
+
+
+def check_links(files: list[str], cfg: dict) -> None:
+    remaining = historical_allowance(cfg)
     for f in files:
         if not f.endswith(".md"):
             continue
         for link in md_links(f):
             target = normpath(resolve(f, link))
-            if not (ROOT / target).exists():
+            exists = (ROOT / target).exists()
+            pair = (f, link)
+            # 링크별 허용 개수보다 새로 추가된 동일 링크도 예외로 삼지 않는다.
+            approved = remaining[pair] > 0 and (ROOT / f).resolve().is_relative_to(
+                (ROOT / "solar_handoff/reports").resolve()
+            )
+            if approved:
+                remaining[pair] -= 1
+                if exists:
+                    historical_resolved.append(f"{f}: {link}")
+                else:
+                    historical_unresolved.append(f"{f}: {link}")
+            elif not exists:
                 errors.append(f"[link] {f}: 깨진 링크 {link}")
 
 
@@ -274,7 +317,7 @@ def main() -> int:
 
     cfg = json.loads(MAP.read_text(encoding="utf-8"))
     files = repo_files()
-    check_links(files)
+    check_links(files, cfg)
     check_orphans(files, cfg)
     check_registry(cfg)
     check_mirrors(cfg)
@@ -284,11 +327,16 @@ def main() -> int:
     changed = check_coupling(cfg, args.base)
 
     print(f"doc-sync: 변경 파일 {len(changed)}개 (base={args.base})")
+    for item in historical_unresolved:
+        print(f"INFO [historical-link] 의도적 미포함, 링크 미해결: {item}")
+    for item in historical_resolved:
+        print(f"INFO [historical-link] 해결됨: {item}")
     for e in errors:
         print("ERROR", e)
     for w in warns:
         print("WARN ", w)
-    print(f"결과: ERROR {len(errors)}, WARN {len(warns)}")
+    print(f"결과: ERROR {len(errors)}, WARN {len(warns)}, "
+          f"의도적 미포함 링크 미해결 {len(historical_unresolved)}, 해결 {len(historical_resolved)}")
     return 1 if errors or (args.strict and warns) else 0
 
 

@@ -9,6 +9,17 @@ description: Use when building, syncing, or checking the vector index (OpenAI em
 환경 설정은 `docs/references/environment.md`를 따른다.
 입력은 `chunking` 스킬에 따라 승인된 Markdown에서 생성한 청크다. 문서 변경 시 청크 본문과 근거 연결을 먼저 갱신·검증한다.
 
+## Solar 단일 임베딩 전달본
+
+- [`solar_handoff/`](../../../solar_handoff/README.md)의 `db/schema.sql`은 별도 `solar_handoff` 스키마의 `chunks`, `vectors`, `index_info`를 정의한다. Upstage Solar 문서 모델과 질문 모델은 별도 ID이고 저장된 설정과 맞아야 하며 벡터 차원은 1024다. 접속은 기존 `DATABASE_URL`을 사용하며, 실행 전 실제 대상과 권한을 확인한다. 아래 기존 PGVector 컬렉션의 테이블·해시·삭제 규칙과 혼동하지 않는다.
+- `legacy-export`는 CLI와 직접 함수 호출 모두 보안상 비활성화되어 원본을 조회하지 않는다. 기존에 검증된 Solar 벡터 1,504개 번들은 비공개 보관 중이며 사용자가 비공개 공유를 선택했지만 아직 전달되지 않았다. 번들 전달은 별도로 수행하며 본문·메타데이터·벡터가 포함되므로 ACL·출처·재배포 권리와 수신 대상을 확인한다. 승인된 빈 대상에는 재임베딩 없이 `init`·`restore`·`verify`를 사용할 수 있다. 임시 PostgreSQL 복원에서 1,504개 전체 메타데이터와 벡터 wire bytes를 독립 새 연결로 확인한 범위만 검증됐다.
+- `src/ingest.py`는 제공된 청크에서 본문이 새롭거나 바뀐 항목만 임베딩하고 입력에서 빠진 항목은 삭제하지 않는다. 기존 설정이 다르면 별도 인덱스가 필요하다. dry-run도 DB에 연결한다. 새 입력 승인, DB 대상·권한과 백업, 매 실행의 유료 API 비용 및 보안 조건을 사전에 확인한다. 실행 플래그는 사용자 승인을 대신하지 않는다.
+- 사용자 151문서 승인 의사와 원본 청크의 pending 상태는 별개다. 과거 승인 스냅샷 검증 시스템을 재도입하지 않는다. 검증은 위 복원과 승인된 질문 1건의 Solar C 검색·rewrite·GPT 답변에 한정되며 모든 모델·검색 조합이나 인용의 의미 정확성은 보장하지 않는다. 실패나 readback 결과 불명 시 자동 재시도하지 않고 대상을 확인한다.
+
+## 기존 PGVector 컬렉션 방식
+
+`DATABASE_URL`은 Solar 전달본과 공통으로 사용한다. 이하의 OpenAI 임베딩, 컬렉션 및 전체 목록에 없는 항목 삭제 절차는 기존 방식이며 Solar 전달본의 증분 적재에 적용하지 않는다.
+
 ## 구성
 
 - 저장소: PostgreSQL 17 + pgvector (`docker compose up -d`), 접속은 `DATABASE_URL`

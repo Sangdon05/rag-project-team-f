@@ -1,0 +1,5278 @@
+{
+  "schema_version": 1,
+  "document_path": "documents/118_콘치.md",
+  "pokemon_id": 118,
+  "document_sha256": "ebf023df8ea60d9e407bde82168fad35c51efbfbab12742b84250cc1a43d0d80",
+  "source_revision": "e58a02d6a952d7e79378cac3df9537adbb6c700a",
+  "provenance_manifests": {
+    "snapshot_manifest.json": "86450d4267c94ed9b94261cfb5fd0e5934ff706bf88a9ab60574eb366aa5d80d",
+    "data/source_manifest.json": "2a78058bbe17b9331d5d13b4db07e56ca7d3565d08d65671f4c6c883eaf0ebbe"
+  },
+  "sources": {
+    "processed:pokemon": {
+      "path": "data/processed/pokemon.json",
+      "sha256": "d0010f89c3408e3a3b9e8bf80303c40bdd9f42199783b8e143419f2dc69ea716"
+    },
+    "processed:moves": {
+      "path": "data/processed/moves.json",
+      "sha256": "617fde5ccf1d1de9b4afb8c3bb7eba0b7ce33d766001efea39c315196c2059bf"
+    },
+    "processed:types": {
+      "path": "data/processed/types.json",
+      "sha256": "f75cd12064eef9e6ffec367a59aef40e068952f8a6a7e677b2fb2db87ab8c514"
+    },
+    "processed:type_chart": {
+      "path": "data/processed/type_chart.json",
+      "sha256": "278f2a56276cb242020d26a66ac28b3f7e6303d06264ca22e5a9e6c9e1a107c2"
+    },
+    "processed:red_blue_move_damage_classification": {
+      "path": "data/processed/red_blue_move_damage_classification.json",
+      "sha256": "bf11f3e438176111d68c0972025bf674580aae27e7d97226a9262f3db511c89b"
+    },
+    "processed:machines_red_blue": {
+      "path": "data/processed/machines_red_blue.json",
+      "sha256": "4ddcb121d75239b43b8af960705d47b900ddd81d171dd4c674265bd2d3d99abb"
+    },
+    "processed:machine_acquisition_red_blue": {
+      "path": "data/processed/machine_acquisition_red_blue.json",
+      "sha256": "b4bebce1654caf1bc0def46bd4a36a754c0452f5042d222a7b408bf4057306ed"
+    },
+    "processed:location_names_ko_red_blue": {
+      "path": "data/processed/location_names_ko_red_blue.json",
+      "sha256": "f33fc190766a80cab3602f1f2a4617b11c3117d637bc2ba40686173c7b31247f"
+    },
+    "processed:evolutions_red_blue": {
+      "path": "data/processed/evolutions_red_blue.json",
+      "sha256": "24c720a0d25a8ecd57cbbc5d737ce1a277ec8f6147481bdb3131eaea6007e4e4"
+    },
+    "processed:evolution_items_red_blue": {
+      "path": "data/processed/evolution_items_red_blue.json",
+      "sha256": "69d4632ebea6a200346aea7129677fd45a661eaaf4e3e123340f6f7dd63e9fbc"
+    },
+    "processed:encounters_red_blue": {
+      "path": "data/processed/encounters_red_blue.json",
+      "sha256": "d308cc1f07c10fb376ee0d1118fbf064c23f3f9ea3ddb95d7e71a721de369a1c"
+    }
+  },
+  "calculator": {
+    "path": "scripts/gen1_battle/gen1_battle_rules.py",
+    "sha256": "1acf5b02611945715f77a97eb0e948c5c9815bb6a7b87e449d27f0bcffbfd96d",
+    "helper": {
+      "path": "scripts/gen1_battle/data_integrity.py",
+      "sha256": "e87db835fea69425a513bc5f98b50faa9aeb6263837e33a83c619c47bc939e1e"
+    },
+    "version": "red-blue",
+    "user_id": 118,
+    "target_id": 118,
+    "classification_source_commit": "ba9c0568f64ae602fadda577a08c66639f93082a",
+    "attack_and_stab_probes": {
+      "water": 55
+    },
+    "defense_probes": {
+      "bug": 41,
+      "dragon": null,
+      "electric": 9,
+      "fighting": 24,
+      "fire": 7,
+      "flying": 17,
+      "ghost": 122,
+      "grass": 22,
+      "ground": 89,
+      "ice": 8,
+      "normal": 1,
+      "poison": 40,
+      "psychic": 60,
+      "rock": 88,
+      "water": 55
+    },
+    "calculator_unchecked_attack_types": [],
+    "calculator_unchecked_defense_types": [
+      "dragon"
+    ],
+    "stab_examples": [
+      {
+        "type": "water",
+        "move_id": 127,
+        "kind": "learnable"
+      }
+    ],
+    "method": "BattleRules.calculate type_effectiveness; single-type target override for attack; actual target for defense; STAB separately; missing regular-damage probes chart-only"
+  },
+  "references": [
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "profile_and_stats"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/0",
+      "record_id": "type:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/1",
+      "record_id": "type:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/2",
+      "record_id": "type:3",
+      "identity_field": "id",
+      "identity_value": 3,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/3",
+      "record_id": "type:4",
+      "identity_field": "id",
+      "identity_value": 4,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/4",
+      "record_id": "type:5",
+      "identity_field": "id",
+      "identity_value": 5,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/5",
+      "record_id": "type:6",
+      "identity_field": "id",
+      "identity_value": 6,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/6",
+      "record_id": "type:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/7",
+      "record_id": "type:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/8",
+      "record_id": "type:10",
+      "identity_field": "id",
+      "identity_value": 10,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/9",
+      "record_id": "type:11",
+      "identity_field": "id",
+      "identity_value": 11,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/10",
+      "record_id": "type:12",
+      "identity_field": "id",
+      "identity_value": 12,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/11",
+      "record_id": "type:13",
+      "identity_field": "id",
+      "identity_value": 13,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/12",
+      "record_id": "type:14",
+      "identity_field": "id",
+      "identity_value": 14,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/13",
+      "record_id": "type:15",
+      "identity_field": "id",
+      "identity_value": 15,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/14",
+      "record_id": "type:16",
+      "identity_field": "id",
+      "identity_value": 16,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/0",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "agility",
+        "method": "level-up",
+        "level": 54,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/96",
+      "record_id": "move:97",
+      "identity_field": "id",
+      "identity_value": 97,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/96",
+      "record_id": "move:97",
+      "identity_field": "id",
+      "identity_value": 97,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/1",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "bide",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/116",
+      "record_id": "move:117",
+      "identity_field": "id",
+      "identity_value": 117,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/116",
+      "record_id": "move:117",
+      "identity_field": "id",
+      "identity_value": 117,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/33",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/33",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/33/locations/0",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/33",
+      "expected_subrecord": {
+        "map_id_raw": "PewterGym",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/134",
+      "record_id": "location_name:pokered_map:PewterGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PewterGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/2",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "blizzard",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/58",
+      "record_id": "move:59",
+      "identity_field": "id",
+      "identity_value": 59,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/58",
+      "record_id": "move:59",
+      "identity_field": "id",
+      "identity_value": 59,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/13",
+      "record_id": "machine:TM14",
+      "identity_field": "code",
+      "identity_value": "TM14",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/13",
+      "record_id": "machine:TM14",
+      "identity_field": "code",
+      "identity_value": "TM14",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/13/locations/0",
+      "record_id": "machine:TM14",
+      "identity_field": "code",
+      "identity_value": "TM14",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/13",
+      "expected_subrecord": {
+        "map_id_raw": "PokemonMansionB1F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/135",
+      "record_id": "location_name:pokered_map:PokemonMansionB1F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PokemonMansionB1F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/3",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "bubble-beam",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/60",
+      "record_id": "move:61",
+      "identity_field": "id",
+      "identity_value": 61,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/60",
+      "record_id": "move:61",
+      "identity_field": "id",
+      "identity_value": 61,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/10",
+      "record_id": "machine:TM11",
+      "identity_field": "code",
+      "identity_value": "TM11",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/10",
+      "record_id": "machine:TM11",
+      "identity_field": "code",
+      "identity_value": "TM11",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/10/locations/0",
+      "record_id": "machine:TM11",
+      "identity_field": "code",
+      "identity_value": "TM11",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/10",
+      "expected_subrecord": {
+        "map_id_raw": "CeruleanGym",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/125",
+      "record_id": "location_name:pokered_map:CeruleanGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeruleanGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/4",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "double-edge",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/37",
+      "record_id": "move:38",
+      "identity_field": "id",
+      "identity_value": 38,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/37",
+      "record_id": "move:38",
+      "identity_field": "id",
+      "identity_value": 38,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/9",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/9",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/9/locations/0",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/9",
+      "expected_subrecord": {
+        "map_id_raw": "RocketHideoutB3F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/138",
+      "record_id": "location_name:pokered_map:RocketHideoutB3F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:RocketHideoutB3F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/5",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "double-team",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/103",
+      "record_id": "move:104",
+      "identity_field": "id",
+      "identity_value": 104,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/103",
+      "record_id": "move:104",
+      "identity_field": "id",
+      "identity_value": 104,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/31",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/31",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/31/locations/0",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/31",
+      "expected_subrecord": {
+        "map_id_raw": "SafariZoneWest",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/155",
+      "record_id": "location_name:pokered_map:SafariZoneWest",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SafariZoneWest",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/31/locations/1",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/31",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMart2F",
+        "method": "shop",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/121",
+      "record_id": "location_name:pokered_map:CeladonMart2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeladonMart2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/6",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "fury-attack",
+        "method": "level-up",
+        "level": 30,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/30",
+      "record_id": "move:31",
+      "identity_field": "id",
+      "identity_value": 31,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/30",
+      "record_id": "move:31",
+      "identity_field": "id",
+      "identity_value": 31,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/7",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "horn-attack",
+        "method": "level-up",
+        "level": 24,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/29",
+      "record_id": "move:30",
+      "identity_field": "id",
+      "identity_value": 30,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/29",
+      "record_id": "move:30",
+      "identity_field": "id",
+      "identity_value": 30,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/8",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "horn-drill",
+        "method": "level-up",
+        "level": 45,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/31",
+      "record_id": "move:32",
+      "identity_field": "id",
+      "identity_value": 32,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/31",
+      "record_id": "move:32",
+      "identity_field": "id",
+      "identity_value": 32,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/9",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "horn-drill",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/6",
+      "record_id": "machine:TM07",
+      "identity_field": "code",
+      "identity_value": "TM07",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/6",
+      "record_id": "machine:TM07",
+      "identity_field": "code",
+      "identity_value": "TM07",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/6/locations/0",
+      "record_id": "machine:TM07",
+      "identity_field": "code",
+      "identity_value": "TM07",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/6",
+      "expected_subrecord": {
+        "map_id_raw": "RocketHideoutB2F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/137",
+      "record_id": "location_name:pokered_map:RocketHideoutB2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:RocketHideoutB2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/6/locations/1",
+      "record_id": "machine:TM07",
+      "identity_field": "code",
+      "identity_value": "TM07",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/6",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMart2F",
+        "method": "shop",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/10",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "ice-beam",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/57",
+      "record_id": "move:58",
+      "identity_field": "id",
+      "identity_value": 58,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/57",
+      "record_id": "move:58",
+      "identity_field": "id",
+      "identity_value": 58,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/12",
+      "record_id": "machine:TM13",
+      "identity_field": "code",
+      "identity_value": "TM13",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/12",
+      "record_id": "machine:TM13",
+      "identity_field": "code",
+      "identity_value": "TM13",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/12/locations/0",
+      "record_id": "machine:TM13",
+      "identity_field": "code",
+      "identity_value": "TM13",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/12",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMartRoof",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/123",
+      "record_id": "location_name:pokered_map:CeladonMartRoof",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeladonMartRoof",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/11",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "mimic",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/101",
+      "record_id": "move:102",
+      "identity_field": "id",
+      "identity_value": 102,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/101",
+      "record_id": "move:102",
+      "identity_field": "id",
+      "identity_value": 102,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/30",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/30",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/30/locations/0",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/30",
+      "expected_subrecord": {
+        "map_id_raw": "CopycatsHouse2F",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/128",
+      "record_id": "location_name:pokered_map:CopycatsHouse2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CopycatsHouse2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/12",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "peck",
+        "method": "level-up",
+        "level": 1,
+        "version_group": "red-blue",
+        "order": 1
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/63",
+      "record_id": "move:64",
+      "identity_field": "id",
+      "identity_value": 64,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/63",
+      "record_id": "move:64",
+      "identity_field": "id",
+      "identity_value": 64,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/13",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "rage",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/98",
+      "record_id": "move:99",
+      "identity_field": "id",
+      "identity_value": 99,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/98",
+      "record_id": "move:99",
+      "identity_field": "id",
+      "identity_value": 99,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/19",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/19",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/19/locations/0",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/19",
+      "expected_subrecord": {
+        "map_id_raw": "Route15",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/142",
+      "record_id": "location_name:pokered_map:Route15",
+      "identity_field": "id",
+      "identity_value": "pokered_map:Route15",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/14",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "rest",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/155",
+      "record_id": "move:156",
+      "identity_field": "id",
+      "identity_value": 156,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/155",
+      "record_id": "move:156",
+      "identity_field": "id",
+      "identity_value": 156,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/43",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/43",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/43/locations/0",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/43",
+      "expected_subrecord": {
+        "map_id_raw": "SSAnneB1FRooms",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/150",
+      "record_id": "location_name:pokered_map:SSAnneB1FRooms",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SSAnneB1FRooms",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/15",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "skull-bash",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/129",
+      "record_id": "move:130",
+      "identity_field": "id",
+      "identity_value": 130,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/129",
+      "record_id": "move:130",
+      "identity_field": "id",
+      "identity_value": 130,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/39",
+      "record_id": "machine:TM40",
+      "identity_field": "code",
+      "identity_value": "TM40",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/39",
+      "record_id": "machine:TM40",
+      "identity_field": "code",
+      "identity_value": "TM40",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/39/locations/0",
+      "record_id": "machine:TM40",
+      "identity_field": "code",
+      "identity_value": "TM40",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/39",
+      "expected_subrecord": {
+        "map_id_raw": "SafariZoneNorth",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/153",
+      "record_id": "location_name:pokered_map:SafariZoneNorth",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SafariZoneNorth",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/16",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "substitute",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/163",
+      "record_id": "move:164",
+      "identity_field": "id",
+      "identity_value": 164,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/163",
+      "record_id": "move:164",
+      "identity_field": "id",
+      "identity_value": 164,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/49",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/49",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/49/locations/0",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/49",
+      "expected_subrecord": {
+        "map_id_raw": "GameCornerPrizeRoom",
+        "method": "game_corner_prize",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/130",
+      "record_id": "location_name:pokered_map:GameCornerPrizeRoom",
+      "identity_field": "id",
+      "identity_value": "pokered_map:GameCornerPrizeRoom",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/17",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "supersonic",
+        "method": "level-up",
+        "level": 19,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/47",
+      "record_id": "move:48",
+      "identity_field": "id",
+      "identity_value": 48,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/47",
+      "record_id": "move:48",
+      "identity_field": "id",
+      "identity_value": 48,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/18",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "surf",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/56",
+      "record_id": "move:57",
+      "identity_field": "id",
+      "identity_value": 57,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/56",
+      "record_id": "move:57",
+      "identity_field": "id",
+      "identity_value": 57,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/52",
+      "record_id": "machine:HM03",
+      "identity_field": "code",
+      "identity_value": "HM03",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/52",
+      "record_id": "machine:HM03",
+      "identity_field": "code",
+      "identity_value": "HM03",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/52/locations/0",
+      "record_id": "machine:HM03",
+      "identity_field": "code",
+      "identity_value": "HM03",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/52",
+      "expected_subrecord": {
+        "map_id_raw": "SafariZoneSecretHouse",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/154",
+      "record_id": "location_name:pokered_map:SafariZoneSecretHouse",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SafariZoneSecretHouse",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/19",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "swift",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/128",
+      "record_id": "move:129",
+      "identity_field": "id",
+      "identity_value": 129,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/128",
+      "record_id": "move:129",
+      "identity_field": "id",
+      "identity_value": 129,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/38",
+      "record_id": "machine:TM39",
+      "identity_field": "code",
+      "identity_value": "TM39",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/38",
+      "record_id": "machine:TM39",
+      "identity_field": "code",
+      "identity_value": "TM39",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/38/locations/0",
+      "record_id": "machine:TM39",
+      "identity_field": "code",
+      "identity_value": "TM39",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/38",
+      "expected_subrecord": {
+        "map_id_raw": "Route12Gate2F",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/141",
+      "record_id": "location_name:pokered_map:Route12Gate2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:Route12Gate2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/20",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "tail-whip",
+        "method": "level-up",
+        "level": 1,
+        "version_group": "red-blue",
+        "order": 2
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/38",
+      "record_id": "move:39",
+      "identity_field": "id",
+      "identity_value": 39,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/38",
+      "record_id": "move:39",
+      "identity_field": "id",
+      "identity_value": 39,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/21",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "take-down",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/35",
+      "record_id": "move:36",
+      "identity_field": "id",
+      "identity_value": 36,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/35",
+      "record_id": "move:36",
+      "identity_field": "id",
+      "identity_value": 36,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/8",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/8",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/8/locations/0",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/8",
+      "expected_subrecord": {
+        "map_id_raw": "SilphCo5F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/159",
+      "record_id": "location_name:pokered_map:SilphCo5F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SilphCo5F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/8/locations/1",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/8",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMart2F",
+        "method": "shop",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/22",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "toxic",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/91",
+      "record_id": "move:92",
+      "identity_field": "id",
+      "identity_value": 92,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/91",
+      "record_id": "move:92",
+      "identity_field": "id",
+      "identity_value": 92,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/5",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/5",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/5/locations/0",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/5",
+      "expected_subrecord": {
+        "map_id_raw": "FuchsiaGym",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/129",
+      "record_id": "location_name:pokered_map:FuchsiaGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:FuchsiaGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/23",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "water-gun",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/11",
+      "record_id": "machine:TM12",
+      "identity_field": "code",
+      "identity_value": "TM12",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/11",
+      "record_id": "machine:TM12",
+      "identity_field": "code",
+      "identity_value": "TM12",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/11/locations/0",
+      "record_id": "machine:TM12",
+      "identity_field": "code",
+      "identity_value": "TM12",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/11",
+      "expected_subrecord": {
+        "map_id_raw": "MtMoon1F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/132",
+      "record_id": "location_name:pokered_map:MtMoon1F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:MtMoon1F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117/learnset/24",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "learnset",
+      "record_pointer": "/117",
+      "expected_subrecord": {
+        "move": "waterfall",
+        "method": "level-up",
+        "level": 37,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/126",
+      "record_id": "move:127",
+      "identity_field": "id",
+      "identity_value": 127,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/126",
+      "record_id": "move:127",
+      "identity_field": "id",
+      "identity_value": 127,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/117",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/117",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/117/evolves_to/0",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "evolution",
+      "record_pointer": "/records/117",
+      "expected_subrecord": {
+        "from_id": 118,
+        "to_id": 119,
+        "trigger": "level-up",
+        "min_level": 33,
+        "item": null
+      }
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/118",
+      "record_id": "pokemon:119",
+      "identity_field": "id",
+      "identity_value": 119,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/118",
+      "record_id": "pokemon:119",
+      "identity_field": "id",
+      "identity_value": 119,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/118/evolves_from/0",
+      "record_id": "pokemon:119",
+      "identity_field": "id",
+      "identity_value": 119,
+      "section": "evolution",
+      "record_pointer": "/records/118",
+      "expected_subrecord": {
+        "from_id": 118,
+        "to_id": 119,
+        "trigger": "level-up",
+        "min_level": 33,
+        "item": null
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/113",
+      "record_id": "location_name:pokeapi_location_area:seafoam-islands-b3f",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:seafoam-islands-b3f",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/0",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "seafoam-islands-b3f",
+          "url": "https://pokeapi.co/api/v2/location-area/261/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/114",
+      "record_id": "location_name:pokeapi_location_area:seafoam-islands-b4f",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:seafoam-islands-b4f",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/1",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "seafoam-islands-b4f",
+          "url": "https://pokeapi.co/api/v2/location-area/262/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/60",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-12-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-12-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/2",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-12-area",
+          "url": "https://pokeapi.co/api/v2/location-area/276/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/86",
+      "record_id": "location_name:pokeapi_location_area:kanto-sea-route-19-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-sea-route-19-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/3",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-sea-route-19-area",
+          "url": "https://pokeapi.co/api/v2/location-area/277/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/87",
+      "record_id": "location_name:pokeapi_location_area:kanto-sea-route-20-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-sea-route-20-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/4",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-sea-route-20-area",
+          "url": "https://pokeapi.co/api/v2/location-area/278/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/52",
+      "record_id": "location_name:pokeapi_location_area:cinnabar-island-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:cinnabar-island-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/5",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cinnabar-island-area",
+          "url": "https://pokeapi.co/api/v2/location-area/279/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/117",
+      "record_id": "location_name:pokeapi_location_area:viridian-city-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:viridian-city-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/6",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "viridian-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/280/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/51",
+      "record_id": "location_name:pokeapi_location_area:cerulean-city-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:cerulean-city-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/7",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cerulean-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/281/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 84,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/115",
+      "record_id": "location_name:pokeapi_location_area:vermilion-city-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:vermilion-city-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/8",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "vermilion-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/282/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/45",
+      "record_id": "location_name:pokeapi_location_area:celadon-city-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:celadon-city-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/9",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "celadon-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/283/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/55",
+      "record_id": "location_name:pokeapi_location_area:fuchsia-city-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:fuchsia-city-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/10",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "fuchsia-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/284/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/96",
+      "record_id": "location_name:pokeapi_location_area:pallet-town-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:pallet-town-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/11",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "pallet-town-area",
+          "url": "https://pokeapi.co/api/v2/location-area/285/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/78",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-6-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-6-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/12",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-6-area",
+          "url": "https://pokeapi.co/api/v2/location-area/300/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/58",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-10-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-10-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/13",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-10-area",
+          "url": "https://pokeapi.co/api/v2/location-area/304/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/59",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-11-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-11-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/14",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-11-area",
+          "url": "https://pokeapi.co/api/v2/location-area/305/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/61",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-13-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-13-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/15",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-13-area",
+          "url": "https://pokeapi.co/api/v2/location-area/306/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/65",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-17-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-17-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/16",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-17-area",
+          "url": "https://pokeapi.co/api/v2/location-area/310/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/66",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-18-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-18-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/17",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-18-area",
+          "url": "https://pokeapi.co/api/v2/location-area/311/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/88",
+      "record_id": "location_name:pokeapi_location_area:kanto-sea-route-21-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-sea-route-21-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/18",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-sea-route-21-area",
+          "url": "https://pokeapi.co/api/v2/location-area/312/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/69",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-22-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-22-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/19",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-22-area",
+          "url": "https://pokeapi.co/api/v2/location-area/313/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 100,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/71",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-24-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-24-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/20",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-24-area",
+          "url": "https://pokeapi.co/api/v2/location-area/314/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 84,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/72",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-25-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-25-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/21",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-25-area",
+          "url": "https://pokeapi.co/api/v2/location-area/315/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 84,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/48",
+      "record_id": "location_name:pokeapi_location_area:cerulean-cave-1f",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:cerulean-cave-1f",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/22",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cerulean-cave-1f",
+          "url": "https://pokeapi.co/api/v2/location-area/323/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/50",
+      "record_id": "location_name:pokeapi_location_area:cerulean-cave-b1f",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:cerulean-cave-b1f",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/23",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cerulean-cave-b1f",
+          "url": "https://pokeapi.co/api/v2/location-area/325/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/70",
+      "record_id": "location_name:pokeapi_location_area:kanto-route-23-area",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-route-23-area",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/24",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-23-area",
+          "url": "https://pokeapi.co/api/v2/location-area/329/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/85",
+      "record_id": "location_name:pokeapi_location_area:kanto-safari-zone-middle",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-safari-zone-middle",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/25",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-middle",
+          "url": "https://pokeapi.co/api/v2/location-area/345/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/82",
+      "record_id": "location_name:pokeapi_location_area:kanto-safari-zone-area-1-east",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-safari-zone-area-1-east",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/26",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-area-1-east",
+          "url": "https://pokeapi.co/api/v2/location-area/346/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/83",
+      "record_id": "location_name:pokeapi_location_area:kanto-safari-zone-area-2-north",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-safari-zone-area-2-north",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/27",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-area-2-north",
+          "url": "https://pokeapi.co/api/v2/location-area/347/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/84",
+      "record_id": "location_name:pokeapi_location_area:kanto-safari-zone-area-3-west",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:kanto-safari-zone-area-3-west",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/28",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-area-3-west",
+          "url": "https://pokeapi.co/api/v2/location-area/348/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/116",
+      "record_id": "location_name:pokeapi_location_area:vermilion-city-ss-anne-dock",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:vermilion-city-ss-anne-dock",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/red/encounters/29",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "vermilion-city-ss-anne-dock",
+          "url": "https://pokeapi.co/api/v2/location-area/349/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/0",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "seafoam-islands-b3f",
+          "url": "https://pokeapi.co/api/v2/location-area/261/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/1",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "seafoam-islands-b4f",
+          "url": "https://pokeapi.co/api/v2/location-area/262/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/2",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-12-area",
+          "url": "https://pokeapi.co/api/v2/location-area/276/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/3",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-sea-route-19-area",
+          "url": "https://pokeapi.co/api/v2/location-area/277/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/4",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-sea-route-20-area",
+          "url": "https://pokeapi.co/api/v2/location-area/278/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/5",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cinnabar-island-area",
+          "url": "https://pokeapi.co/api/v2/location-area/279/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/6",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "viridian-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/280/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/7",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cerulean-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/281/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 84,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/8",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "vermilion-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/282/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/9",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "celadon-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/283/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/10",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "fuchsia-city-area",
+          "url": "https://pokeapi.co/api/v2/location-area/284/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/11",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "pallet-town-area",
+          "url": "https://pokeapi.co/api/v2/location-area/285/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/12",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-6-area",
+          "url": "https://pokeapi.co/api/v2/location-area/300/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/13",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-10-area",
+          "url": "https://pokeapi.co/api/v2/location-area/304/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/14",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-11-area",
+          "url": "https://pokeapi.co/api/v2/location-area/305/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/15",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-13-area",
+          "url": "https://pokeapi.co/api/v2/location-area/306/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/16",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-17-area",
+          "url": "https://pokeapi.co/api/v2/location-area/310/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/17",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-18-area",
+          "url": "https://pokeapi.co/api/v2/location-area/311/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/18",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-sea-route-21-area",
+          "url": "https://pokeapi.co/api/v2/location-area/312/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 75,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/19",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-22-area",
+          "url": "https://pokeapi.co/api/v2/location-area/313/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 100,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 25,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 8,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/20",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-24-area",
+          "url": "https://pokeapi.co/api/v2/location-area/314/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 84,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/21",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-25-area",
+          "url": "https://pokeapi.co/api/v2/location-area/315/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 84,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            },
+            {
+              "min_level": 15,
+              "max_level": 15,
+              "chance": 17,
+              "method": {
+                "name": "super-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/4/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/22",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cerulean-cave-1f",
+          "url": "https://pokeapi.co/api/v2/location-area/323/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/23",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cerulean-cave-b1f",
+          "url": "https://pokeapi.co/api/v2/location-area/325/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/24",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-route-23-area",
+          "url": "https://pokeapi.co/api/v2/location-area/329/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/25",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-middle",
+          "url": "https://pokeapi.co/api/v2/location-area/345/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/26",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-area-1-east",
+          "url": "https://pokeapi.co/api/v2/location-area/346/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/27",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-area-2-north",
+          "url": "https://pokeapi.co/api/v2/location-area/347/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/28",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "kanto-safari-zone-area-3-west",
+          "url": "https://pokeapi.co/api/v2/location-area/348/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/117/versions/blue/encounters/29",
+      "record_id": "pokemon:118",
+      "identity_field": "id",
+      "identity_value": 118,
+      "section": "encounter",
+      "record_pointer": "/pokemon/117",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "vermilion-city-ss-anne-dock",
+          "url": "https://pokeapi.co/api/v2/location-area/349/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 50,
+          "encounter_details": [
+            {
+              "min_level": 10,
+              "max_level": 10,
+              "chance": 50,
+              "method": {
+                "name": "good-rod",
+                "url": "https://pokeapi.co/api/v2/encounter-method/3/"
+              },
+              "condition_values": [],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/bug",
+      "record_id": "type_matchup:water:bug",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/dragon",
+      "record_id": "type_matchup:water:dragon",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/electric",
+      "record_id": "type_matchup:water:electric",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/fighting",
+      "record_id": "type_matchup:water:fighting",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/fire",
+      "record_id": "type_matchup:water:fire",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/flying",
+      "record_id": "type_matchup:water:flying",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/ghost",
+      "record_id": "type_matchup:water:ghost",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/grass",
+      "record_id": "type_matchup:water:grass",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/ground",
+      "record_id": "type_matchup:water:ground",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/ice",
+      "record_id": "type_matchup:water:ice",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/normal",
+      "record_id": "type_matchup:water:normal",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/poison",
+      "record_id": "type_matchup:water:poison",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/psychic",
+      "record_id": "type_matchup:water:psychic",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/rock",
+      "record_id": "type_matchup:water:rock",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/water",
+      "record_id": "type_matchup:water:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/bug/water",
+      "record_id": "type_matchup:bug:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/dragon/water",
+      "record_id": "type_matchup:dragon:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/electric/water",
+      "record_id": "type_matchup:electric:water",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fighting/water",
+      "record_id": "type_matchup:fighting:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fire/water",
+      "record_id": "type_matchup:fire:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/flying/water",
+      "record_id": "type_matchup:flying:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ghost/water",
+      "record_id": "type_matchup:ghost:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/water",
+      "record_id": "type_matchup:grass:water",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ground/water",
+      "record_id": "type_matchup:ground:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ice/water",
+      "record_id": "type_matchup:ice:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/normal/water",
+      "record_id": "type_matchup:normal:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/water",
+      "record_id": "type_matchup:poison:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/psychic/water",
+      "record_id": "type_matchup:psychic:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/water",
+      "record_id": "type_matchup:rock:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/water",
+      "record_id": "type_matchup:water:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "attack_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "attack_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/126",
+      "record_id": "move:127",
+      "identity_field": "id",
+      "identity_value": 127,
+      "section": "stab_example"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/126",
+      "record_id": "move:127",
+      "identity_field": "id",
+      "identity_value": 127,
+      "section": "stab_example"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/40",
+      "record_id": "move:41",
+      "identity_field": "id",
+      "identity_value": 41,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/40",
+      "record_id": "move:41",
+      "identity_field": "id",
+      "identity_value": 41,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/8",
+      "record_id": "move:9",
+      "identity_field": "id",
+      "identity_value": 9,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/8",
+      "record_id": "move:9",
+      "identity_field": "id",
+      "identity_value": 9,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/23",
+      "record_id": "move:24",
+      "identity_field": "id",
+      "identity_value": 24,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/23",
+      "record_id": "move:24",
+      "identity_field": "id",
+      "identity_value": 24,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/6",
+      "record_id": "move:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/6",
+      "record_id": "move:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/16",
+      "record_id": "move:17",
+      "identity_field": "id",
+      "identity_value": 17,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/16",
+      "record_id": "move:17",
+      "identity_field": "id",
+      "identity_value": 17,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/121",
+      "record_id": "move:122",
+      "identity_field": "id",
+      "identity_value": 122,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/121",
+      "record_id": "move:122",
+      "identity_field": "id",
+      "identity_value": 122,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/88",
+      "record_id": "move:89",
+      "identity_field": "id",
+      "identity_value": 89,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/88",
+      "record_id": "move:89",
+      "identity_field": "id",
+      "identity_value": 89,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/7",
+      "record_id": "move:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/7",
+      "record_id": "move:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/0",
+      "record_id": "move:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/0",
+      "record_id": "move:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/59",
+      "record_id": "move:60",
+      "identity_field": "id",
+      "identity_value": 60,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/59",
+      "record_id": "move:60",
+      "identity_field": "id",
+      "identity_value": 60,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "defense_probe"
+    }
+  ],
+  "section_dependencies": {
+    "profile_and_stats": [],
+    "learnset": [
+      "profile_and_stats"
+    ],
+    "machine": [
+      "profile_and_stats",
+      "learnset"
+    ],
+    "machine_acquisition": [
+      "profile_and_stats",
+      "learnset",
+      "machine"
+    ],
+    "evolution": [],
+    "encounter_trade": [],
+    "encounter": [
+      "profile_and_stats",
+      "encounter_trade"
+    ],
+    "type_calculations": [
+      "profile_and_stats"
+    ],
+    "attack_probe": [],
+    "defense_probe": [],
+    "attack": [
+      "profile_and_stats",
+      "type_calculations",
+      "attack_probe"
+    ],
+    "defense": [
+      "profile_and_stats",
+      "type_calculations",
+      "defense_probe"
+    ],
+    "stab_example": [
+      "profile_and_stats",
+      "learnset",
+      "type_calculations",
+      "attack_probe"
+    ]
+  },
+  "limitations": [
+    "Evidence links inputs and calculations, not document truth or review approval.",
+    "Encounter and machine acquisition records may be incomplete; absence is not impossibility.",
+    "Historical move and stat values may include present-value fallbacks; see source manifest.",
+    "The classification source records a historical moves input hash different from this snapshot.",
+    "Chart-only types without a regular-damage probe are not calculator-verified."
+  ]
+}
