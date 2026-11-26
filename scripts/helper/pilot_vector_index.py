@@ -45,6 +45,7 @@ GAME_VERSION = "red-blue"
 DEFAULT_COLLECTION = "langchain"  # collection_name을 안 주면 섞여 들어가는 기본 컬렉션 (vectordb 스킬)
 MARKDOWN_SOURCE_PREFIX = "pilot_markdown:"
 HEADING_SEPARATOR = " — "
+POKEMON_ID_RANGE = range(1, 152)  # source_ref_id 허용 도감번호 (1~151)
 RUN_NOTE = "테스트 전용 원본 검색 결과. 채점·비교 없음. 질의 파일의 기대 정답 필드는 읽지 않았다."
 
 STATS = {"embed_requests": 0, "embed_texts": 0, "embed_tokens_estimate": 0}
@@ -119,11 +120,35 @@ def markdown_record(chunk):
     return found[0] if len(found) == 1 else {}
 
 
+def markdown_source_path(chunk_doc):
+    """청크 문서 source_files에서 원문 Markdown 경로 하나를 찾는다. 없거나 여러 개면 ValueError."""
+    paths = [f.get("path") for f in chunk_doc.get("source_files", [])
+             if f.get("source_id", "").startswith(MARKDOWN_SOURCE_PREFIX)]
+    if len(paths) != 1 or not paths[0]:
+        raise ValueError(f"원문 Markdown 경로가 하나가 아니다 ({MARKDOWN_SOURCE_PREFIX}*): {paths}")
+    if Path(paths[0]).suffix != ".md":
+        raise ValueError(f"원문 Markdown 경로가 .md가 아니다: {paths[0]!r}")
+    return paths[0]
+
+
+def source_ref_id_of(pokemon_id):
+    """source_ref_id = 도감번호 3자리 (pokemon_id zero-pad, 예: 1 → "001", chunking 스킬).
+
+    API documents 엔드포인트가 문서 폴더에서 `<번호>_*.md`를 찾는 키다. 정수가 아니거나 1~151 밖이면 ValueError.
+    """
+    if isinstance(pokemon_id, bool) or not isinstance(pokemon_id, int) or pokemon_id not in POKEMON_ID_RANGE:
+        raise ValueError(f"source_ref_id용 pokemon_id는 1~151 정수여야 한다: {pokemon_id!r}")
+    return f"{pokemon_id:03d}"
+
+
 def build_rows(chunk_doc, chunk_path, collection, model, pokemon_rows, type_names):
-    """청크 문서 → 적재 행 [{id, text, meta}]. 본문은 content 그대로 (접두어 없음)."""
+    """청크 문서 → 적재 행 [{id, text, meta}]. 본문은 content 그대로 (접두어 없음).
+
+    chunk_path는 호출 호환을 위해 받지만 메타데이터에 쓰지 않는다 (source_ref_id는 도감번호 3자리).
+    """
+    source_ref_id = source_ref_id_of(chunk_doc.get("pokemon_id"))  # 레코드 조회 전에 검증 (범위 밖은 ValueError)
     record = next(p for p in pokemon_rows if p["id"] == chunk_doc["pokemon_id"])
-    markdown_path = next((f["path"] for f in chunk_doc.get("source_files", [])
-                          if f.get("source_id", "").startswith(MARKDOWN_SOURCE_PREFIX)), None)
+    markdown_path = markdown_source_path(chunk_doc)
     rows = []
     for chunk in chunk_doc["chunks"]:
         md = markdown_record(chunk)
@@ -141,7 +166,7 @@ def build_rows(chunk_doc, chunk_path, collection, model, pokemon_rows, type_name
             "source_path": markdown_path,
             "line_start": md.get("line_start"),
             "line_end": md.get("line_end"),
-            "source_ref_id": f"{chunk_path}#{chunk['chunk_id']}",
+            "source_ref_id": source_ref_id,
             "schema_version": chunk_doc["schema_version"],
             "template_version": chunk_doc.get("template_version", "tpl1"),
             "embed_model": model,

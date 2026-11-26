@@ -50,10 +50,15 @@ uv run python -m unittest discover -s tests            # 테스트
 | --- | --- |
 | `OPENAI_API_KEY` | 각자 발급 |
 | `OPENAI_CHAT_MODEL` / `OPENAI_EMBEDDING_MODEL` | 사용할 LLM / 임베딩 모델 |
+| `OPENAI_REASONING_EFFORT` | API `llm` 모드 추론 강도 (기본 `low`) |
 | `UPSTAGE_API_KEY` | Solar 임베딩 API 인증 키 |
 | `UPSTAGE_EMBEDDING_MODEL` / `UPSTAGE_QUERY_MODEL` | Solar 문서 / 질문 임베딩 모델 ID |
 | `POSTGRES_*`, `DATABASE_URL` | DB 접속 정보 (docker compose와 앱, Solar 전달본에서 사용). Solar 작업 전 실제 대상·권한 확인 |
 | `PGVECTOR_COLLECTION` | 기존 방식에서 사용할 벡터 컬렉션(인덱스 버전). 필수 |
+| `ANSWER_BACKEND` | API 답변 생성기 `mock`(기본) \| `llm` |
+| `API_CORS_ORIGINS` | API가 허용할 프론트 origin, 쉼표 구분 (비우면 CORS 없음) |
+| `API_MAX_MESSAGES` | API 요청당 메시지 수 상한 (기본 20) |
+| `API_DOCUMENTS_DIR` | API 문서 조회가 읽는 원문 Markdown 폴더 (기본 `solar_handoff/documents`, 파일은 `<폴더>/<도감번호 3자리>_*.md`) |
 
 ### 규칙
 

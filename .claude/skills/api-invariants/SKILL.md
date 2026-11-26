@@ -42,7 +42,7 @@ FastAPI 서비스(`api/`)가 어떤 작업에서도 지켜야 하는 규칙과 �
 | ID | 규칙 | 검사 |
 | --- | --- | --- |
 | R6 | domain·application·presentation에서 `HTTPException`을 만들지 않는다. 슬라이스 전용 예외(`<slice>/domain/exceptions.py`)를 `shared/exceptions.py`의 기반 예외에서 상속해 내고, HTTP 변환은 `api/error_handlers.py`가 한다. | 자동(`[HTTP예외]`) + 정독 |
-| R7 | 모든 에러 응답은 `{"success": false, "error_code", "message"}` 형식이다. 요청 형식 오류는 400 `VALIDATION_ERROR`, 답변 생성기 실패는 502, 처리하지 못한 예외는 500 `INTERNAL_ERROR`다. 응답에 스택, 내부 메시지, 키, 외부 SDK 원문 오류를 넣지 않는다. | 정독 + 실행(smoke) |
+| R7 | 성공 응답은 `{"success": true, "data": {...}}`, 에러 응답은 `{"success": false, "error_code", "message"}` 형식이다(`/health` 포함). 요청 형식·값 오류는 모두 400 `VALIDATION_ERROR`, 외부 의존(답변 생성기, 문서 저장소) 실패는 502, 처리하지 못한 예외는 500 `INTERNAL_ERROR`다. 응답에 스택, 내부 메시지, 키, 외부 SDK 원문 오류를 넣지 않는다. | 정독 + 실행(smoke) |
 
 ## 4. RAG 경계
 
@@ -56,7 +56,7 @@ FastAPI 서비스(`api/`)가 어떤 작업에서도 지켜야 하는 규칙과 �
 
 | ID | 규칙 | 검사 |
 | --- | --- | --- |
-| R11 | 비로그인 공개 API이므로 요청 크기를 제한한다. 메시지 수·메시지 길이 한도는 환경 변수 설정값이며 domain에서 검증한다(초과 시 400). | 정독 + 실행(smoke) |
+| R11 | 메시지 수 한도는 환경 변수 설정값(`API_MAX_MESSAGES`)이며 domain에서 검증한다(초과 시 400). 학습 프로젝트이므로 메시지 길이·요청 크기 한도는 두지 않는다. | 정독 + 실행(smoke) |
 | R12 | 키·모델명·CORS origin·한도·백엔드 선택은 환경 변수로 읽는다. 하드코딩하지 않는다. 새 환경 변수는 같은 작업에서 `.env.example`, [environment.md](../../../docs/references/environment.md), README 환경 변수 표에 함께 추가한다. 질문 원문·키를 로그에 남기지 않는다. | 정독 (security-check는 security-reviewer, doc-sync는 오케스트레이터가 실행) |
 | R13 | CORS `allow_origins`는 환경 변수의 목록만 허용한다. `"*"`를 쓰지 않는다. | 자동(`[CORS]`) + 실행(smoke) |
 
@@ -104,17 +104,20 @@ uv run python -m unittest discover -s tests                            # 실패 
 ```bash
 export APP=api.main:app HEALTH_PATH=/health PORT=8000 LOG="$TMPDIR/api.log" PIDFILE="$TMPDIR/api.pid"
 export ANSWER_BACKEND=mock API_CORS_ORIGINS=http://localhost:5173    # 검증 설정: LLM 비용 없음
+export API_DOCUMENTS_DIR=solar_handoff/documents                       # documents 확인용 Solar 원문
 bash .claude/skills/fastapi-run/scripts/run_server.sh start
-BASE=http://127.0.0.1:$PORT CORS_ORIGIN=http://localhost:5173 bash .claude/skills/api-invariants/scripts/smoke.sh
+BASE=http://127.0.0.1:$PORT CORS_ORIGIN=http://localhost:5173 DOC_ID=001 bash .claude/skills/api-invariants/scripts/smoke.sh
 bash .claude/skills/fastapi-run/scripts/run_server.sh stop
 ```
 
 | smoke 항목 | 기대 |
 | --- | --- |
 | `GET /health` | 200 |
-| `GET /openapi.json` | 200. `/api/v1/chat`이 없으면 chat 항목은 INFO(미구현) |
-| `POST /api/v1/chat` 정상 질문 | 200, `answer`(문자열), `sources`(목록), `mode`(mock\|llm\|rag) |
-| 빈 `messages`, 메시지 `MAX_MESSAGES + 1`개, JSON이 아닌 본문 | 400 + 공통 에러 형식 (`MAX_MESSAGES`는 서버의 `API_MAX_MESSAGES`, 기본 20) |
+| `GET /openapi.json` | 200. 엔드포인트가 없으면 그 항목은 INFO(미구현) |
+| `POST /api/v1/chat` 정상 질문 | 200, `data.answer`(문자열), `data.sources`(목록), `data.mode`(mock\|llm\|rag) |
+| 빈 `messages`, 메시지 `MAX_MESSAGES + 1`개, JSON이 아닌 본문 | 400 `VALIDATION_ERROR` + 공통 에러 형식 (`MAX_MESSAGES`는 서버의 `API_MAX_MESSAGES`, 기본 20) |
+| `GET /api/v1/suggestion` 기본, `?level=bad` | 200 `data.level`=beginner, 400 `VALIDATION_ERROR` |
+| `GET /api/v1/documents/{DOC_ID}`, 형식 밖 id, 없는 번호(999) | 200 `data.markdown`(문자열), 400 `VALIDATION_ERROR`, 404 `DOCUMENT_NOT_FOUND` (`DOC_ID` 미지정이면 200 항목은 INFO) |
 | 없는 경로 | 404 + 공통 에러 형식 |
 | CORS (`CORS_ORIGIN` 지정 시) | 허용 origin은 그 값이 돌아오고 다른 origin은 허용 헤더 없음 |
 

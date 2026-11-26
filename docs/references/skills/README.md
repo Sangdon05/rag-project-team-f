@@ -25,7 +25,7 @@
 | [layered-architecture](../../../.claude/skills/layered-architecture/SKILL.md) | api-architect, api-implementer, api-reviewer | (공통) 4계층 책임·의존 방향·포트·DI 조립, 서비스가 주입할 항목 |
 | [fsd-architecture](../../../.claude/skills/fsd-architecture/SKILL.md) | api-architect, api-reviewer | (공통) FSD 슬라이스 구성·공개 API·슬라이스 간 규칙과 강도 설정 |
 | [api-invariants](../../../.claude/skills/api-invariants/SKILL.md) | api-architect, api-implementer, api-reviewer | `api/` 규칙 R1~R16과 완료 게이트 원본, 공통 스킬에 주입하는 프로파일·smoke·실행 정보 |
-| [api-architecture](../../../.claude/skills/api-architecture/SKILL.md) | api-architect, api-implementer, api-reviewer | `api/`가 공통 스킬을 적용하는 방식: 폴더, 슬라이스, `AnswerGenerator` 포트, 조립 |
+| [api-architecture](../../../.claude/skills/api-architecture/SKILL.md) | api-architect, api-implementer, api-reviewer | `api/`가 공통 스킬을 적용하는 방식: 폴더, 슬라이스, 포트(`AnswerGenerator`, `DocumentStore`, `SuggestionProvider`), 조립 |
 | [api-implementation](../../../.claude/skills/api-implementation/SKILL.md) | api-implementer, api-reviewer | 계층별 코드 패턴, 공통 에러 형식, mock·llm 생성기, unittest 작성법 |
 | [layer-check](../../../.claude/skills/layer-check/SKILL.md) | api-implementer, api-reviewer | (공통) 프로파일 기반 계층 import 방향·경계 자동 검사 스크립트 |
 | [fastapi-run](../../../.claude/skills/fastapi-run/SKILL.md) | api-reviewer | (공통) PID 파일 방식 FastAPI 서버 기동·종료. 앱 경로·설정·smoke는 서비스가 주입 |

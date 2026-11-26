@@ -30,11 +30,12 @@ class AnswerGenerator(ABC):
 | `Conversation` | `messages: tuple[Message, ...]` | 프론트가 보낸 대화 전체. 마지막은 항상 user 질문 (API가 검증해서 넘김) |
 | | `question` | 마지막 user 메시지 |
 | | `history` | 질문 앞의 대화 (user/assistant 교대) |
-| `Message` | `role: "user" \| "assistant"`, `content: str` | 앞뒤 공백 제거, 길이 한도 검증 완료 |
+| `Message` | `role: "user" \| "assistant"`, `content: str` | 앞뒤 공백 제거, 빈 값·개수·순서 검증 완료 (길이 한도 없음) |
 | `Answer` | `text: str` | 비어 있으면 안 됨 |
 | | `mode: "mock" \| "llm" \| "rag"` | 생성 방식 |
 | | `sources: tuple[Source, ...]` | 근거. 근거가 없으면 빈 목록 |
-| `Source` | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 이름 그대로 |
+| `Source` | `ref: int` | 출처 번호. `text` 안의 `[n]`과 같은 값이며 체인이 정한다. API는 번호를 바꾸거나 목록을 자르지 않는다 |
+| | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 값 그대로. `source_ref_id`는 도감번호 3자리(예: `001`)이며 문서 조회 키로 쓴다. 체인이 `source_ref_id`를 주지 않으면 `rag` 어댑터가 `document_id`(`pokemon:{id}`)에서 `f"{id:03d}"`로 만든다(저장된 메타데이터·임베딩은 바꾸지 않는다) |
 
 실패 규약:
 
@@ -42,7 +43,30 @@ class AnswerGenerator(ABC):
 - "근거가 부족해 확인할 수 없다"는 실패가 아니라 정상 답변이다. 체인이 그런 답을 내면 `text`에 담고 `sources`는 빈 목록으로 돌려준다.
 - 체인 안에서 대화 기록을 저장하지 않는다. 대화 맥락은 매 요청의 `messages`로만 받는다.
 
-HTTP 쪽 계약(프론트와의 계약)은 `POST /api/v1/chat` 요청 `{"messages": [{"role", "content"}]}`, 응답 `{"answer", "sources": [{"chunk_id", "source_ref_id"}], "mode"}`이다. 세부 명세는 설계안([목록](../design/api/README.md))이 원본이다.
+### 문서 저장소 포트
+
+출처 원문을 돌려주는 두 번째 경계다. API 쪽 포트(`api/documents/domain/store.py`):
+
+```python
+class DocumentStore(ABC):
+    async def get(self, source_ref_id: str) -> str: ...   # 원문 Markdown
+```
+
+- 구현체는 `<API_DOCUMENTS_DIR>/<source_ref_id>_*.md`(예: `solar_handoff/documents/001_이상해씨.md`)를 읽는다. 같은 번호 파일이 둘 이상이면 502다. API는 파일을 읽기만 하고 고치지 않는다.
+- 파일이 없으면 `DocumentNotFoundError` → 404 `DOCUMENT_NOT_FOUND`. 읽기 실패는 `DocumentSourceError` → 502 `DOCUMENT_SOURCE_FAILED`.
+- 문서 파일 위치·이름 규칙은 RAG 쪽(chunking 스킬)이 원본이다. 바뀌면 `API_DOCUMENTS_DIR`만 바꾼다.
+
+### HTTP 계약
+
+프론트와의 계약이다. 모든 응답은 공통 형식 `{"success": true, "data": {...}}` / `{"success": false, "error_code", "message"}`이다.
+
+| 엔드포인트 | `data` |
+| --- | --- |
+| `POST /api/v1/chat` (요청 `{"messages": [{"role", "content"}]}`) | `{"answer", "mode", "sources": [{"ref", "chunk_id", "source_ref_id"}]}` |
+| `GET /api/v1/documents/{source_ref_id}` | `{"source_ref_id", "markdown"}` |
+| `GET /api/v1/suggestion?level=` | `{"level", "suggestions": [{"id", "text"}]}` (RAG와 무관) |
+
+세부 명세는 설계안([목록](../design/api/README.md))이 원본이다. 요구사항 원본은 [API 엔드포인트 스펙](../archives/specs/2026-11-26-api-endpoints.md) 3절이다(완료·보관).
 
 ## 3. 연결 전에 RAG 쪽이 준비할 것
 
@@ -51,7 +75,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 1. **import 가능한 진입점.** API 어댑터가 부를 함수 또는 객체 하나. 예: `answer(question: str, history: list[dict]) -> {"answer": str, "sources": [...]}` (비동기면 더 좋다).
    - 지금 체인 코드는 패키지가 아니다. 진입점의 위치(예: `src/pokedex/`)와 import 방법(루트 `pyproject.toml`의 패키지 설정 등)은 [미정]이다. 정해지면 이 절에 적는다.
 2. **설정은 환경 변수로.** 모델명, `DATABASE_URL`, `PGVECTOR_COLLECTION` 등을 체인이 직접 읽는다. API는 DB 접속 정보를 알지 않는다.
-3. **출처 형식.** 답변 근거를 `chunk_id`, `source_ref_id`로 돌려준다.
+3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 도감번호 3자리다. Solar 질문 CLI는 `source_ref_id` 대신 `document_id`·`source_document`를 내보내므로 어댑터가 변환한다(2절 `Source`). 체인 쪽 변경은 필요 없다.
 4. **동작 확인 기록.** 툴·체인 테스트 통과, 사용한 `index_version` 기록(langchain-rag 스킬의 완료 조건).
 
 ## 4. 연결 절차
@@ -59,7 +83,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 | 단계 | 담당 | 내용 |
 | --- | --- | --- |
 | 1 | 오케스트레이터 | 3절 준비 상태 확인, api-architect에게 설계안 갱신 발주 (`rag` 백엔드, 에러, 타임아웃) |
-| 2 | api-implementer | `api/chat/infrastructure/rag_generator.py`에 `RagAnswerGenerator` 작성. 체인 진입점을 생성자로 받고, 결과를 `Answer(mode=rag)`와 `Source`로 바꾸고, 예외를 `AnswerGenerationError`로 바꾼다 |
+| 2 | api-implementer | `api/chat/infrastructure/rag_generator.py`에 `RagAnswerGenerator` 작성. 체인 진입점을 생성자로 받고, 결과를 `Answer(mode=rag)`와 `Source`로 바꾸고(`source_ref_id`가 없으면 `document_id` `pokemon:{id}` → `{id:03d}`, 형식이 다르면 `AnswerGenerationError`), 예외를 `AnswerGenerationError`로 바꾼다 |
 | 3 | api-implementer | `api/container.py`에 `ANSWER_BACKEND=rag` 분기 추가. 체인 import는 이 분기 안에서만 한다(mock 모드는 체인·DB 없이 떠야 한다) |
 | 4 | api-implementer | 테스트: fake 체인으로 변환·예외 처리 확인. 실제 체인·DB를 부르지 않는다 |
 | 5 | api-reviewer | 완료 게이트, smoke(mock), 발주서에 명시되면 `rag` 모드 실제 호출 1~2회 |
@@ -82,7 +106,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 - [ ] 3절 준비 항목 4개 충족
 - [ ] 설계안에 `rag` 백엔드와 에러·타임아웃 명세 반영
 - [ ] `RagAnswerGenerator` + 테스트 (fake 체인)
-- [ ] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동
+- [x] `ANSWER_BACKEND=mock`으로 서버가 체인·DB 없이 기동 (API 엔드포인트 계획 smoke로 확인)
 - [ ] api-invariants 완료 게이트, smoke 통과
 - [ ] `.env.example`, environment.md, README 환경 변수 설명 갱신
 - [ ] 이 문서 1절 표의 `rag` 행을 "예정"에서 실제 상태로 갱신

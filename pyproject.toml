@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
     "datasets>=5.2.0",
+    "fastapi>=0.165.0",
     "ipykernel>=7.4.0",
     "langchain>=1.5.2",
     "langchain-classic>=1.1.0",
@@ -15,4 +16,10 @@ dependencies = [
     "pydantic>=2.14.4",
     "python-dotenv>=1.2.4",
     "ragas>=0.4.4",
+    "uvicorn>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
 ]

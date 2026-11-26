@@ -123,12 +123,14 @@ Markdown 문서 하나를 고정 제목 단위로 나눈다. 아래 표가 기�
 | game_version | 영문 Red·Blue 기준 구분 |
 | review_status | 사람의 검토·승인 상태 |
 | source_loc | 원문 위치: Markdown 문서 경로와 절 (예: `data/synthetic/pilot/bulbasaur_red_blue_plain.md#종족치`). 필요하면 행 범위를 덧붙인다. 검색 결과·답변 출처·평가셋 허용 근거에서 바로 확인하는 값 |
-| source_ref_id | 상세 문서 위치·정제 레코드·계산 근거 연결 식별자 |
+| source_ref_id | 도감번호 3자리(`pokemon_id` zero-pad, 예: `001`). 출처 원문 조회 키: API documents 엔드포인트가 문서 폴더에서 `<번호>_*.md`(Solar 원문 `solar_handoff/documents/001_이상해씨.md`)를 찾는다 |
 | type_{normal, fire, …} | 타입별 필터가 필요할 때 사용하는 불리언 |
 | content_hash, meta_hash, schema_version | 변경 감지와 계약 버전 |
 
 - `chunk_id`, `document_id`, 원문 위치는 발제 필수 항목이다. 위 `source_loc`은 일반 계약 초안이며 Solar는 별도 위치 필드에서 미검증 표시값을 만든다. Markdown 절이나 행이 바뀌면 위치도 다시 검증한다.
-- 검색 필터에 필요한 메타데이터는 스칼라 값으로 둔다. 상세 출처가 여러 개인 경우 별도 근거 연결 기록을 `source_ref_id`로 조회한다. 구체적인 저장 형식은 계약에서 확정한다.
+- `source_ref_id`는 청크 문서의 `pokemon_id`(정제 레코드 `id`)를 `f"{pokemon_id:03d}"`로 만든 값이다. 원문 Markdown 경로에 의존하지 않으며 경로는 `source_path`에 따로 둔다. `pokemon_id`가 정수가 아니거나 1~151 밖이면 조용히 넘기지 않고 실패시킨다(`scripts/helper/pilot_vector_index.py`, `tests/test_pilot_vector_index.py`).
+- API가 조회하는 원문 Markdown 파일명은 `<번호 3자리>_` 접두어를 가져야 하고(예: `001_이상해씨.md`), 한 문서 폴더에 같은 번호 파일은 하나만 둔다.
+- 검색 필터에 필요한 메타데이터는 스칼라 값으로 둔다. 정제 레코드·계산 근거 같은 상세 출처 연결은 청크 JSON의 `source_records`·`source_lineage`에 두며, 구체적인 저장 형식은 계약에서 확정한다.
 - 타입 enum은 `types.json`의 15개 소문자 영문을 기준으로 한다. 한글명·별칭은 텍스트와 `resolve_name` 툴에서 처리한다.
 - `content_hash`와 `meta_hash`는 `vectordb` 스킬의 규칙을 따른다. 청크 템플릿·섹션이나 임베딩 모델이 바뀌면 새 `index_version`으로 전체 빌드하고 평가한다.
 

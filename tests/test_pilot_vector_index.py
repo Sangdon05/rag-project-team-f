@@ -141,6 +141,60 @@ class PilotVectorIndexTest(unittest.TestCase):
         # 같은 입력이면 해시가 같다 (재실행 시 embedded=0의 전제)
         self.assertEqual([r["meta"] for r in rows], [r["meta"] for r in self.rows("test-pilot-v2-te3s-tpl2")])
 
+    def test_source_ref_id_is_pokedex_number(self):
+        # 기본 파일럿(schema_version 3)과 보존 판 모두 도감번호 3자리이며 URL path에 그대로 넣을 수 있다
+        current = ROOT / "data" / "synthetic" / "pilot" / "bulbasaur_red_blue.json"
+        for path in (current, CHUNKS, V1_CHUNKS, V3A_CHUNKS, V3B_CHUNKS):
+            doc = load(path)
+            rows = self.rows("test-x", doc)
+            with self.subTest(path=path.relative_to(ROOT).as_posix()):
+                self.assertEqual(len(rows), 10)
+                self.assertEqual([r["meta"]["source_ref_id"] for r in rows], ["001"] * 10)
+                for r in rows:
+                    self.assertEqual(r["meta"]["source_ref_id"], f"{r['meta']['pokemon_id']:03d}")
+                    self.assertTrue(r["meta"]["source_path"].endswith(".md"))  # source_path 메타데이터는 그대로
+        self.assertEqual(load(current)["schema_version"], 3)
+        # chunk_id·document_id 규칙은 그대로다
+        rows = self.rows("test-x", load(current))
+        self.assertEqual([r["meta"]["chunk_id"] for r in rows], load(current)["chunk_ids"])
+        self.assertEqual({r["meta"]["document_id"] for r in rows}, {c["doc_id"] for c in load(current)["chunks"]})
+
+    def test_source_ref_id_of(self):
+        for pid, expected in ((1, "001"), (9, "009"), (10, "010"), (99, "099"), (100, "100"), (151, "151")):
+            self.assertEqual(self.mod.source_ref_id_of(pid), expected)
+        for bad in (0, 152, -1, "1", "001", 1.0, None, True):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    self.mod.source_ref_id_of(bad)
+        # 청크 문서의 pokemon_id가 범위 밖·정수 아님·없음이면 조용히 넘기지 않는다
+        for bad in (0, 152, "1", None):
+            doc = json.loads(json.dumps(self.doc))
+            doc["pokemon_id"] = bad
+            with self.subTest(doc_pokemon_id=bad):
+                with self.assertRaises(ValueError):
+                    self.rows("test-x", doc)
+        doc = json.loads(json.dumps(self.doc))
+        del doc["pokemon_id"]
+        with self.assertRaises(ValueError):
+            self.rows("test-x", doc)
+
+    def test_source_path_requires_single_markdown(self):
+        def with_sources(files):
+            doc = json.loads(json.dumps(self.doc))
+            doc["source_files"] = files
+            return doc
+
+        md = {"source_id": "pilot_markdown:x", "path": "data/synthetic/pilot/bulbasaur_red_blue.md"}
+        other = [f for f in self.doc["source_files"] if not f["source_id"].startswith("pilot_markdown:")]
+        bad_docs = {"no_markdown": other,
+                    "two_markdown": other + [md, dict(md, path="data/synthetic/pilot/ivysaur_red_blue.md")],
+                    "not_md": other + [dict(md, path="data/synthetic/pilot/bulbasaur_red_blue.json")],
+                    "empty_path": other + [dict(md, path="")]}
+        for label, files in bad_docs.items():
+            with self.subTest(label):
+                with self.assertRaises(ValueError):
+                    self.rows("test-x", with_sources(files))
+
     def test_classify(self):
         rows = self.rows()
         stored = {r["id"]: (r["meta"]["content_hash"], r["meta"]["meta_hash"]) for r in rows}

@@ -63,20 +63,20 @@ class LlmGeneratorTest(unittest.IsolatedAsyncioTestCase):
 ## API
 
 ```python
-SETTINGS = Settings(answer_backend="mock", cors_origins=["http://localhost:5173"], max_messages=20, max_message_chars=2000)
+SETTINGS = Settings(answer_backend="mock", cors_origins=["http://localhost:5173"], max_messages=20, documents_dir="solar_handoff/documents")
 
 
 class ChatApiTest(unittest.IsolatedAsyncioTestCase):
     def client(self, generator=None):
         app = create_app(SETTINGS)                       # 환경 변수 대신 설정을 직접 넘긴다
         if generator is not None:
-            svc = AskService(generator, ConversationLimits(20, 2000))
+            svc = AskService(generator, ConversationLimits(20))
             app.dependency_overrides[provide_ask_service] = lambda: svc
         return httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test")
 
     async def test_error_shapes(self):
         cases = [
-            ({"messages": []}, 400, "INVALID_CONVERSATION"),
+            ({"messages": []}, 400, "VALIDATION_ERROR"),
             ({"messages": [{"role": "bot", "content": "q"}]}, 400, "VALIDATION_ERROR"),
             ({}, 400, "VALIDATION_ERROR"),
         ]
