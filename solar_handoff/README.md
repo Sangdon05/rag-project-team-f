@@ -18,12 +18,12 @@
 
 ### 도구 연결 후 오프라인 검증
 
-독립 검증에서 정형 도구 8개, Solar 회귀 50개, API 어댑터 6개가 통과했다. 가짜 Responses와 인메모리 청크를 연결한 FastAPI `TestClient`의 세 질문도 HTTP 200이었다. 이는 경로·근거·응답 형식을 확인한 결과다. 실제 GPT·Solar·DB 실행 및 공식 평가는 하지 않았으며 모델의 도구 선택·답변 품질은 확인하지 않았다. 변경 전후에 도감 원문·청크·인덱스·모델 설정을 유지했고 재임베딩하지 않았다.
+출처 거부 처리와 서버 렌더링을 적용한 뒤 정형 도구 8개, Solar 회귀 61개, API 어댑터 6개가 통과했다. 가짜 Responses와 인메모리 청크를 실제 FastAPI 경로와 연결해 정상 200 뒤 인용 거부 200, 공급자·DB 오류 502, 정형 답변의 번호와 포켓몬 문서 키를 대조했다. 실제 GPT·Solar·DB는 호출하지 않았고, 모델 답변 품질·공식 평가·운영 반영을 확인한 결과가 아니다. 도감 원문·청크·인덱스·모델 설정은 유지했다.
 
 ```sh
-uv run --offline --no-sync --no-env-file python -B -m unittest discover -s tests -p test_pokedex_structured_tools.py
-uv run --offline --no-sync --no-env-file python -B -m unittest discover -s tests -p 'test_solar*.py'
-uv run --offline --no-sync --no-env-file python -B -m unittest discover -s api/tests/chat -p test_rag_generator.py
+PYTHON_DOTENV_DISABLED=1 uv run --offline --no-sync --no-env-file python -B -m unittest discover -s tests -p test_pokedex_structured_tools.py
+PYTHON_DOTENV_DISABLED=1 uv run --offline --no-sync --no-env-file python -B -m unittest discover -s tests -p 'test_solar*.py'
+PYTHON_DOTENV_DISABLED=1 uv run --offline --no-sync --no-env-file python -B -m unittest discover -s api/tests/chat -p test_rag_generator.py
 ```
 
 ## 환경과 안전 경계
@@ -40,7 +40,7 @@ uv run --offline --no-sync --no-env-file python -B -m unittest discover -s api/t
 | `UPSTAGE_QUERY_MODEL` | 질문 임베딩 모델 ID; 문서 모델 ID와 달라야 하며 인덱스에 기록된 모델과 일치해야 함 |
 | `OPENAI_CHAT_MODEL`, `OPENAI_API_KEY` | 대화의 GPT 도구 선택과 GPT 답변, 선택적 재작성, C 방식 재순위화에 필요. 모델 ID는 환경에서 읽으며 `gpt-` 접두사만 허용하고 그 외 ID는 거부한다. 응답의 실제 모델 ID도 `gpt-`여야 하나 설정 ID와의 정확한 일치는 요구하지 않는다 (alias가 날짜가 붙은 revision으로 응답할 수 있음) |
 
-Solar 임베딩은 Upstage로 질문 또는 청크 본문을 전송한다. 대화에서 GPT 도구를 선택할 때 전체 대화가, 답변을 생성할 때는 선택된 근거도 OpenAI로 전송된다. 확인 질문도 도구 선택에는 GPT를 사용한다. 민감정보·전송 범위·라이선스·비용을 사전에 검토하고 각 실행을 승인한다. 모델별 실제 비용은 미상이며 새 유료 호출마다 사용자에게 별도 승인을 받아야 한다. 코드의 민감정보 검사로 알려지지 않은 민감정보나 모든 변형을 자동 탐지한다고 보장할 수 없다. 실패한 요청도 과금됐을 수 있으므로 자동 재시도하지 말고 먼저 확인한다.
+Solar 임베딩은 Upstage로 질문 또는 청크 본문을 전송한다. 대화에서 GPT 도구를 선택할 때 전체 대화가, 일반 검색의 답변을 생성할 때는 선택된 근거도 OpenAI로 전송된다. 정형 답변과 확인 질문은 도구 선택 뒤 서버가 만들고 정형 계산 결과나 청크를 GPT에 보내지 않는다. 민감정보·전송 범위·라이선스·비용을 사전에 검토하고 각 실행을 승인한다. 모델별 실제 비용은 미상이며 새 유료 호출마다 사용자에게 별도 승인을 받아야 한다. 코드의 민감정보 검사로 알려지지 않은 민감정보나 모든 변형을 자동 탐지한다고 보장할 수 없다. 실패한 요청도 과금됐을 수 있으므로 자동 재시도하지 말고 먼저 확인한다.
 
 ## 기존 Solar 벡터를 팀 DB로 전달
 
@@ -86,9 +86,10 @@ python -B -m solar_handoff.src.export verify --bundle "저장소_밖_비공개_�
 
 진입점은 [`src/conversation.py`](src/conversation.py)의 `create_service().answer(messages)`다. 같은 설정의 GPT가 전체 대화에서 마지막 질문을 보고 등록된 도구 하나를 고른다. 별도 라우터는 없으며 일반 질문에도 이전보다 GPT 선택 호출 1회가 추가된다.
 
-- **일반 도감 질문:** Solar 대화의 `search_pokedex`는 인수 없이 호출한다. 원질문과 최근 사용자 질문으로 기존 검색 입력을 구성한다. `SOLAR_RETRIEVAL_METHOD`(기본 B)로 A/B/C를 정하고, `SOLAR_REWRITE`는 기본 `false`다. 후보 생성·상위 5개 선택·C 재순위화 규칙은 CLI와 동일하다. 대화의 답변 근거는 검색 청크를 보존하고 같은 문서의 형제 청크를 더하되 총 50개·직렬화 UTF-8 96,000바이트 한도를 적용한다.
-- **정형 도구:** 확인된 팀원·후보·기술 ID로 방어 상성을 계산한다. 포켓몬 근거가 필요할 때만 기존 DB 청크 기록을 읽고 정확한 ID를 선택한다. 질문 임베딩·BM25·벡터 검색·재순위화를 실행하지 않는다. 직접 피해가 없는 기술과 별도 피해·미확정 분류에 일반 배율을 붙이지 않는다. 이름이 모호하거나 다른 이름에 포함된 부분 일치뿐이면 확인 질문을 반환한다. 자세한 도구 계약은 [tool-calling 스킬](../.claude/skills/tool-calling/SKILL.md)을 따른다.
-- **응답:** 인용한 포켓몬 청크만 번호 출처로 반환한다. 기술 분류는 기술 ID와 정제 레코드를 본문에 따로 표시한다. 질의 임베딩을 호출하지 않으면 `embedding`은 생략한다. HTTP 원문 조회는 기존 documents 슬라이스를 사용하며 요청·응답 형식은 [API–RAG 연결 가이드](../docs/references/api-rag-integration.md)와 같다.
+- **일반 도감 질문:** Solar 대화의 `search_pokedex`는 인수 없이 호출한다. 원질문과 최근 사용자 질문으로 기존 검색 입력을 구성한다. `SOLAR_RETRIEVAL_METHOD`(기본 B)로 A/B/C를 정하고, `SOLAR_REWRITE`는 기본 `false`다. 후보 생성·상위 5개 선택·C 재순위화 규칙은 CLI와 동일하다. 대화의 답변 근거는 검색 청크를 보존하고 같은 문서의 형제 청크를 더하되 총 50개·직렬화 UTF-8 96,000바이트 한도를 적용한다. GPT는 대화 전용 형식으로 주장과 근거 ID를 분리해서 반환하며, 서버는 선택된 청크에 속하는 참조만 검증해 표시한다. 주장이 해당 청크의 내용을 정확히 반영하는지는 별도의 사람 검토가 필요하다.
+- **정형 도구:** 확인된 팀원·후보·기술 ID로 방어 상성을 계산한다. 포켓몬 근거가 필요할 때만 기존 DB에서 정확한 청크 ID와 메타데이터를 검증한다. 서버가 그 결과와 근거만 표시하고, GPT는 도구 선택 1회로 끝난다. 질문 임베딩·BM25·벡터 검색·재순위화도 실행하지 않는다. 필요한 근거가 빠지면 안전 안내를 반환한다. 변화기·별도 피해·미확정 분류에 일반 배율을 붙이지 않으며, 이름이 모호하거나 부분 일치뿐이면 확인 질문을 반환한다. 자세한 도구 계약은 [tool-calling 스킬](../.claude/skills/tool-calling/SKILL.md)을 따른다.
+- **응답:** 서버가 인용된 포켓몬 청크의 본문 첫 등장 순서로 번호를 붙이며 같은 청크는 같은 번호를 한 번만 `sources`에 넣는다. 기술 분류는 기술 ID와 정제 레코드를 본문에 따로 표시한다. 인용만 거부된 답변은 전체를 폐기하고 HTTP 200 `mode=rag`, 고정된 한국어 안내, 빈 `sources`로 응답한다. 질의 임베딩을 호출해 확인된 `embedding`은 이때도 유지하며 없으면 생략한다. HTTP 원문 조회는 기존 documents 슬라이스를 사용하며 요청·응답 형식은 [API–RAG 연결 가이드](../docs/references/api-rag-integration.md)와 같다.
+- **실패 로그:** 서버 콘솔(`uvicorn.error`, `WARNING`)에 처리 결과에 따라 한 건만 남긴다. 인용만 거부되어 200으로 응답하면 `conversation_citation_rejected`와 `stage=citation_validation`, `reason`(`missing_citation`, `invalid_citation_format`, `citation_not_selected` 중 하나)을 기록한다. 기존 502는 `conversation_answer_failed`와 실패 `stage`, 허용된 `failure_type`을 기록한다. `http_error`의 `upstream_status`는 100–599 정수일 때만 기록한다. 두 이벤트에 질문·청크·모델 원문·임의 ID·설정·접속 정보·예외 메시지나 스택은 남기지 않는다. 다른 정상 응답, 입력 400, 재작성 형식 오류에서 원래 검색어로 복구한 경우에는 두 이벤트가 모두 없다. 자동 재시도하지 않는다.
 
 ### 기존 단일 질문 CLI
 

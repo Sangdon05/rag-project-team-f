@@ -17,7 +17,7 @@
 | [chunking](../../../.claude/skills/chunking/SKILL.md) | data-engineer | 포켓몬별 Markdown 청킹·근거 연결 및 Solar 제목 기반 청크 |
 | [vectordb](../../../.claude/skills/vectordb/SKILL.md) | data-engineer | 기존 pgvector 컬렉션 sync, 빈 볼륨 최초 Solar 스키마 초기화와 별도 벡터 복원·증분 적재 |
 | [tool-calling](../../../.claude/skills/tool-calling/SKILL.md) | rag-developer | 현재 Solar 대화의 팀·기술·확인·무인수 검색 도구 계약과 향후 LangChain 도구 계획 |
-| [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | Solar 질문 CLI와 대화의 도구 선택·검색·감사, 향후 LangChain 체인·평가용 트레이스 |
+| [langchain-rag](../../../.claude/skills/langchain-rag/SKILL.md) | rag-developer | Solar 질문 CLI, 대화의 도구 선택·검색·서버 출처 렌더링과 운영 로그, 향후 LangChain 체인·평가용 트레이스 |
 | [doc-sync](../../../.claude/skills/doc-sync/SKILL.md) | 오케스트레이터 | 문서 의존 지도와 동기화 검사, Docker 초기화·Solar 스키마 관련 문서 연결 점검 |
 | [spec-plan](../../../.claude/skills/spec-plan/SKILL.md) | 오케스트레이터 | 업무 스펙(HITL 승인)·작업 계획 형식과 frontmatter, 완료 기준 규칙, 활성·보관 문서 관리 스크립트 |
 | [security-check](../../../.claude/skills/security-check/SKILL.md) | security-reviewer | PR 전 비밀·금지 파일·위험 코드 점검 (트리 + 브랜치 기록) |

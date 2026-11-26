@@ -10,6 +10,10 @@ from unittest.mock import patch
 from solar_handoff.src import conversation, providers
 
 
+def claim(text, *source_ids):
+    return {'text': text, 'source_ids': list(source_ids)}
+
+
 class FakeDatabase:
     def __init__(self, records):
         self.records = copy.deepcopy(records)
@@ -39,7 +43,7 @@ class FakeProvider:
         self.payload = None
         self.tool_payload = {}
         self.selection = (conversation.SEARCH, {})
-        self.result = {'status': 'answer', 'answer': '자료에 확인된 내용이에요[[pokemon:1#profile]].'}
+        self.result = {'status': 'answer', 'claims': [claim('자료에 확인된 내용이에요.', 'pokemon:1#profile')]}
         self.failure: str | None = None
 
     def choose_tool(self, instructions, data, tools):
@@ -58,10 +62,11 @@ class FakeProvider:
             raise RuntimeError('private provider details')
         return [1.0] + [0.0] * 1023, {}
 
-    def openai(self, instructions, data, schema):
+    def openai(self, instructions, data, schema, *, strict_envelope):
         self.calls.append(('openai',))
         self.payload = copy.deepcopy(data)
         self.instructions = instructions
+        self.strict_envelope = strict_envelope
         if self.failure == 'openai':
             raise RuntimeError('private provider details')
         return self.result, {}
@@ -180,9 +185,10 @@ class ConversationTests(unittest.TestCase):
         history = [{'role': 'user', 'content': '피카츄는 무슨 타입이야?'},
                    {'role': 'assistant', 'content': '피카츄는 전기 타입 포켓몬입니다. [1]'},
                    {'role': 'user', 'content': '꼬부기는 어떤 기술 써?'}]
-        self.provider.result = {'status': 'answer', 'answer':
-                                '레벨업 기술[[pokemon:7#learnset_level]]과 '
-                                '머신 기술[[pokemon:7#learnset_machine]]을 확인할 수 있어요.'}
+        self.provider.result = {'status': 'answer', 'claims': [
+            claim('레벨업 기술을 확인할 수 있어요.', 'pokemon:7#learnset_level'),
+            claim('머신 기술을 확인할 수 있어요.', 'pokemon:7#learnset_machine'),
+        ]}
         events = []
         # Pin the observed seed selection to isolate expansion from lexical/vector ranking.
         with patch.object(conversation.retrieval, 'bm25', return_value=[]):
@@ -215,27 +221,31 @@ class ConversationTests(unittest.TestCase):
     def test_expansion_does_not_invent_missing_or_unretrieved_pokemon_evidence(self):
         # Squirtle exists in the corpus but none of its document's sections were retrieved.
         self.use_registered_pokemon({7, 25}, ['pokemon:25#profile'])
-        self.provider.result = {'status': 'insufficient_evidence', 'answer': '제공된 근거로 확인할 수 없어요.'}
+        self.provider.result = {'status': 'insufficient_evidence', 'claims': []}
         events = []
         with patch.object(conversation.retrieval, 'bm25', return_value=[]):
             response = self.service(audit_callback=events.append).answer(self.question('꼬부기는 어떤 기술 써?'))
         self.assertTrue(all(row['document_id'] == 'pokemon:25' for row in self.provider.payload['contexts']))
         self.assertEqual(response['sources'], [])
         self.assertEqual(events[0]['answer_status'], 'insufficient_evidence')
-        self.provider.result = {'status': 'answer', 'answer': '알아요[[pokemon:7#learnset_level]].'}
+        self.provider.result = {'status': 'answer', 'claims': [claim('알아요.', 'pokemon:7#learnset_level')]}
         with patch.object(conversation.retrieval, 'bm25', return_value=[]):
-            with self.assertRaises(conversation.AnswerGenerationError):
-                self.service().answer(self.question('꼬부기는 어떤 기술 써?'))
+            with self.assertLogs('uvicorn.error', level='WARNING') as logs:
+                rejected = self.service().answer(self.question('꼬부기는 어떤 기술 써?'))
+        self.assertEqual(rejected, {'answer': conversation.UNVERIFIED_EVIDENCE, 'mode': 'rag', 'sources': []})
+        self.assertIn('citation_not_selected', logs.output[0])
         # Removing the absent entity's corpus rows still never manufactures a section for it.
-        self.database.records = [row for row in self.database.records if row['pokemon_id'] == 25]
-        self.provider.result = {'status': 'insufficient_evidence', 'answer': '제공된 근거로 확인할 수 없어요.'}
+        self.database.records = [row for row in self.records if row['pokemon_id'] == 25]
+        self.provider.result = {'status': 'insufficient_evidence', 'claims': []}
         with patch.object(conversation.retrieval, 'bm25', return_value=[]):
             self.service().answer(self.question('꼬부기는 어떤 기술 써?'))
         self.assertTrue(all(row['document_id'] == 'pokemon:25' for row in self.provider.payload['contexts']))
 
     def test_conversation_list_exception_is_scoped_and_does_not_change_cli_prompt(self):
         self.service().answer(self.question())
-        self.assertTrue(self.provider.instructions.startswith(providers.ANSWER))
+        self.assertTrue(self.provider.strict_envelope)
+        self.assertNotIn(providers.ANSWER, self.provider.instructions)
+        self.assertIn('separate, nonempty source_ids array', self.provider.instructions)
         self.assertIn('single Pokemon\'s Red/Blue learnset section', self.provider.instructions)
         self.assertIn('If only one method is supplied', self.provider.instructions)
         self.assertIn('Never infer missing rows, global counts', self.provider.instructions)
@@ -253,13 +263,14 @@ class ConversationTests(unittest.TestCase):
                    {'role': 'assistant', 'content': '이전 대답을 그대로 보존해요.'},
                    {'role': 'user', 'content': '그럼 그 친구는?'}]
         original = copy.deepcopy(history)
-        self.provider.result['answer'] = '먼저[[pokemon:2#profile]], 다음[[pokemon:1#profile]], 다시[[pokemon:2#profile]].'
+        self.provider.result['claims'] = [claim('먼저.', 'pokemon:2#profile', 'pokemon:1#profile', 'pokemon:2#profile'),
+                                          claim('다음.', 'pokemon:1#profile'), claim('다시.', 'pokemon:2#profile')]
         result = self.service().answer(history)
         self.assertEqual(self.provider.payload['messages'], original)
         self.assertEqual(history, original)
         self.assertEqual(self.provider.payload['question'], history[-1]['content'])
         self.assertIn('untrusted conversation data', self.provider.instructions)
-        self.assertEqual(result, {'answer': '먼저[1], 다음[2], 다시[1].', 'mode': 'rag', 'sources': [
+        self.assertEqual(result, {'answer': '먼저. [1] [2]\n\n다음. [2]\n\n다시. [1]', 'mode': 'rag', 'sources': [
             {'ref': 1, 'chunk_id': 'pokemon:2#profile', 'source_ref_id': 'pokemon:2'},
             {'ref': 2, 'chunk_id': 'pokemon:1#profile', 'source_ref_id': 'pokemon:1'}]})
         query = next(call[1] for call in self.provider.calls if call[0] == 'embed')
@@ -328,19 +339,34 @@ class ConversationTests(unittest.TestCase):
             self.service().answer(self.question())
         self.assertEqual(self.provider.calls, [('choose_tool',)])
 
-    def test_unknown_malformed_missing_and_unmapped_number_citations_fail(self):
-        for answer in ['알아요[[pokemon:151#profile]].', '알아요[[pokemon:1#profile].',
-                       '알아요[pokemon:1#profile].', '출처 없이 알아요.', '알아요[1].']:
-            with self.subTest(answer=answer):
-                self.provider.result = {'status': 'answer', 'answer': answer}
-                with self.assertRaises(conversation.AnswerGenerationError):
-                    self.service().answer(self.question())
+    def test_unknown_malformed_missing_and_unmapped_number_citations_are_discarded(self):
+        cases = [(claim('알아요.', 'pokemon:151#profile'), 'citation_not_selected'),
+                 (claim('알아요.', ' pokemon:1#profile'), 'invalid_citation_format'),
+                 (claim('알아요.', 'pokemon:01#profile'), 'invalid_citation_format'),
+                 (claim('알아요.', 1), 'invalid_citation_format'),
+                 ({'text': '알아요.', 'source_ids': None}, 'invalid_citation_format'),
+                 (claim('알아요.'), 'missing_citation'),
+                 ({'text': '알아요.'}, 'missing_citation')]
+        cases.extend((claim(text, 'pokemon:1#profile'), 'invalid_citation_format') for text in (
+            '알아요[[pokemon:151#profile]].', '알아요[[pokemon:1#profile].',
+            '알아요[pokemon:1#profile].', '알아요[1].', '알아요［１］.', '알아요&#91;1&#93;.',
+            '근거pokemon:1#profile이에요.', '근거<cite>1</cite>예요.'))
+        for block, reason in cases:
+            with self.subTest(block=block):
+                self.provider.result = {'status': 'answer', 'claims': [block]}
+                with self.assertLogs('uvicorn.error', level='WARNING') as logs:
+                    result = self.service().answer(self.question())
+                self.assertEqual(result, {'answer': conversation.UNVERIFIED_EVIDENCE, 'mode': 'rag', 'sources': []})
+                record, = logs.records
+                self.assertEqual(json.loads(record.getMessage())['reason'], reason)
 
     def test_mixed_duplicate_single_bracket_citation_is_rejected(self):
-        self.provider.result['answer'] = 'a[[pokemon:1#profile]] b[pokemon:1#profile]'
+        self.provider.result['claims'] = [claim('먼저 확인된 내용.', 'pokemon:1#profile'),
+                                          claim('a[[pokemon:1#profile]] b[pokemon:1#profile]', 'pokemon:1#profile')]
         events = []
-        with self.assertRaises(conversation.AnswerGenerationError):
-            self.service(audit_callback=events.append).answer(self.question())
+        with self.assertLogs('uvicorn.error', level='WARNING'):
+            result = self.service(audit_callback=events.append).answer(self.question())
+        self.assertEqual(result, {'answer': conversation.UNVERIFIED_EVIDENCE, 'mode': 'rag', 'sources': []})
         self.assertEqual(events, [])
 
     def test_success_audit_has_only_safe_metadata_and_does_not_change_response(self):
@@ -393,9 +419,22 @@ class ConversationTests(unittest.TestCase):
         self.assertEqual(sum(call[0] == 'openai' for call in self.provider.calls), 1)
 
     def test_insufficient_evidence_can_have_no_citations(self):
-        self.provider.result = {'status': 'insufficient_evidence', 'answer': '자료로 확인할 수 없어요.'}
-        result = self.service().answer(self.question())
-        self.assertEqual(result, {'answer': '자료로 확인할 수 없어요.', 'mode': 'rag', 'sources': []})
+        self.provider.result = {'status': 'insufficient_evidence', 'claims': []}
+        with self.assertNoLogs('uvicorn.error', level='WARNING'):
+            result = self.service().answer(self.question())
+        self.assertEqual(result, {'answer': conversation.UNVERIFIED_EVIDENCE, 'mode': 'rag', 'sources': []})
+
+    def test_insufficient_evidence_only_displays_supported_blocks_and_fixed_notice(self):
+        self.provider.result = {'status': 'insufficient_evidence', 'claims': [
+            claim('확인된 내용이에요.', 'pokemon:1#profile')]}
+        with self.assertNoLogs('uvicorn.error', level='WARNING'):
+            result = self.service().answer(self.question())
+        self.assertEqual(result['answer'], '확인된 내용이에요. [1]\n\n' + conversation.PARTIAL_EVIDENCE)
+        self.assertEqual([row['chunk_id'] for row in result['sources']], ['pokemon:1#profile'])
+        self.provider.result['claims'].append(claim('뒤의 주장은 확인되지 않았어요.'))
+        with self.assertLogs('uvicorn.error', level='WARNING'):
+            result = self.service().answer(self.question())
+        self.assertEqual(result, {'answer': conversation.UNVERIFIED_EVIDENCE, 'mode': 'rag', 'sources': []})
 
     def test_failures_do_not_retry_and_messages_do_not_expose_internal_details(self):
         for failure in ('choose_tool', 'embed', 'openai'):
@@ -435,7 +474,7 @@ class ConversationTests(unittest.TestCase):
             self.service().answer(self.question(secret))
         self.assertNotIn(secret, str(caught.exception))
         self.assertEqual(self.factory_calls, [])
-        self.provider.result['answer'] = secret + '[[pokemon:1#profile]]'
+        self.provider.result['claims'] = [claim(secret, 'pokemon:1#profile')]
         with self.assertRaises(conversation.AnswerGenerationError) as caught:
             self.service().answer(self.question())
         self.assertNotIn(secret, str(caught.exception))

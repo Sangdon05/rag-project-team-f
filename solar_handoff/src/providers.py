@@ -3,6 +3,7 @@ import json
 import math
 import re
 import struct
+import urllib.error
 import urllib.request
 from .retrieval import valid_vector
 
@@ -58,6 +59,16 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         raise ValueError('redirect refused')
 
 
+class ProviderTransportError(RuntimeError):
+    """A transport failure with the existing public message and safe diagnostics."""
+    def __init__(self, failure_type, *, upstream_status=None):
+        super().__init__('request outcome unknown or response rejected; do not retry automatically')
+        self.failure_type = failure_type
+        self.upstream_status = (
+            upstream_status if type(upstream_status) is int and 100 <= upstream_status <= 599 else None
+        )
+
+
 def request(url, payload, key=None):
     headers = {'Content-Type':'application/json'}
     if key:
@@ -67,11 +78,23 @@ def request(url, payload, key=None):
     try:
         with urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect()).open(req, timeout=120) as response:
             raw = response.read(MAX_RESPONSE + 1)
+    except urllib.error.HTTPError as error:
+        raise ProviderTransportError('http_error', upstream_status=error.code) from None
+    except urllib.error.URLError as error:
+        kind = 'timeout' if isinstance(error.reason, TimeoutError) else 'connection_error'
+        raise ProviderTransportError(kind) from None
+    except TimeoutError:
+        raise ProviderTransportError('timeout') from None
+    except OSError:
+        raise ProviderTransportError('connection_error') from None
+    except Exception:
+        raise ProviderTransportError('transport_error') from None
+    try:
         if len(raw) > MAX_RESPONSE:
             raise ValueError('response too large')
         return json_unique(raw.decode('utf8', 'strict'))
     except Exception:
-        raise RuntimeError('request outcome unknown or response rejected; do not retry automatically') from None
+        raise ProviderTransportError('response_decode_error') from None
 
 
 def truncated(obj):
@@ -151,6 +174,32 @@ def _function_call(response, allowed_names):
     return name, arguments
 
 
+def _validate_answer_envelope(response):
+    """Chat can recover from citations only after a complete assistant message."""
+    output = response.get('output')
+    if (not isinstance(output, list) or response.get('error') is not None
+            or response.get('incomplete_details') is not None
+            or response.get('truncation', 'disabled') != 'disabled'
+            or truncated({k: v for k, v in response.items() if k != 'truncation'})):
+        raise ValueError('invalid answer response')
+    message_count = 0
+    for item in output:
+        if not isinstance(item, dict):
+            raise ValueError('invalid answer output item')
+        if item.get('type') == 'reasoning':
+            if (item.get('status') not in (None, 'completed') or not isinstance(item.get('id'), str)
+                    or not item['id'] or not isinstance(item.get('summary'), list)):
+                raise ValueError('invalid reasoning item')
+            continue
+        content = item.get('content')
+        if (item.get('type') != 'message' or item.get('role') != 'assistant' or item.get('status') != 'completed'
+                or not isinstance(content, list) or len(content) != 1 or not isinstance(content[0], dict)):
+            raise ValueError('invalid answer message')
+        message_count += 1
+    if message_count != 1:
+        raise ValueError('expected one answer message')
+
+
 class Providers:
     def __init__(self, env, *, transport=request, require_solar=True):
         self.env, self.transport = env, transport
@@ -198,12 +247,14 @@ class Providers:
         except (ValueError, TypeError, RecursionError):
             raise ProviderResponseError('completed', 'invalid_tool_call') from None
 
-    def openai(self, system, data, schema):
+    def openai(self, system, data, schema, *, strict_envelope=False):
         payload = self._gpt_payload(system, data)
         payload['text'] = {'format': {'type':'json_schema', 'name':'result', 'strict':True, 'schema':schema}}
         response = self.transport(OPENAI_URL, payload, setting(self.env, 'OPENAI_API_KEY'))
         _completed_gpt(response)
         try:
+            if strict_envelope:
+                _validate_answer_envelope(response)
             text = response_text(response)
             obj = json_unique(text)
         except (ValueError, TypeError, AttributeError, RecursionError) as exc:

@@ -14,7 +14,7 @@ FastAPI 서비스(`api/`)와 RAG 체인을 잇는 계약과 절차다. Solar 대
 | `llm` | `LlmAnswerGenerator` | 검색 없이 LLM이 답함 (Red·Blue 기준 시스템 프롬프트) | 빈 목록 | 임시 데모. 근거가 없으므로 평가에 쓰지 않는다 |
 | `rag` | `RagAnswerGenerator` | Solar 대화의 일반 검색, 팀·기술 정형 조회 또는 확인 질문 | 인용한 포켓몬 청크. 포켓몬 인용이 없으면 빈 목록 | 경로에 따라 GPT, DB 및 Solar 설정을 사용 |
 
-응답의 `mode`는 답변 생성기를 구분한다. `rag`가 검색이나 임베딩 호출을 뜻하지는 않는다. Solar 대화는 동일한 GPT에 단일 도구를 선택하도록 요청한다. 일반 검색만 A/B/C 정책을 쓰며, 정형 경로는 필요한 청크를 ID로 읽고 확인 질문에는 DB를 쓰지 않는다. 내부 동작은 [langchain-rag 스킬](../../.claude/skills/langchain-rag/SKILL.md)을 따른다.
+응답의 `mode`는 답변 생성기를 구분한다. `rag`가 검색이나 임베딩 호출을 뜻하지는 않는다. Solar 대화는 GPT에 단일 도구를 선택하도록 요청한다. 일반 검색만 A/B/C 정책을 쓰며, 정형 경로는 필요한 청크를 ID로 읽어 계산 결과를 서버가 표시한다(후속 GPT 호출 없음). 확인 질문에는 DB를 쓰지 않는다. 내부 동작은 [langchain-rag 스킬](../../.claude/skills/langchain-rag/SKILL.md)을 따른다.
 
 ## 2. 계약
 
@@ -36,13 +36,14 @@ class AnswerGenerator(ABC):
 | | `sources: tuple[Source, ...]` | 근거. 근거가 없으면 빈 목록 |
 | | `embedding: EmbeddingInfo \| None = None` | 표시용 임베딩 모델 정보. `mode=rag`에서 서비스가 실제 사용 정보를 제공한 경우에만 허용하며 없으면 HTTP 응답에서 필드 자체를 생략한다. mock·llm에서 제공하면 `AnswerGenerationError` |
 | `EmbeddingInfo` | `query_model: str`, `document_model: str` | 이번 질의 임베딩에 실제 사용한 모델과 현재 인덱스에 결합된 문서 임베딩 모델. 각 값은 공백만으로 이루어지지 않은 1~200자 문자열이며 Unicode 제어·형식·서로게이트 등 `C` 범주 문자를 허용하지 않는다. 답변 생성 GPT 모델이 아니다 |
-| `Source` | `ref: int` | 출처 번호. `text` 안의 `[n]`과 같은 값이며 체인이 정한다. API는 번호를 바꾸거나 목록을 자르지 않는다 |
+| `Source` | `ref: int` | 출처 번호. Solar 대화 서비스가 검증된 근거의 본문 첫 등장 순서로 청크당 한 번호를 붙인다. `text` 안의 `[n]`과 같으며, API는 번호를 바꾸거나 목록을 자르지 않는다 |
 | | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 값 그대로. `source_ref_id`는 도감번호 3자리(예: `001`)이며 문서 조회 키로 쓴다. 체인이 `source_ref_id`를 주지 않으면 `rag` 어댑터가 `document_id`(`pokemon:{id}`)에서 `f"{id:03d}"`로 만든다(저장된 메타데이터·임베딩은 바꾸지 않는다) |
 
 실패 규약:
 
-- 체인이 답을 만들지 못하면(네트워크, 모델, DB 오류) 어댑터가 `AnswerGenerationError`로 바꿔 올린다 → 502 `ANSWER_GENERATION_FAILED`. 원문 오류나 모델 원문을 응답에 노출하지 않는다.
+- 네트워크, DB, 모델 응답 봉투·JSON·일반 답변 유효성 오류는 어댑터가 `AnswerGenerationError`로 바꿔 올린다 → 502 `ANSWER_GENERATION_FAILED`. 원문 오류나 모델 원문을 응답에 노출하지 않는다.
 - 확인 질문 또는 "근거가 부족해 확인할 수 없다"는 안내는 정상 `rag` 답변이다. 인용한 포켓몬 청크가 없으면 `sources`는 빈 목록이다.
+- 일반 검색의 완성된 답변이 인용만 누락하거나 잘못 참조하면, 답변 전체를 버리고 고정된 한국어 안내와 빈 `sources`를 HTTP 200 `mode=rag`로 반환한다. 실제 사용이 확인된 `embedding`만 유지하며 재호출하지 않는다. 이 경우 502 실패 이벤트 대신 별도 인용 거부 이벤트를 남긴다.
 - 체인 안에서 대화 기록을 저장하지 않는다. 대화 맥락은 매 요청의 `messages`로만 받는다.
 - RAG 반환값의 선택 `embedding`은 `{"query_model": str, "document_model": str}`이다. 질의 임베딩 호출 뒤 확인한 실제 query 모델과 인덱스에 결합된 document 모델만 사용한다. 정형 조회·확인 질문 등 질의 임베딩을 호출하지 않은 응답은 필드를 생략한다. API는 환경 변수나 답변 모델명으로 추정·보충하지 않는다. 필드가 제공됐지만 `null`·비객체·필수 값 누락·잘못된 모델 ID인 경우에는 전체 답변을 502 `ANSWER_GENERATION_FAILED`로 거부한다. mock·llm 및 이 필드를 제공하지 않는 기존 RAG는 기존 세 필드 응답을 유지한다.
 

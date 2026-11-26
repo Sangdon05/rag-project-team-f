@@ -14,17 +14,17 @@ description: Use when changing Solar conversation, prompts, retriever settings, 
 - `solar_handoff/src/cli.py`는 한 질문의 검색·답변을 수행해 JSON 트레이스를 출력한다. 과거 `dev_rag`와 별개이며, 대화 도구 선택이나 형제 청크 확장을 적용하지 않는다. `retrieval.py`, `providers.py`, `citations.py` 및 `solar_handoff/config/retrieval.json`이 각각 검색, 모델 호출, 출처와 고정 검색 설정을 담당한다.
 - 검색 경로는 원질문을 보존하고 선택적 GPT rewrite를 적용한 검색어를 Solar query API로 임베딩한다. A는 벡터 후보 최대 20개에서 상위 5개를 선택한다. B는 벡터와 BM25 각각 최대 20개를 RRF(k=60)로 결합해 상위 5개를 선택한다. C는 B의 상위 정확히 5개를 원질문 기준 GPT로 재순위화하며 5개 미만이면 실패한다. 답변은 GPT 전용이다.
 - rewrite의 완료된 응답이 거절 또는 형식 오류인 경우에만 재작성 전 검색어로 되돌린다. 네트워크 등 결과가 불명인 실패는 fallback하지 않고 실패 처리하며 자동 재시도하지 않는다. 유효한 rewrite도 의미 보존은 미검토다.
-- 출처 검사는 답변에 인용된 ID가 선택된 청크에 속하는지와 형식만 확인한다. path·heading·불연속 줄 범위는 메타데이터 표시이며, 실제 문서 위치와 주장에 대한 근거 적합성은 사람이 대조해야 한다.
+- 출처 검사는 인용 ID가 선택된 청크에 속하는지와 형식을 확인한다. path·heading·불연속 줄 범위는 메타데이터 표시이며, 실제 문서 위치와 주장에 대한 근거 적합성은 사람이 대조해야 한다. CLI의 `status`·`answer`와 `[[chunk ID]]` 인용 계약은 대화 전용 형식과 별개다.
 - 검색은 루트 환경의 `DATABASE_URL`, `UPSTAGE_API_KEY`, `UPSTAGE_EMBEDDING_MODEL`, `UPSTAGE_QUERY_MODEL`을 사용한다. GPT 도구 선택·답변·rewrite·C는 `OPENAI_CHAT_MODEL`, `OPENAI_API_KEY`를 사용한다. 설정과 응답의 모델 ID 모두 `gpt-` 접두사여야 하나 정확한 일치는 요구하지 않는다 (alias가 날짜가 붙은 revision으로 응답할 수 있음). 별도 승인된 DB 접근·비용 확인 후에만 실제 호출하며 CLI에는 `--allow-cost`가 필요하다. 환경과 안전 경계는 [Solar 전달본](../../../solar_handoff/README.md)을 따른다.
 - 확인된 실제 질문은 Solar + C + rewrite + GPT 1건뿐이다 (`solar_handoff/README.md`의 확인된 실 실행 범위). `pokemon:133#profile`의 이브이 노말 타입은 `solar_handoff/documents/133_이브이.md` 6·10행과 대조됐다. 다른 조합의 성공이나 운영 준비를 뜻하지 않는다.
 
 ### 대화 서비스: 단일 도구 선택과 근거 전달
 
-- `solar_handoff/src/conversation.py`는 전체 대화와 마지막 사용자 질문을 같은 설정의 GPT에 보내 [네 Responses 도구](../tool-calling/SKILL.md) 중 하나를 선택하게 한다. 서버가 검증된 호출 하나만 실행하고, 답변 생성이 필요하면 선택한 근거를 넣은 새 GPT 요청에서 기존 JSON 응답 형식(`status`, `answer`)을 사용한다. 별도 질문 라우터나 LangChain 에이전트가 아니다.
-- 무인수 `search_pokedex`를 고르면 원질문과 길이 한도에 맞는 최근 사용자 질문으로 검색어를 만들고 위 A/B/C·선택적 rewrite 정책을 그대로 사용한다(`SOLAR_RETRIEVAL_METHOD` 기본 B, `SOLAR_REWRITE` 기본 `false`). 후보 생성과 C의 B 상위 5개 기준은 그대로다. 최종 답변에는 원질문과 전체 대화를 넘긴다. 답변 근거는 검색 결과를 보존하고 같은 문서의 형제 청크를 더하되 총 50개·직렬화 UTF-8 96,000바이트 한도를 적용한다.
-- 팀·기술 경로는 검증된 ID와 정형 계산 결과를 사용한다. 포켓몬 근거가 필요한 경우에만 기존 청크를 읽어 정확한 ID로 선택하며, 질의 임베딩·BM25·벡터 검색·재작성·재순위화를 하지 않는다. 확인 질문은 서버 문구로 마치며, 변화기·별도 피해·미확정 분류·약점 대상 0건처럼 포켓몬 근거가 필요 없는 기술 답변에는 DB를 열지 않는다.
-- 일반 검색에도 도구 선택용 GPT 호출이 기존보다 1회 추가된다. 답변 가능한 정형 경로는 선택 1회와 답변 생성 1회이며, 확인 질문은 선택 1회로 끝난다. 일반 검색의 재작성·C 재순위화는 기존 설정에 따른 별도 호출이다. 근거 부족으로 서버가 바로 안내할 때는 답변 생성을 호출하지 않는다.
-- 번호 출처는 인용한 포켓몬 청크만 가리키며 기술 분류는 `move:{id}` 정제 레코드를 본문에 따로 표시한다. 질의 임베딩을 호출하지 않으면 `embedding`을 생략한다. HTTP 계약은 [API–RAG 연결 가이드](../../../docs/references/api-rag-integration.md)가 원본이다. 정상 응답의 대화 감사 로그에는 도구, 실제 호출 수, 선택·인용 근거 ID 등 메타데이터만 남기며 질문·비밀·모델 원문은 남기지 않는다. 아래의 향후 평가 JSONL 형식과는 별개다.
+- `solar_handoff/src/conversation.py`는 전체 대화와 마지막 사용자 질문을 GPT에 보내 [네 Responses 도구](../tool-calling/SKILL.md) 중 하나를 선택하게 한다. 서버가 검증된 호출 하나만 실행한다. 별도 질문 라우터나 LangChain 에이전트가 아니다.
+- 무인수 `search_pokedex`는 원질문과 길이 한도에 맞는 최근 사용자 질문으로 검색어를 만들고 위 A/B/C·선택적 rewrite 정책을 그대로 사용한다(`SOLAR_RETRIEVAL_METHOD` 기본 B, `SOLAR_REWRITE` 기본 `false`). 답변 근거는 검색 결과를 보존하고 같은 문서의 형제 청크를 더하되 총 50개·직렬화 UTF-8 96,000바이트 한도를 적용한다. 일반 검색의 답변 생성, 재작성·C 재순위화는 도구 선택과 별도 호출이다.
+- 일반 검색 답변에는 원질문·전체 대화·선택 근거를 보낸다. 대화 전용 strict 응답은 `status`와 `claims`로 구성하며, 각 주장에는 `text`와 `source_ids`를 요구한다. `source_ids` 후보는 이번 요청의 선택 청크 ID뿐이다. 서버도 블록과 참조를 재검사하고 인용된 청크의 본문 첫 등장 순서로 `[n]`과 중복 없는 `sources`를 만든다. 인라인 인용 표기를 추정·보정하지 않는다. `insufficient_evidence`는 검증을 통과한 주장만 고정 안내와 함께 표시하거나 안내만 반환한다.
+- 팀·기술 답변은 기존 도구 계산 결과와 검증된 정확한 청크를 서버가 연결한다. 도구 선택 GPT 1회 외에 후속 GPT·질의 임베딩·BM25·벡터 검색·재작성·재순위화를 하지 않는다. 필수 근거가 없으면 결과 대신 안전 안내를 반환한다. 확인 질문과 포켓몬 근거가 필요 없는 기술 답변(변화기·별도 피해·미확정 분류·약점 대상 0건 등)은 DB를 열지 않는다. 기술 분류의 `move:{id}` 정제 레코드는 본문에만 표시한다.
+- 일반 검색의 완성된 모델 답변에서 인용만 거부되면 모든 주장을 버린다. HTTP 200 `mode=rag`, 고정 한국어 안내, 빈 `sources`를 반환하고 실제 사용이 확인된 `embedding`은 유지한다. 공급자·DB·일반 유효성 오류는 기존 502이며 재시도하지 않는다. 인용 거부 경고는 공급자 원문이나 원본 예외 없이 [Solar 전달본](../../../solar_handoff/README.md)의 고정 사유만 기록한다. HTTP 계약은 [API–RAG 연결 가이드](../../../docs/references/api-rag-integration.md)가 원본이다. 대화 감사 로그는 정상 답변의 도구, 호출 수, 선택·인용 근거 ID 등 메타데이터이며 아래의 향후 평가 JSONL과 별개다.
 - 새 대화 경로의 확인 범위는 [Solar 전달본의 오프라인 검증](../../../solar_handoff/README.md)까지다. 기존 청크·인덱스·모델 설정은 유지했고 재임베딩하지 않았다. 실제 GPT·Solar·DB 실행이나 공식 평가를 추가로 수행하지 않았다.
 
 ## 향후 에이전트 구성 (구현 예정)
