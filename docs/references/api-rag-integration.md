@@ -30,7 +30,7 @@ class AnswerGenerator(ABC):
 | `Conversation` | `messages: tuple[Message, ...]` | 프론트가 보낸 대화 전체. 마지막은 항상 user 질문 (API가 검증해서 넘김) |
 | | `question` | 마지막 user 메시지 |
 | | `history` | 질문 앞의 대화 (user/assistant 교대) |
-| `Message` | `role: "user" \| "assistant"`, `content: str` | 앞뒤 공백 제거, 길이 한도 검증 완료 |
+| `Message` | `role: "user" \| "assistant"`, `content: str` | 앞뒤 공백 제거, 빈 값·개수·순서 검증 완료 (길이 한도 없음) |
 | `Answer` | `text: str` | 비어 있으면 안 됨 |
 | | `mode: "mock" \| "llm" \| "rag"` | 생성 방식 |
 | | `sources: tuple[Source, ...]` | 근거. 근거가 없으면 빈 목록 |

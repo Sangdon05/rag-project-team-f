@@ -20,7 +20,7 @@ description: Use when designing api/ slices or wiring its DI. How api/ applies t
 
 - DB가 없다. 데이터와 벡터 DB는 RAG 쪽이 관리하고 API는 중개만 한다. 그래서 레포지토리·ORM·트랜잭션 계층이 없다(R10).
 - 로그인·계정이 없다. 대화 맥락은 프론트가 매 요청 `messages[]`로 보낸다.
-- 외부 의존은 답변 생성기 포트 하나다.
+- 외부 의존은 포트 세 개다: 답변 생성기(chat), 문서 저장소(documents), 추천 질문 제공자(suggestion, 지금은 fake 데이터).
 
 ## 3. 폴더
 
@@ -28,20 +28,23 @@ description: Use when designing api/ slices or wiring its DI. How api/ applies t
 api/
   __init__.py
   main.py              create_app: load_dotenv, CORS, 예외 핸들러, 의존성 연결, 라우터 등록 (app)
-  container.py         ANSWER_BACKEND에 따른 생성기 선택과 연결 (app)
+  container.py         ANSWER_BACKEND에 따른 생성기 선택, 슬라이스별 구현체 연결 (app)
   error_handlers.py    shared 예외 → 공통 에러 응답 (app)
   shared/
     exceptions.py      기반 예외 (순수 파이썬, domain도 import 가능)
     settings.py        환경 변수 읽기 (domain은 import 금지)
+    responses.py       SuccessResponse[T], ErrorResponse (presentation·error_handlers만)
   health/
-    presentation/      router.py — presentation만
+    presentation/      schemas.py, router.py — presentation만
+  suggestion/          domain(SuggestionProvider 포트) / application / infrastructure(fake 제공자) / presentation
+  documents/           domain(SourceRefId, DocumentStore 포트) / application / infrastructure(file_store.py) / presentation
   chat/
     domain/            conversation.py, answer.py, generator.py(포트), exceptions.py
     application/       service.py (AskService)
     infrastructure/    mock_generator.py, llm_generator.py (나중에 rag_generator.py)
     presentation/      schemas.py, dependencies.py(provide_*), router.py
   tests/
-    chat/ ...
+    health/ suggestion/ chat/ documents/ ...
 ```
 
 폴더마다 `__init__.py`를 둔다. 새 슬라이스는 설계안 `docs/design/api/<slice>.md`부터 만들고 [설계안 목록](../../../docs/design/api/README.md)에 링크한다.
