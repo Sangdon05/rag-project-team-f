@@ -1,7 +1,7 @@
 /** NEO-RETRO free conversation with a transparent chat overlay. */
 import { TEAM_API } from './neo-config.mjs?v=20261126-team-api1';
 import { createTeamApiClient } from './neo-team-client.mjs?v=20261126-team-api1';
-import { createConversationStore, buildApiMessages } from './neo-conversation.mjs';
+import { createConversationStore, buildApiMessages } from './neo-conversation.mjs?v=20261126-reset1';
 import { renderCitedAnswer, renderMarkdown, createOverlayScroll } from './neo-chat-render.mjs';
 import { MATE_PROFILES, getMateProfile } from './mate-content.mjs';
 import { guideOf } from './neo-dex-view.mjs';
@@ -16,7 +16,8 @@ const PERSONA = Object.freeze({ P1: { letter: 'A', level: 'beginner' }, P2: { le
 const PIKACHU_LINE = '난 피카츄야! 만나서 반가워! 누구랑 같이 시작할래?';
 let api;
 let db;
-const state = { personaId: null, choosing: true, messages: new Map(), drafts: new Map(), requests: new Map(), suggestions: null, selection: 0, storageReady: false, ready: false, homeAnimation: null, animations: new Set(), lastRequestCount: null };
+let confirmReset;
+const state = { personaId: null, choosing: true, messages: new Map(), drafts: new Map(), requests: new Map(), resets: new Map(), suggestions: null, selection: 0, storageReady: false, ready: false, homeAnimation: null, animations: new Set(), lastRequestCount: null };
 const motionOff = () => reducedMotion.matches || document.body.dataset.motion === 'off';
 const profile = () => getMateProfile(state.personaId);
 const messages = id => state.messages.get(id) ?? [];
@@ -37,10 +38,12 @@ function errorText(error) {
   return `답변을 가져오지 못했어요${error.httpStatus ? ` (HTTP ${error.httpStatus})` : ''}. 다시 시도해 주세요.`;
 }
 function updateBusy() {
-  const busy = !!state.requests.get(state.personaId);
+  const resetting = state.resets.has(state.personaId);
+  const busy = !!state.requests.get(state.personaId) || resetting;
   $('nx-home-form').setAttribute('aria-busy', String(busy));
   $('nx-home-form').querySelector('[type="submit"]').disabled = !state.ready || !state.storageReady || busy;
-  $('nx-home-input').disabled = !state.storageReady;
+  $('nx-home-input').disabled = !state.storageReady || resetting;
+  $('nx-reset-chat').disabled = !state.ready || !state.storageReady || resetting;
   document.querySelectorAll('#nx-home-options button').forEach(b => { b.disabled = busy; });
   document.querySelectorAll('.nx-chat-retry').forEach(b => { b.disabled = busy || !state.storageReady; });
 }
@@ -102,6 +105,46 @@ function chooseAgain() {
   for (const animation of state.animations) animation.cancel(); state.animations.clear();
   renderUsers(); renderHome();
   (document.querySelector('.nx-user[aria-pressed="true"]') ?? document.querySelector('.nx-user'))?.focus({ preventScroll: true });
+}
+async function resetConversation() {
+  const p = profile();
+  if (!p || state.choosing || !state.ready || !state.storageReady || state.resets.has(p.id)) return;
+  if (confirmReset(`${p.name}의 대화를 모두 지울까요? 이 브라우저에 저장된 ${p.name}의 대화만 삭제되며 되돌릴 수 없어요.`) !== true) return;
+  const id = p.id;
+  let release;
+  let cleared = false;
+  state.resets.set(id, new Promise(resolve => { release = resolve; }));
+  updateBusy();
+  try {
+    await db.clearPersona(id);
+    // Invalidate before abort so neither a late success nor its catch can save rows again.
+    const pending = state.requests.get(id);
+    state.requests.delete(id); pending?.abort();
+    state.messages.set(id, []); state.drafts.delete(id);
+    cleared = true;
+    if (state.personaId === id && !state.choosing) {
+      for (const animation of state.animations) animation.cancel(); state.animations.clear();
+      $('nx-chat-messages').replaceChildren(); $('nx-home-input').value = ''; autoGrow();
+      $('nx-home-note').textContent = ''; state.lastRequestCount = null;
+      $('nx-context-note').textContent = '대화는 이 브라우저에 저장돼요. 답변에는 최근 대화 일부가 전달돼요.';
+      renderThread(); scroll.followLatest(true);
+      announce(`${p.name}의 대화를 리셋했어요. ${p.mateName}와 새 대화를 시작해 보세요.`);
+    }
+  } catch {
+    if (state.personaId === id && !state.choosing) {
+      $('nx-home-note').textContent = '대화를 지우지 못했어요. 기존 대화는 유지됩니다. 다시 시도해 주세요.';
+      announce($('nx-home-note').textContent);
+    }
+  } finally {
+    state.resets.delete(id); release(); updateBusy();
+    if (cleared && state.personaId === id && !state.choosing) $('nx-home-input').focus({ preventScroll: true });
+  }
+}
+async function requestIsCurrent(id, controller) {
+  // A reset waits for existing IDB writes; later writes wait for its outcome.
+  // On deletion failure the original request remains valid and can finish normally.
+  await state.resets.get(id);
+  return state.requests.get(id) === controller;
 }
 async function loadSuggestions(id, selection) {
   const controller = new AbortController(); state.suggestions = controller;
@@ -198,33 +241,39 @@ async function openDocument(box, message, source) {
   await load();
 }
 async function submitQuestion(value, retry = null) {
-  const p = profile(); if (!p || state.choosing || !state.ready || !state.storageReady || state.requests.has(p.id)) return;
+  const p = profile(); if (!p || state.choosing || !state.ready || !state.storageReady || state.requests.has(p.id) || state.resets.has(p.id)) return;
   const question = String(value ?? '').trim(); if (!question) return;
   const controller = new AbortController(); const id = p.id; const record = retry ? { ...retry, request_status: 'pending', error_message: null } : newRecord('user', question, p);
   state.requests.set(id, controller); updateBusy();
   try {
     const payload = buildApiMessages(messages(id), record, { maxMessages: api.maxMessages, maxContentLength: api.maxContentLength ?? Infinity });
-    try { await db.save(record); } catch { storageError(); return; } upsert(record);
+    try { await db.save(record); } catch { if (await requestIsCurrent(id, controller)) storageError(); return; }
+    if (!await requestIsCurrent(id, controller)) return;
+    upsert(record);
     if (state.personaId === id && !state.choosing) {
       if (!retry) { $('nx-home-input').value = ''; state.drafts.set(id, ''); autoGrow(); }
       $('nx-home-note').textContent = ''; renderThread(); scroll.followLatest();
       $('nx-context-note').textContent = `대화는 이 브라우저에 저장돼요. 이번 요청에는 최근 ${payload.length}개 메시지가 전달돼요.`;
     }
     const result = await api.ask(payload, { signal: controller.signal });
-    if (state.requests.get(id) !== controller) return;
+    if (!await requestIsCurrent(id, controller)) return;
     const user = { ...record, request_status: 'completed' };
     const answer = { ...newRecord('assistant', result.answer, p), reply_to: record.message_id, request_status: 'completed', mode: result.mode, sources: result.sources };
     try { await db.saveMany([user, answer]); } catch {
+      if (!await requestIsCurrent(id, controller)) return;
       // Keep the received answer visible, but never claim it was saved.
       upsert(user); upsert(answer); storageError();
       if (state.personaId === id && !state.choosing) renderThread();
       return;
     }
+    if (!await requestIsCurrent(id, controller)) return;
     upsert(user); upsert(answer);
     if (state.personaId === id && !state.choosing) { renderThread(answer.message_id); announce(`${p.mateName}의 답변이 도착했어요. ${result.mode} 모드, 출처 ${result.sources.length}개.`); }
   } catch (error) {
+    if (!await requestIsCurrent(id, controller)) return;
     const failed = { ...record, request_status: 'failed', error_message: errorText(error) };
-    try { await db.save(failed); upsert(failed); } catch { storageError(); }
+    try { await db.save(failed); if (!await requestIsCurrent(id, controller)) return; upsert(failed); }
+    catch { if (!await requestIsCurrent(id, controller)) return; storageError(); }
     if (state.personaId === id && !state.choosing) { renderThread(); $('nx-home-note').textContent = failed.error_message; announce(failed.error_message); }
   } finally { if (state.requests.get(id) === controller) state.requests.delete(id); updateBusy(); }
 }
@@ -239,6 +288,7 @@ async function initialize() {
   $('nx-home-input').addEventListener('input', () => { autoGrow(); $('nx-home-note').textContent = ''; });
   $('nx-home-input').addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229) { event.preventDefault(); $('nx-home-form').requestSubmit(); } });
   $('nx-change-user').addEventListener('click', chooseAgain); $('nx-rechoose').addEventListener('click', chooseAgain); $('nx-chat-latest').addEventListener('click', () => scroll.followLatest(true));
+  $('nx-reset-chat').addEventListener('click', resetConversation);
   $('nx-motion').addEventListener('click', () => { const off = document.body.dataset.motion !== 'off'; document.body.dataset.motion = off ? 'off' : 'on'; $('nx-motion').setAttribute('aria-pressed', String(off)); $('nx-motion').setAttribute('aria-label', off ? '움직임 다시 켜기' : '움직임 멈추기'); if (off) { state.homeAnimation?.finish(); for (const a of state.animations) a.finish(); } });
   window.addEventListener('hashchange', route); window.addEventListener('popstate', route);
   document.addEventListener('visibilitychange', () => {
@@ -272,7 +322,7 @@ async function initialize() {
   });
   updateBusy(); document.dispatchEvent(new CustomEvent('neo-chat-ready'));
 }
-export async function startNeoChat({ client = createTeamApiClient({ config: TEAM_API }), store = createConversationStore() } = {}) {
-  api = client; db = store;
+export async function startNeoChat({ client = createTeamApiClient({ config: TEAM_API }), store = createConversationStore(), confirmReset: confirm = message => window.confirm(message) } = {}) {
+  api = client; db = store; confirmReset = confirm;
   try { await initialize(); } catch { $('nx-load-note').textContent = '화면을 불러오지 못했어요. 새로고침해 주세요.'; }
 }

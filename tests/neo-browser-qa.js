@@ -1,7 +1,8 @@
 /** Explicit test transport, isolated real IndexedDB, and the production chat controller. */
-import { startNeoChat } from '../frontend/neo-chat.js?v=20261126-final1';
+import { startNeoChat } from '../frontend/neo-chat.js?v=20261126-reset1';
 import { createTeamApiClient } from '../frontend/neo-team-client.mjs';
 import { createConversationStore } from '../frontend/neo-conversation.mjs';
+import { getMateProfile } from '../frontend/mate-content.mjs';
 
 const $ = id => document.getElementById(id);
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -19,6 +20,38 @@ const attempts = new Map();
 let suggestionScenario = 'normal';
 let docCalls = 0;
 const store = createConversationStore({ dbName });
+let rejectReset = false;
+let acceptReset = true;
+const resetPrompts = [];
+const clearCalls = [];
+const pendingResetRequests = new Map();
+const pausedWrites = new Map();
+const holdCommittedWrite = (question, result) => new Promise(resolve => {
+  pausedWrites.set(question, { release: () => resolve(result) });
+});
+const controlledStore = {
+  ...store,
+  async save(record) {
+    const result = await store.save(record);
+    if ((record.request_status === 'pending' && record.content.startsWith('SAVE-PAUSE'))
+        || (record.request_status === 'failed' && record.content.includes('FAILED-SAVE-PAUSE'))) {
+      return holdCommittedWrite(record.content, result);
+    }
+    return result;
+  },
+  async saveMany(records) {
+    const result = await store.saveMany(records);
+    const question = records.find(record => record.role === 'user')?.content;
+    if (question?.startsWith('SAVEMANY-PAUSE')) return holdCommittedWrite(question, result);
+    return result;
+  },
+  async clearPersona(personaId) {
+    clearCalls.push(personaId);
+    if (rejectReset) throw new Error('fixture reset transaction failure');
+    return store.clearPersona(personaId);
+  },
+};
+const confirmReset = message => { resetPrompts.push(message); return acceptReset; };
 const resultElement = document.createElement('pre'); resultElement.id = 'neo-qa-results'; resultElement.style.cssText = 'white-space:pre-wrap;margin:20px;padding:16px;border:2px solid #243d55;background:#f2ebdd;color:#243d55;';
 const resultDetails = document.createElement('details'); resultDetails.style.margin = '12px 20px 30px';
 const resultSummary = document.createElement('summary'); resultSummary.textContent = '통합 테스트 상세 결과 (테스트 응답)';
@@ -57,7 +90,20 @@ async function fixtureFetch(url, init) {
   }
   throw new Error(`Unexpected fixture endpoint: ${parsed.pathname}`);
 }
-const client = createTeamApiClient({ config: { baseUrl: location.origin, suggestionsPath: '/fixture/suggestions', askPath: '/fixture/chat', documentPath: '/fixture/documents/{source_ref_id}', maxMessages: 20, maxContentLength: 2000, timeoutMs: 5000 }, fetchImpl: fixtureFetch });
+const transport = createTeamApiClient({ config: { baseUrl: location.origin, suggestionsPath: '/fixture/suggestions', askPath: '/fixture/chat', documentPath: '/fixture/documents/{source_ref_id}', maxMessages: 20, maxContentLength: 2000, timeoutMs: 5000 }, fetchImpl: fixtureFetch });
+const client = {
+  ...transport,
+  ask(messages, options = {}) {
+    const question = messages.at(-1).content;
+    if (!question.startsWith('RESET-LATE')) return transport.ask(messages, options);
+    requests.push({ method: 'POST', pathname: '/fixture/chat', body: { messages } });
+    return new Promise((resolve, reject) => {
+      const pending = { resolve, reject, signal: options.signal, aborted: false };
+      options.signal?.addEventListener('abort', () => { pending.aborted = true; }, { once: true });
+      pendingResetRequests.set(question, pending);
+    });
+  },
+};
 async function select(id) {
   if ($('nx-chooser').hidden) $('nx-change-user').click();
   document.querySelector(`#nx-users button[data-persona="${id}"]`).click();
@@ -77,6 +123,20 @@ async function send(question) {
 const askRequests = () => requests.filter(r => r.pathname === '/fixture/chat');
 const messages = () => [...document.querySelectorAll('#nx-chat-messages [data-message-id]')];
 const assistants = () => messages().filter(n => n.dataset.role === 'assistant');
+const greeting = () => document.querySelector('#nx-chat-messages .nx-chat-message[data-role="assistant"] .nx-chat-text')?.textContent;
+async function beginResetRequest(question) {
+  $('nx-home-input').value = question;
+  $('nx-home-form').requestSubmit();
+  await until(() => pendingResetRequests.has(question), question);
+  return pendingResetRequests.get(question);
+}
+const lateAnswer = () => ({ answer: '늦게 도착한 테스트 응답[1]', mode: 'rag', sources: [source] });
+async function requestReset(accept = true) {
+  acceptReset = accept;
+  const before = resetPrompts.length;
+  $('nx-reset-chat').click();
+  await until(() => resetPrompts.length === before + 1, 'reset confirmation');
+}
 
 async function seedContext() {
   const records = [];
@@ -91,17 +151,24 @@ async function seedContext() {
 async function run() {
   publish();
   if (!saved) await seedContext();
-  await startNeoChat({ client, store });
+  await startNeoChat({ client, store: controlledStore, confirmReset });
   document.body.dataset.motion = 'off';
   if (saved) {
     await select('P1');
     const rows = await store.load('P1');
     check('실제 페이지 새로고침 후 IndexedDB 대화 복원', rows.length === saved.expectedA && messages().length === rows.length, `saved=${saved.expectedA}, restored=${rows.length}, rendered=${messages().length}`);
-    check('새로고침 후 출처와 mode 보존', rows.some(m => m.role === 'assistant' && m.mode === 'rag' && m.sources.length === 2));
+    if (saved.resetRestore) {
+      check('리셋 후 실제 새로고침에도 빈 대화와 기존 인사 유지', rows.length === 0 && messages().length === 0 && greeting() === getMateProfile('P1').greeting);
+      check('리셋 후 새로고침에도 다른 유저 기록 유지', JSON.stringify(await store.load('P2')) === saved.otherB && JSON.stringify(await store.load('P3')) === saved.otherC);
+      await send('리셋 후 새로고침 첫 질문');
+      check('리셋 후 새로고침 첫 요청은 새 질문 1개', askRequests().at(-1).body.messages.length === 1);
+    }
+    const restoredRows = await store.load('P1');
+    check('새로고침 후 출처와 mode 보존', restoredRows.some(m => m.role === 'assistant' && m.mode === 'rag' && m.sources.length === 2));
     $('nx-chat-latest').click();
     document.body.dataset.motion = 'on';
     label.textContent = `통합 테스트 ${report.filter(r => r.pass).length}/${report.length} 통과 · 테스트 픽스처 · 실제 팀 API 아님`;
-    sessionStorage.setItem(runKey, JSON.stringify({ ...saved, phase: 'complete', report })); publish(report.every(r => r.pass) ? 'passed' : 'failed');
+    sessionStorage.setItem(runKey, JSON.stringify({ ...saved, phase: 'complete', resetRestore: false, expectedA: restoredRows.length, report })); publish(report.every(r => r.pass) ? 'passed' : 'failed');
     return;
   }
 
@@ -193,7 +260,69 @@ async function run() {
   const aRows = await store.load('P1'), bRows = await store.load('P2'), cRows = await store.load('P3');
   check('A/B/C 로컬 저장 분리', aRows.every(m => m.persona_id === 'P1') && bRows.length === 2 && cRows.length === 26);
   check('요청에 persona·mate·level·system 필드 없음', askRequests().every(r => Object.keys(r.body).join() === 'messages' && r.body.messages.every(m => Object.keys(m).sort().join() === 'content,role')));
-  sessionStorage.setItem(runKey, JSON.stringify({ phase: 'restore', dbName, expectedA: aRows.length, report }));
+
+  const otherB = JSON.stringify(bRows), otherC = JSON.stringify(cRows);
+  const sceneActor = $('nx-home-stage').firstElementChild;
+  const background = document.querySelector('.nx-scene-bg').style.backgroundImage;
+  const draft = '취소하면 그대로 남아야 하는 초안';
+  $('nx-home-input').value = draft; $('nx-home-input').dispatchEvent(new Event('input', { bubbles: true }));
+  const oldMessages = messages().map(node => node.dataset.messageId).join();
+  const oldSources = document.querySelectorAll('.nx-chat-source').length;
+  const clearsBeforeCancel = clearCalls.length;
+  await requestReset(false); await pause(20);
+  check('리셋 취소는 저장소·메시지·초안·출처를 바꾸지 않음', clearCalls.length === clearsBeforeCancel && JSON.stringify(await store.load('P1')) === JSON.stringify(aRows) && messages().map(node => node.dataset.messageId).join() === oldMessages && $('nx-home-input').value === draft && document.querySelectorAll('.nx-chat-source').length === oldSources);
+  check('리셋 확인은 현재 유저를 명시', resetPrompts.at(-1).includes(getMateProfile('P1').name));
+
+  const failurePending = await beginResetRequest('RESET-LATE 리셋 실패 후 정상 완료');
+  const beforeFailure = JSON.stringify(await store.load('P1'));
+  $('nx-home-input').value = draft;
+  rejectReset = true; await requestReset();
+  await until(() => !$('nx-reset-chat').disabled, 'failed reset completed');
+  check('저장소 리셋 실패는 기존 기록·초안을 보존하고 오류 표시', JSON.stringify(await store.load('P1')) === beforeFailure && $('nx-home-input').value === draft && $('nx-home-note').textContent.length > 0);
+  check('저장소 리셋 실패는 진행 중 요청을 취소하지 않음', !failurePending.aborted && !failurePending.signal.aborted);
+  rejectReset = false; failurePending.resolve(lateAnswer());
+  await until(() => $('nx-home-form').getAttribute('aria-busy') === 'false', 'pending request after reset failure');
+  check('리셋 실패 뒤 진행 중 답변은 정상 보존', (await store.load('P1')).some(row => row.role === 'assistant' && row.content === '늦게 도착한 테스트 응답[1]'));
+
+  await requestReset();
+  await until(() => messages().length === 0 && !$('nx-reset-chat').disabled, 'accepted reset');
+  check('확정 리셋은 현재 유저의 IndexedDB와 화면 대화만 삭제', (await store.load('P1')).length === 0 && messages().length === 0 && JSON.stringify(await store.load('P2')) === otherB && JSON.stringify(await store.load('P3')) === otherC);
+  check('확정 리셋은 초안·출처·원문을 비우고 원래 인사를 복원', $('nx-home-input').value === '' && document.querySelectorAll('.nx-citation, .nx-chat-source, .nx-chat-document').length === 0 && greeting() === getMateProfile('P1').greeting);
+  check('대화 리셋은 살아 있는 픽셀 그래픽을 교체하지 않음', $('nx-home-stage').firstElementChild === sceneActor && document.querySelector('.nx-scene-bg').style.backgroundImage === background);
+  await select('P2'); await select('P1');
+  check('리셋한 유저로 돌아와도 이전 초안과 대화가 복원되지 않음', $('nx-home-input').value === '' && messages().length === 0);
+  await send('리셋 후 새 첫 질문');
+  check('리셋 후 다음 요청은 새 질문 1개', askRequests().at(-1).body.messages.length === 1);
+
+  for (const [question, expectedRequests, label] of [
+    ['SAVE-PAUSE 첫 질문 저장 반환 대기', 0, '첫 질문 저장'],
+    ['SAVEMANY-PAUSE 답변 저장 반환 대기', 1, '질문·답변 저장'],
+    ['ERR500 FAILED-SAVE-PAUSE 실패 기록 저장 반환 대기', 1, '실패 기록 저장'],
+  ]) {
+    const requestCount = askRequests().length;
+    $('nx-home-input').value = question; $('nx-home-form').requestSubmit();
+    await until(() => pausedWrites.has(question), `${label} committed barrier`);
+    check(`${label} 대기 조건은 실제 IndexedDB 커밋 이후`, (await store.load('P1')).some(row => row.role === 'user' && row.content === question));
+    await requestReset();
+    await until(() => messages().length === 0 && !$('nx-reset-chat').disabled, `${label} reset`);
+    pausedWrites.get(question).release();
+    await pause(60);
+    check(`${label} 반환이 리셋 이후 기록·화면을 되살리지 않음`, (await store.load('P1')).length === 0 && messages().length === 0 && $('nx-home-note').textContent === '');
+    check(`${label} 리셋 이후 추가 API 요청 없음`, askRequests().length === requestCount + expectedRequests);
+  }
+
+  for (const outcome of ['resolve', 'reject']) {
+    const pending = await beginResetRequest(`RESET-LATE 성공 리셋 뒤 ${outcome}`);
+    await requestReset();
+    await until(() => pending.aborted && messages().length === 0 && !$('nx-reset-chat').disabled, `reset pending ${outcome}`);
+    if (outcome === 'resolve') pending.resolve(lateAnswer()); else pending.reject(new Error('late fixture failure'));
+    await pause(60);
+    check(`리셋 이전 요청의 늦은 ${outcome}가 기록을 되살리지 않음`, messages().length === 0 && (await store.load('P1')).length === 0);
+    check(`진행 중 리셋 ${outcome} 이후에도 다른 유저 기록 유지`, JSON.stringify(await store.load('P2')) === otherB && JSON.stringify(await store.load('P3')) === otherC);
+    if (outcome === 'resolve') await send('두 번째 리셋의 새 첫 질문');
+  }
+  check('저장소 리셋은 선택된 persona에만 요청', clearCalls.every(id => id === 'P1'));
+  sessionStorage.setItem(runKey, JSON.stringify({ phase: 'restore', resetRestore: true, dbName, expectedA: 0, otherB, otherC, report }));
   await store.close();
   location.reload();
 }

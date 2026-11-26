@@ -1,2 +1,2 @@
-import { startNeoChat } from './neo-chat.js?v=20261126-team-api1';
+import { startNeoChat } from './neo-chat.js?v=20261126-reset1';
 await startNeoChat();

@@ -105,6 +105,19 @@ export function createConversationStore({ indexedDB = globalThis.indexedDB, dbNa
     },
     async save(record) { return (await saveMany([record]))[0]; },
     saveMany,
+    async clearPersona(personaId) {
+      requirePersona(personaId);
+      // One transaction: a failed deletion rolls back every row for this persona.
+      return transact("readwrite", (store, done) => {
+        let count = 0;
+        const request = store.index("persona_id").openCursor(personaId);
+        request.onsuccess = () => {
+          const cursor = request.result;
+          if (!cursor) { done(count); return; }
+          cursor.delete(); count += 1; cursor.continue();
+        };
+      });
+    },
     async recoverPending(personaId) {
       requirePersona(personaId);
       return transact("readwrite", (store, done) => {
