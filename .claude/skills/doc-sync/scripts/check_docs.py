@@ -17,6 +17,7 @@ import json
 import re
 import subprocess
 import sys
+import tomllib
 from fnmatch import fnmatch
 from pathlib import Path, PurePosixPath
 
@@ -266,11 +267,14 @@ def check_env_docs(cfg: dict) -> None:
                 errors.append(f"[env] {doc}: .env.example에 없는 변수 {t} 설명 (삭제·이름 변경 반영 안 됨)")
 
 
+def dependency_names(pyproject_text: str) -> list[str]:
+    """[project].dependencies의 패키지 이름(소문자). 정규식 대신 TOML로 읽어 `psycopg[binary,pool]` 같은 extras의 `]`에서 끊기지 않게 한다."""
+    deps = tomllib.loads(pyproject_text).get("project", {}).get("dependencies", [])
+    return [re.split(r"[\[<>=!~ ;]", d.strip())[0].lower() for d in deps]
+
+
 def check_deps_docs(cfg: dict) -> None:
-    py = read(cfg["deps_docs"]["source"])
-    block = re.search(r"dependencies\s*=\s*\[(.*?)\]", py, re.S)
-    names = [re.split(r"[\[<>=!~ ;]", d)[0].lower()
-             for d in re.findall(r'"([^"]+)"', block.group(1) if block else "")]
+    names = dependency_names(read(cfg["deps_docs"]["source"]))
     for doc in cfg["deps_docs"]["in"]:
         text = read(doc).lower()
         for n in names:
