@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <base href="../frontend/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#243d55">
+  <link rel="icon" href="data:,">
+  <title>관동도감 · 메이트와 도감 탐색</title>
+  <link rel="stylesheet" href="neo.css?v=2">
+  <link rel="stylesheet" href="neo-chat.css?v=1">
+  <script type="module" src="../tests/neo-browser-qa.js?v=20261126-final4"></script>
+</head>
+<body data-view="home" data-motion="on" data-mode="mock">
+  <a class="nx-skip" href="#main">본문으로 건너뛰기</a>
+
+  <header class="nx-top">
+    <a class="nx-brand" href="#home" aria-label="관동도감 처음 화면">
+      <span class="nx-brand-mark" aria-hidden="true">관동도감</span>
+      <span class="nx-brand-sub">KANTO POKÉDEX</span>
+    </a>
+    <div class="nx-who" id="nx-who" hidden>
+      <img class="nx-face" id="nx-who-face" src="assets/neo/mates/iseul-pixel.png" alt="" width="40" height="40">
+      <p class="nx-who-text"><span class="nx-who-user" id="nx-who-user"></span><span class="nx-who-mate">메이트 <b id="nx-who-mate"></b></span></p>
+      <button class="nx-link-button" id="nx-change-user" type="button">유저 바꾸기</button>
+    </div>
+    <div class="nx-top-tools">
+      <span class="nx-mode" id="nx-mode" title="답변이 어디에서 오는지">예시 데이터</span>
+      <span class="nx-version" title="도감 수치와 규칙의 기준">RED/BLUE · 151</span>
+      <button class="nx-icon-button" id="nx-motion" type="button" aria-pressed="false" aria-label="움직임 멈추기" title="움직임 멈추기">
+        <span aria-hidden="true">Ⅱ</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- HOME · 유저 선택 → 메이트 배정 → 인사 → 첫 질문 -->
+    <section class="nx-home" id="home" aria-labelledby="nx-home-title">
+      <div class="nx-home-visual">
+        <div class="nx-home-scene nx-scene" aria-hidden="true">
+          <div class="nx-scene-bg"></div>
+          <div class="nx-stage" id="nx-home-stage"></div>
+        </div>
+        <div class="nx-dialogue nx-window nx-home-dialogue" aria-live="polite">
+          <div class="nx-portrait"><img class="nx-face" id="nx-home-face" src="assets/neo/sprites/25.png" alt="" width="40" height="40"></div>
+          <div class="nx-dialogue-body">
+            <p class="nx-nameplate" id="nx-home-speaker">피카츄</p>
+            <p class="nx-dialogue-text" id="nx-home-line">난 피카츄야! 만나서 반가워!</p>
+          </div>
+          <span class="nx-more" aria-hidden="true">▼</span>
+        </div>
+        <section class="nx-chat-overlay" id="nx-chat-overlay" aria-label="메이트와 대화" hidden>
+          <div class="nx-chat-scroll" id="nx-chat-scroll" tabindex="0" aria-label="대화 기록">
+            <ol class="nx-chat-messages" id="nx-chat-messages" aria-label="시간순 메시지"></ol>
+          </div>
+          <button class="nx-chat-latest nx-btn" id="nx-chat-latest" type="button">최근 메시지 ↓</button>
+        </section>
+      </div>
+
+      <div class="nx-home-copy">
+        <div class="nx-home-intro">
+          <p class="nx-kicker">1세대 RED/BLUE 도감 · 싱글 배틀 준비</p>
+          <h1 class="nx-home-title" id="nx-home-title">메이트와 함께<br>도감을 펼쳐요</h1>
+        </div>
+
+        <section class="nx-chooser" id="nx-chooser" aria-labelledby="nx-chooser-title">
+          <h2 class="nx-section-title" id="nx-chooser-title">누구로 시작할까요?</h2>
+          <p class="nx-chooser-help">가상 유저를 고르면 그 유저에게 맞는 메이트가 함께해요.</p>
+          <ul class="nx-users" id="nx-users"></ul>
+          <p class="nx-ask-note" id="nx-load-note" role="status"></p>
+        </section>
+
+        <section class="nx-start" id="nx-start" aria-labelledby="nx-start-title" hidden>
+          <h2 class="nx-sr" id="nx-start-title">첫 질문</h2>
+          <div class="nx-picked nx-window">
+            <img class="nx-face" id="nx-picked-face" src="assets/neo/mates/iseul-pixel.png" alt="" width="40" height="40">
+            <div class="nx-picked-text">
+              <p class="nx-picked-user" id="nx-picked-user" tabindex="-1"></p>
+              <p class="nx-picked-mate" id="nx-picked-mate"></p>
+            </div>
+            <button class="nx-link-button" id="nx-rechoose" type="button">다시 고르기</button>
+          </div>
+          <form class="nx-ask" id="nx-home-form" autocomplete="off">
+            <label class="nx-ask-label" for="nx-home-input" id="nx-home-label">무엇이든 물어보세요</label>
+            <div class="nx-ask-row">
+              <textarea class="nx-ask-input" id="nx-home-input" name="q" rows="1" maxlength="500" enterkeyhint="send" placeholder="궁금한 걸 적어 줘." required></textarea>
+              <button class="nx-btn nx-btn-primary" type="submit">묻기</button>
+            </div>
+            <p class="nx-ask-note" id="nx-home-note" role="status" aria-live="polite"></p>
+          </form>
+          <div class="nx-home-suggest">
+            <p class="nx-pixel-label" id="nx-home-options-title">추천 질문</p>
+            <ol class="nx-options" id="nx-home-options" aria-labelledby="nx-home-options-title"></ol>
+          </div>
+          <p class="nx-note" id="nx-suggestions-note" role="status"></p>
+          <p class="nx-note" id="nx-storage-note" role="status"></p>
+          <p class="nx-note" id="nx-context-note">대화는 이 브라우저에 저장돼요. 답변에는 최근 대화 일부가 전달돼요.</p>
+        </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="nx-foot">
+    <span id="nx-foot-mode">미리보기 · 예시 데이터 · 실제 RAG 미연결</span>
+    <a href="assets/neo/SOURCES.md">에셋 출처</a>
+  </footer>
+
+  <p class="nx-sr" id="nx-announce" role="status" aria-live="polite" aria-atomic="true"></p>
+  <noscript><p class="nx-noscript">메이트와 대화를 시작하려면 브라우저의 자바스크립트를 켜 주세요.</p></noscript>
+</body>
+</html>

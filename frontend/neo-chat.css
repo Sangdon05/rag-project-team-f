@@ -1,0 +1,43 @@
+/* Chat is an independent transparent layer. neo.css and all scenery rules stay intact. */
+.nx-home[data-chat="on"] .nx-home-dialogue { visibility: hidden; }
+.nx-home-visual[data-locked] { height: var(--nx-visual-height); min-height: 0; }
+.nx-chat-overlay { position: absolute; inset: var(--px) var(--px) auto; height: var(--nx-chat-height); z-index: 2; pointer-events: none; background: transparent; }
+.nx-chat-scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 16px 12px 52px; pointer-events: auto; background: transparent; overflow-anchor: none; }
+.nx-chat-messages { display: flex; flex-direction: column; gap: 16px; padding: 0; margin: 0; list-style: none; min-width: 0; }
+.nx-chat-message { display: flex; align-items: flex-start; gap: 8px; width: 92%; }
+.nx-chat-message[data-role="user"] { align-self: flex-end; flex-direction: row-reverse; }
+.nx-chat-avatar { width: 40px; height: 40px; flex: none; border: 2px solid var(--line); background: var(--sky-4); image-rendering: pixelated; }
+.nx-chat-body { min-width: 0; display: grid; gap: 4px; }
+.nx-chat-name, .nx-chat-time { margin: 0; font: 400 var(--fs-12)/1.5 var(--font-pixel); }
+.nx-chat-name { width: fit-content; padding: 1px 5px; background: var(--surface); color: var(--text); }
+.nx-chat-message[data-role="user"] .nx-chat-body { justify-items: end; }
+.nx-chat-bubble { padding: 10px 12px; border: 2px solid var(--line); background: var(--surface); box-shadow: 0 2px 0 var(--line); min-width: 0; max-width: 100%; }
+.nx-chat-message[data-role="user"] .nx-chat-bubble { background: var(--selected); }
+.nx-chat-text { margin: 0; white-space: pre-wrap; line-height: 1.6; }
+.nx-chat-time { color: var(--text-2); }
+.nx-chat-status { font-size: var(--fs-12); margin: 6px 0 0; color: var(--text-2); }
+.nx-chat-error { color: var(--error); }
+.nx-chat-sources { display: grid; gap: 5px; margin: 4px 0 0; padding: 0; list-style: none; }
+.nx-chat-source { width: 100%; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 7px 9px; text-align: left; font: inherit; font-size: var(--fs-12); cursor: pointer; overflow-wrap: anywhere; }
+.nx-chat-source small { display: block; color: var(--text-2); }
+.nx-citation { padding: 0 3px; margin: 0 1px; border: 0; border-bottom: 1px solid currentColor; color: var(--text); background: var(--selected); font: inherit; cursor: pointer; }
+.nx-chat-document { margin-top: 8px; padding: 10px; border: 1px solid var(--line-soft); background: var(--surface); font-size: var(--fs-14); max-width: 100%; }
+.nx-chat-document h3 { margin: 0; font-size: var(--fs-14); }
+.nx-document-content { overflow-wrap: anywhere; }
+.nx-document-content > :first-child { margin-top: 8px; }
+.nx-document-content h1 { font-size: 22px; }
+.nx-document-content h2 { font-size: 20px; }
+.nx-document-content h3 { font-size: 18px; }
+.nx-document-content pre { overflow-x: auto; white-space: pre-wrap; }
+.nx-document-content table { display: block; overflow-x: auto; border-collapse: collapse; }
+.nx-document-content th, .nx-document-content td { padding: 4px; border: 1px solid var(--line-soft); }
+.nx-document-content a { color: var(--ink); }
+.nx-chat-latest { position: absolute; right: 12px; bottom: 8px; pointer-events: auto; font-size: var(--fs-12); min-height: 32px; padding: 0 10px; }
+.nx-chat-sources.is-revealing > li { animation: nx-source-in 180ms steps(3) both; animation-delay: calc(var(--source-index) * 90ms); }
+@keyframes nx-source-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 560px) {
+  .nx-chat-scroll { padding: 8px 6px 42px; }
+  .nx-chat-message { width: 96%; gap: 5px; }
+  .nx-chat-avatar { width: 28px; height: 28px; }
+  .nx-chat-bubble { padding: 7px 9px; font-size: var(--fs-14); }
+}
