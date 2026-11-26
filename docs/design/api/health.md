@@ -39,7 +39,7 @@
 | `api/shared/settings.py` | `Settings`(frozen dataclass) + `Settings.from_env()` | presentation, 조립 파일 (domain 금지) |
 | `api/error_handlers.py` | `register_exception_handlers(app)` (0.4) | 조립 파일 |
 | `api/container.py` | `wire_dependencies(app, settings)`: 슬라이스별 구현체 선택·생성, `provide_*` 연결 | — |
-| `api/main.py` | `create_app(settings=None)`: settings가 없을 때만 `load_dotenv` → `Settings.from_env()` (settings를 넘기면 `.env`를 읽지 않는다) → CORS → 예외 핸들러 → `wire_dependencies` → 라우터 등록. 모듈 수준 `app = create_app()` | — |
+| `api/main.py` | `create_app(settings=None)`: settings가 없을 때만 `load_dotenv` → `Settings.from_env()` (settings를 넘기면 `.env`를 읽지 않는다) → 예외 핸들러·500 미들웨어 → CORS(나중에 add한 미들웨어가 바깥이므로 500 미들웨어가 CORS 안쪽에 온다) → `wire_dependencies` → 라우터 등록. 모듈 수준 `app = create_app()` | — |
 
 기반 예외 (`api/shared/exceptions.py`):
 

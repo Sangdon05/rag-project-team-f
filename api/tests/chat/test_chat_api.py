@@ -132,7 +132,7 @@ class GeneratorWiringTest(unittest.TestCase):
         self.assertIsInstance(create_answer_generator(self.settings("mock")), MockAnswerGenerator)
 
     def test_llm_backend_builds_without_network(self):
-        env = {"OPENAI_CHAT_MODEL": "test-model", "OPENAI_API_KEY": "sk-test-not-real"}
+        env = {"OPENAI_CHAT_MODEL": "test-model", "OPENAI_API_KEY": "test-key-not-secret"}  # security: allow 테스트 더미 키, 네트워크 호출 없음
         with mock.patch.dict(os.environ, env):
             generator = create_answer_generator(self.settings("llm"))
         self.assertIsInstance(generator, LlmAnswerGenerator)

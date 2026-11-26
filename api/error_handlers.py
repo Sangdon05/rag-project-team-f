@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from api.shared.exceptions import ApiError
 from api.shared.responses import ErrorResponse
@@ -57,7 +58,43 @@ async def _handle_http_exception(request: Request, exc: StarletteHTTPException) 
 
 async def _handle_unexpected(request: Request, exc: Exception) -> JSONResponse:
     logger.exception("처리하지 못한 예외: %s", type(exc).__name__)
+    return _internal_error()
+
+
+def _internal_error() -> JSONResponse:
     return _error(500, "INTERNAL_ERROR", INTERNAL_ERROR_MESSAGE)
+
+
+class UnhandledExceptionMiddleware:
+    """CORS 안쪽에서 처리 못 한 예외를 500 INTERNAL_ERROR로 바꾼다 (health 설계안 0.4).
+
+    Starlette의 Exception 핸들러는 ServerErrorMiddleware(CORS 바깥)에서 돌아 응답에 CORS 헤더가 없다.
+    이 미들웨어를 CORS보다 먼저 add해서(나중에 add한 미들웨어가 바깥) CORS가 500 응답에도 헤더를 붙이게 한다.
+    응답을 이미 보내기 시작했으면 바꿀 수 없으므로 다시 던진다.
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        response_started = False
+
+        async def send_wrapper(message: Message) -> None:
+            nonlocal response_started
+            if message["type"] == "http.response.start":
+                response_started = True
+            await send(message)
+
+        try:
+            await self.app(scope, receive, send_wrapper)
+        except Exception as exc:
+            if response_started:
+                raise
+            logger.exception("처리하지 못한 예외: %s", type(exc).__name__)
+            await _internal_error()(scope, receive, send)
 
 
 def register_exception_handlers(app: FastAPI) -> None:

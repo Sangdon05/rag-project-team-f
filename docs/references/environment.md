@@ -56,6 +56,7 @@ docker compose ps            # STATUS가 healthy인지 확인
 | `ANSWER_BACKEND` | API(`api/`) 답변 생성기. `mock`(기본, LLM 호출 없음) \| `llm`(검색 없이 LLM). 그 밖의 값이면 앱 시작 실패 |
 | `API_CORS_ORIGINS` | API가 허용할 프론트 origin, 쉼표 구분. 비우면 CORS 미들웨어를 붙이지 않는다. `*` 금지 |
 | `API_MAX_MESSAGES` | API 요청당 메시지 수 상한. 기본 `20`, 1 이상 정수가 아니면 앱 시작 실패 |
+| `API_DOCUMENTS_DIR` | API documents 슬라이스가 읽는 원문 Markdown 폴더. 기본 `data/synthetic/pilot`, 파일은 `<폴더>/<source_ref_id>.md`, 상대 경로는 서버 작업 디렉터리 기준. 시작 시 검사하지 않고 폴더가 없으면 요청 시 502 `DOCUMENT_SOURCE_FAILED` |
 
 코드는 모델명과 접속 정보를 하드코딩하지 않고 환경 변수로 읽는다. 기존 진입점의 `load_dotenv()`와 달리 Solar 코드는 `.env`를 자동으로 읽지 않는다. Solar 환경 전달과 DB·비용 승인 경계는 [Solar 전달본](../../solar_handoff/README.md#환경과-안전-경계)을 따른다.
 
