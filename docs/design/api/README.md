@@ -6,10 +6,10 @@ FastAPI 서비스(`api/`)의 슬라이스별 설계안을 모은다. 설계안�
 
 | 슬라이스 | 설계안 | 상태 | 요약 |
 | --- | --- | --- | --- |
-| health | (작성 전) | — | `GET /health` |
-| suggestion | (작성 전) | — | `GET /api/v1/suggestion?level=`, 등급별 추천 질문(fake 데이터) |
-| chat | (작성 전) | — | `POST /api/v1/chat`, mock·llm 답변 생성기, `[n]` 출처 |
-| documents | (작성 전) | — | `GET /api/v1/documents/{source_ref_id}`, 원문 Markdown |
+| health | [health.md](health.md) | 검토 중 | `GET /health`. 0절에 전 슬라이스 공통 사항(응답 형식, 기반 예외, 예외→HTTP 매핑, 환경 변수) |
+| suggestion | [suggestion.md](suggestion.md) | 검토 중 | `GET /api/v1/suggestion?level=`, 등급별 추천 질문(fake 데이터, `SuggestionProvider` 포트) |
+| chat | [chat.md](chat.md) | 검토 중 | `POST /api/v1/chat`, mock·llm 답변 생성기, `[n]` 출처, 대화 검증 판정 순서 |
+| documents | [documents.md](documents.md) | 검토 중 | `GET /api/v1/documents/{source_ref_id}`, 원문 Markdown (`DocumentStore` 포트, `API_DOCUMENTS_DIR`) |
 
 상태: `초안` → `검토 중` → `확정`. 확정은 사용자(팀원)가 정한다. api-implementer는 `검토 중` 이상이면 구현하고, `초안`은 발주서에 명시된 경우에만 구현한다.
 
