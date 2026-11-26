@@ -96,6 +96,9 @@
   ],
 
   "coupling": [
+    {"when": ["docker-compose.yml", "docker/postgres/init.sql", "solar_handoff/db/schema.sql"],
+     "review": ["solar_handoff/README.md", ".claude/skills/vectordb/SKILL.md"],
+     "why": "Solar 기본 DB 최초 초기화와 기존 DB 복원 분기"},
     {"when": ["docs/problem.md"],
      "review": ["docs/persona-question-generator.md", ".claude/skills/question-design/SKILL.md"],
      "why": "페르소나·상황·질문이 바뀌면 생성 예시와 질문 입력 추출 규칙을 검토"},

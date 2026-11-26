@@ -34,6 +34,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 | Python 버전 | `.python-version` | pyproject, README, environment.md |
 | 패키지 | `pyproject.toml` | environment.md 패키지 표 |
 | DB 포트·이미지 | `docker-compose.yml` | README, environment.md |
+| Docker 초기화·Solar 스키마 | `docker-compose.yml`, `docker/postgres/init.sql`, `solar_handoff/db/schema.sql` | Solar 전달본, vectordb 스킬 |
 | 스킬 정의 | `.claude/skills/*/SKILL.md` | skills README 표 |
 | 에이전트 정의·사용 스킬 | `.claude/agents/*.md` frontmatter | agents README 표, AGENTS.md 에이전트 표, skills README '사용 에이전트' |
 | 청크 ID·섹션·메타데이터 | chunking 스킬 (→ `contracts/chunk_schema.json` 예정) | vectordb, tool-calling, langchain-rag 스킬, agents README |
@@ -92,6 +93,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 - 문서끼리 같은 값을 쓰게 되면: `mirrors`에 등록
 - 금지어를 의도적으로 담아야 하는 파일(예: security-check `rules.json`의 금지 경로 목록)은 해당 규칙의 `skip`에 등록한다
 - 규칙을 추가·삭제하면 이 SKILL.md의 원본 문서 표도 갱신한다
+- Docker 초기화 파일이나 Solar 스키마가 바뀌면 Solar 전달본과 vectordb 스킬의 최초 초기화·복원 안내를 함께 검토한다.
 
 ## 검사의 한계
 
