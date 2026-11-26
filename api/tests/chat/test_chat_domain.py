@@ -62,6 +62,23 @@ class ConversationCreateTest(unittest.TestCase):
                 Conversation.create(raw, LIMITS)
             self.assertEqual(ctx.exception.message, ORDER_MESSAGE)
 
+    def test_non_string_role_is_invalid_conversation(self):
+        # 스키마를 거치지 않은 호출(설계안 4.2): 해시 불가·비문자열 role도 TypeError가 아니라 400
+        cases = {
+            "list_role": [(["user"], "q")],
+            "dict_role": [({"role": "user"}, "q")],
+            "set_role": [({"user"}, "q")],
+            "int_role": [(1, "q")],
+            "none_role": [(None, "q")],
+            "bytes_role": [(b"user", "q")],
+            "unhashable_later": [("user", "q"), (["assistant"], "a"), ("user", "q")],
+        }
+        for name, raw in cases.items():
+            with self.subTest(name), self.assertRaises(InvalidConversationError) as ctx:
+                Conversation.create(raw, LIMITS)
+            self.assertEqual(ctx.exception.message, ORDER_MESSAGE)
+            self.assertEqual(ctx.exception.error_code, "VALIDATION_ERROR")
+
     def test_t4_blank_content(self):
         for raw in ([("user", "   ")], [("user", "q"), ("assistant", " "), ("user", "q")]):
             with self.subTest(raw=raw), self.assertRaises(InvalidConversationError) as ctx:

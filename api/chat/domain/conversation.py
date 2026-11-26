@@ -17,9 +17,6 @@ class Role(StrEnum):
     ASSISTANT = "assistant"
 
 
-_ROLE_VALUES = frozenset(role.value for role in Role)
-
-
 @dataclass(frozen=True)
 class ConversationLimits:
     max_messages: int
@@ -51,7 +48,8 @@ class Conversation:
             raise InvalidConversationError(COUNT_MESSAGE.format(max=limits.max_messages))
         for index, (role, _content) in enumerate(items):
             expected = Role.USER if index % 2 == 0 else Role.ASSISTANT
-            if role not in _ROLE_VALUES or role != expected:
+            # 문자열 확인을 먼저 한다. 해시 불가 값(['user'] 등)도 TypeError 없이 400이 되게 한다.
+            if not isinstance(role, str) or role != expected:
                 raise InvalidConversationError(ORDER_MESSAGE)
         if items[-1][0] != Role.USER:
             raise InvalidConversationError(ORDER_MESSAGE)
