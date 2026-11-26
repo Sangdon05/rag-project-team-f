@@ -46,7 +46,7 @@ HTTP 쪽 계약(프론트와의 계약)은 `POST /api/v1/chat` 요청 `{"message
 
 ## 3. 연결 전에 RAG 쪽이 준비할 것
 
-rag-developer 담당이다. 아래가 갖춰지기 전에는 API에서 연결 작업을 시작하지 않는다.
+API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬에 API 작업을 넣지 않는다. 오케스트레이터가 RAG 산출물로 충족 여부를 확인하고, 갖춰지기 전에는 API에서 연결 작업을 시작하지 않는다.
 
 1. **import 가능한 진입점.** API 어댑터가 부를 함수 또는 객체 하나. 예: `answer(question: str, history: list[dict]) -> {"answer": str, "sources": [...]}` (비동기면 더 좋다).
    - 지금 체인 코드는 패키지가 아니다. 진입점의 위치(예: `src/pokedex/`)와 import 방법(루트 `pyproject.toml`의 패키지 설정 등)은 [미정]이다. 정해지면 이 절에 적는다.
@@ -72,7 +72,7 @@ rag-developer 담당이다. 아래가 갖춰지기 전에는 API에서 연결 �
 | 바꾸는 것 | 담당 | API 쪽 후속 |
 | --- | --- | --- |
 | 프롬프트, 검색 설정, 툴, 체인 내부 | rag-developer | 없음 |
-| 체인 진입점 시그니처, 반환 형식, 출처 필드 | rag-developer | 이 문서 갱신 → api-implementer에게 어댑터 수정 발주 |
+| 체인 진입점 시그니처, 반환 형식, 출처 필드 | rag-developer | 오케스트레이터가 이 문서 갱신 → api-implementer에게 어댑터 수정 발주 |
 | 청크 메타데이터 이름 | data-engineer | `Source` 필드 확인 |
 | `api/` 코드 | api-implementer | — |
 | `LlmAnswerGenerator`의 임시 시스템 프롬프트 | api-implementer | RAG 연결 후 `llm` 모드를 남길지 오케스트레이터가 판정 |

@@ -1,0 +1,31 @@
+{
+  "_doc": "api/ 서비스가 공통 layer-check에 주입하는 규칙. 규칙 원본은 api-invariants SKILL.md (R번호). 형식: layer-check SKILL.md '프로파일'.",
+  "root": "api",
+  "package": "api",
+  "shared_dirs": ["shared"],
+  "skip_dirs": ["tests"],
+  "assembly_files": ["main.py", "container.py"],
+  "forbidden_packages": {
+    "domain": ["fastapi", "starlette", "pydantic", "uvicorn", "httpx", "dotenv",
+               "langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"],
+    "application": ["fastapi", "starlette", "uvicorn",
+                    "langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"],
+    "infrastructure": ["fastapi", "starlette"],
+    "presentation": ["langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"],
+    "shared": ["langchain", "langgraph", "openai", "tiktoken", "ragas", "psycopg", "sqlalchemy", "pokedex", "scripts"]
+  },
+  "domain_shared_allowed": ["exceptions"],
+  "http_exception_forbidden": ["domain", "application", "presentation"],
+  "cors_wildcard_forbidden": true,
+  "broad_exception_warn": ["ValueError", "LookupError", "PermissionError", "KeyError", "BaseException"],
+  "fsd": {"cross_slice": "off"},
+  "rule_ids": {
+    "구조": "R1",
+    "의존방향": "R2",
+    "외부의존": "R1/R8",
+    "공용": "R1",
+    "HTTP예외": "R6",
+    "CORS": "R13",
+    "슬라이스": "R5"
+  }
+}

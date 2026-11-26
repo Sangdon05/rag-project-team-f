@@ -5,6 +5,8 @@ tools: Read, Grep, Glob, Bash
 model: sonnet
 effort: high
 skills:
+  - layered-architecture
+  - fsd-architecture
   - api-invariants
   - api-architecture
   - api-implementation
@@ -42,7 +44,7 @@ skills:
 ## 절차
 
 1. 실행 검사 ([api-invariants §7](../skills/api-invariants/SKILL.md)의 게이트 명령 네 개). 앞 검사가 실패해도 나머지를 모두 실행하고 명령과 마지막 출력 줄을 기록한다.
-2. 서버 smoke ([fastapi-run](../skills/fastapi-run/SKILL.md)). `ANSWER_BACKEND=mock`으로 띄우고, `LOG`·`PIDFILE`은 `$TMPDIR` 아래에 두고, `PORT`는 비어 있는 포트를 쓴다. 테스트가 실패해도 서버가 뜨면 smoke를 실행한다. 끝나면 성공·실패와 관계없이 `stop`하고 `status`로 꺼진 것을 확인한다.
+2. 서버 smoke ([api-invariants §10](../skills/api-invariants/SKILL.md)의 값으로 공통 [fastapi-run](../skills/fastapi-run/SKILL.md) 스크립트를 실행). `ANSWER_BACKEND=mock`으로 띄우고, `LOG`·`PIDFILE`은 `$TMPDIR` 아래에 두고, `PORT`는 비어 있는 포트를 쓴다. 테스트가 실패해도 서버가 뜨면 smoke를 실행한다. 끝나면 성공·실패와 관계없이 `stop`하고 `status`로 꺼진 것을 확인한다.
 3. diff 정독. 바뀐 함수가 부르는 코드와 그 함수를 부르는 코드까지 읽는다. 아래 관점마다 확인하고, 해당이 없으면 "해당 없음"으로 적는다.
    - 계층·추상화: 빈 엔티티, 서비스의 비즈니스 if-else, 구현체 직접 생성, `provide_*` 매핑 누락 (R3~R5)
    - 에러: 예외 → 상태 코드·`error_code`가 설계안과 같은가, 응답에 내부 원문·키가 새지 않는가, SDK 예외가 502로 바뀌는가 (R7)

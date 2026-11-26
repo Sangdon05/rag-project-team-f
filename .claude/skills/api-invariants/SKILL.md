@@ -8,7 +8,9 @@ description: Use when designing, implementing, or reviewing api/ code. Canonical
 FastAPI 서비스(`api/`)가 어떤 작업에서도 지켜야 하는 규칙과 완료 게이트의 원본이다.
 다른 스킬·에이전트는 규칙 문장을 다시 쓰지 않고 `R번호`로 가리킨다. 규칙을 바꿀 때는 이 문서만 고친다.
 
-- 이유와 구조: [api-architecture](../api-architecture/SKILL.md) / 코드 패턴: [api-implementation](../api-implementation/SKILL.md) / 자동 검사: [layer-check](../layer-check/SKILL.md) / 실행 확인: [fastapi-run](../fastapi-run/SKILL.md)
+- 공통 원칙(서비스와 무관): [layered-architecture](../layered-architecture/SKILL.md), [fsd-architecture](../fsd-architecture/SKILL.md), 자동 검사 [layer-check](../layer-check/SKILL.md), 서버 실행 [fastapi-run](../fastapi-run/SKILL.md)
+- 이 서비스가 공통 스킬에 주입하는 것: layer-check 프로파일 [layer-profile.json](layer-profile.json), smoke 스크립트 [scripts/smoke.sh](scripts/smoke.sh), 10절의 실행 정보
+- `api/` 적용 구조: [api-architecture](../api-architecture/SKILL.md) / 코드 패턴: [api-implementation](../api-implementation/SKILL.md)
 - RAG 연결 계약: [API–RAG 연결 가이드](../../../docs/references/api-rag-integration.md)
 - 저장소 전체 가드레일은 루트 [AGENTS.md](../../../AGENTS.md)가 우선한다. 이 문서는 `api/`에 한정한 규칙이다.
 
@@ -25,7 +27,7 @@ FastAPI 서비스(`api/`)가 어떤 작업에서도 지켜야 하는 규칙과 �
 | ID | 규칙 | 검사 |
 | --- | --- | --- |
 | R1 | domain은 순수 파이썬이다. fastapi, starlette, pydantic, uvicorn, httpx, dotenv, RAG 경계 패키지(R8)와 다른 계층을 import하지 않는다. shared 중에서는 `shared.exceptions`만 쓴다. 엔티티는 `dataclass`로 쓴다. | 자동(`[외부의존]`, `[의존방향]`, `[공용]`) |
-| R2 | 의존 방향은 presentation → application → domain, infrastructure → domain이다. presentation과 application은 infrastructure를 import하지 않는다. | 자동(`[의존방향]`) |
+| R2 | 의존 방향은 공통 4계층 방향([layered-architecture §2](../layered-architecture/SKILL.md))을 따른다. | 자동(`[의존방향]`) |
 | R3 | 도메인 규칙(입력 검증, 메시지 수·길이 한도, 역할 순서)은 엔티티 메서드나 생성 팩토리에 둔다. 서비스에 비즈니스 if-else를 두지 않는다. 메서드 없는 빈 엔티티를 만들지 않는다. | 정독 |
 
 ## 2. 추상화와 조립
@@ -71,7 +73,7 @@ FastAPI 서비스(`api/`)가 어떤 작업에서도 지켜야 하는 규칙과 �
 `api/` 코드를 바꾼 작업은 아래를 모두 통과해야 완료다. 명령의 원본은 이 절이며 에이전트 정의는 이 절을 가리킨다.
 
 ```bash
-uv run python .claude/skills/layer-check/scripts/check_layers.py        # 위반 0건 (R1, R2, R6, R8, R13)
+uv run python .claude/skills/layer-check/scripts/check_layers.py --profile .claude/skills/api-invariants/layer-profile.json   # 위반 0건 (R1, R2, R6, R8, R13)
 uv run python -c "import api.main"                                     # 성공 (R5)
 uv run python -m unittest discover -s api/tests -t . -v                # 실패 0, skip 0 (R15)
 uv run python -m unittest discover -s tests                            # 실패 0, skip 수는 base와 같음
@@ -81,7 +83,7 @@ uv run python -m unittest discover -s tests                            # 실패 
 - 앞 명령이 실패해도 나머지를 모두 실행하고 각각 기록한다.
 
 - 정독 규칙(R3~R5, R7, R9~R12, R14, R16)은 수정한 에이전트가 아니라 api-reviewer가 판정한다.
-- 실제 동작(R7, R11, R13)은 api-reviewer가 [fastapi-run](../fastapi-run/SKILL.md)의 smoke로 확인한다.
+- 실제 동작(R7, R11, R13)은 api-reviewer가 10절 절차로 확인한다.
 - 그 다음 저장소 공통 게이트(doc-sync, security-check)를 거친다. 절차는 [AGENTS.md](../../../AGENTS.md)를 따른다.
 - `api/`가 없으면 layer-check는 종료 코드 2, `api/`는 있지만 슬라이스가 없으면 "검사한 슬라이스: (없음)"과 종료 코드 0이다. 둘 다 통과가 아니라 **미구현**(`not_run`)으로 보고한다.
 
@@ -94,3 +96,27 @@ uv run python -m unittest discover -s tests                            # 실패 
 | 심각도 | 파일:줄 | 규칙 | 내용 | 고치는 방법 |
 | --- | --- | --- | --- | --- |
 | 위반 / 주의 / 미구현 | `api/chat/presentation/router.py:42` | R6 | router에서 `HTTPException(400)` 생성 | 도메인 예외를 내고 전역 핸들러에 맡긴다 |
+
+## 10. 실행 확인
+
+공통 [fastapi-run](../fastapi-run/SKILL.md) 스크립트에 아래 값을 주입한다.
+
+```bash
+export APP=api.main:app HEALTH_PATH=/health PORT=8000 LOG="$TMPDIR/api.log" PIDFILE="$TMPDIR/api.pid"
+export ANSWER_BACKEND=mock API_CORS_ORIGINS=http://localhost:5173    # 검증 설정: LLM 비용 없음
+bash .claude/skills/fastapi-run/scripts/run_server.sh start
+BASE=http://127.0.0.1:$PORT CORS_ORIGIN=http://localhost:5173 bash .claude/skills/api-invariants/scripts/smoke.sh
+bash .claude/skills/fastapi-run/scripts/run_server.sh stop
+```
+
+| smoke 항목 | 기대 |
+| --- | --- |
+| `GET /health` | 200 |
+| `GET /openapi.json` | 200. `/api/v1/chat`이 없으면 chat 항목은 INFO(미구현) |
+| `POST /api/v1/chat` 정상 질문 | 200, `answer`(문자열), `sources`(목록), `mode`(mock\|llm\|rag) |
+| 빈 `messages`, 메시지 `MAX_MESSAGES + 1`개, JSON이 아닌 본문 | 400 + 공통 에러 형식 (`MAX_MESSAGES`는 서버의 `API_MAX_MESSAGES`, 기본 20) |
+| 없는 경로 | 404 + 공통 에러 형식 |
+| CORS (`CORS_ORIGIN` 지정 시) | 허용 origin은 그 값이 돌아오고 다른 origin은 허용 헤더 없음 |
+
+- `ANSWER_BACKEND=llm` 실제 호출은 발주서에 명시된 경우에만 최대 2회 한다.
+- smoke가 다루지 않는 엔드포인트는 설계안 명세대로 `curl`로 확인한다.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# FastAPI 서비스(api/) smoke 검사 (fastapi-run 스킬)
-#   BASE=http://127.0.0.1:8000 bash .claude/skills/fastapi-run/scripts/smoke.sh
+# api/ 서비스 smoke 검사 (api-invariants 스킬). 서버 기동·종료는 공통 fastapi-run 스킬로 한다.
+#   BASE=http://127.0.0.1:8000 bash .claude/skills/api-invariants/scripts/smoke.sh
 # 환경 변수:
 #   BASE          서버 주소 (기본 http://127.0.0.1:8000)
 #   MAX_MESSAGES  서버의 API_MAX_MESSAGES 값 (기본 20). 초과 요청이 400인지 본다

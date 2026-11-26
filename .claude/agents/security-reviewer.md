@@ -46,7 +46,7 @@ summary: "ERROR n, WARN m"
 errors:
   - finding: "<스크립트 출력 한 줄 그대로>"
     action: 수정 필요
-    owner_hint: data-engineer | rag-developer | api-implementer | 오케스트레이터
+    owner_hint: data-engineer | rag-developer | 오케스트레이터
 warns:
   - finding: "<스크립트 출력 한 줄 그대로>"
     action: 수정 필요 | 사유 기록 | 판단 불가

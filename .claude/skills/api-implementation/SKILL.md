@@ -5,7 +5,7 @@ description: Use when writing or fixing api/ code. Per-layer code patterns for s
 
 # api-implementation
 
-`api/` 슬라이스 코드를 계층별로 쓰는 패턴이다. 규칙 원본은 [api-invariants](../api-invariants/SKILL.md), 배치 이유는 [api-architecture](../api-architecture/SKILL.md)다.
+`api/` 슬라이스 코드를 계층별로 쓰는 패턴이다. 규칙 원본은 [api-invariants](../api-invariants/SKILL.md), 배치는 [api-architecture](../api-architecture/SKILL.md), 공통 원칙은 [layered-architecture](../layered-architecture/SKILL.md)다.
 테스트 작성법은 [references/testing.md](references/testing.md)를 본다.
 
 아래 코드는 chat 슬라이스 기준 예시다. 임시 작업 트리에서 그대로 만들어 layer-check 위반 0건, unittest 12개 통과, smoke 전부 PASS를 확인한 구성이다.
@@ -170,7 +170,7 @@ class AskService:
 
 - `schemas.py`: `ChatRequest(messages: list[MessageIn])`, `MessageIn.role`은 `Literal["user", "assistant"]`. `ChatResponse(answer, sources, mode)`와 `from_domain(answer)`. 필드마다 `Field(..., description=...)`를 쓴다.
 - 스키마는 형식만 본다(타입, 필수 여부, role 값). 메시지 수·길이 같은 규칙은 도메인이 본다. 둘 다 400이지만 `error_code`가 다르다(`VALIDATION_ERROR` / 슬라이스 코드).
-- `dependencies.py`: `provide_ask_service()` 플레이스홀더([api-architecture §6.1](../api-architecture/SKILL.md)).
+- `dependencies.py`: `provide_ask_service()` 플레이스홀더([layered-architecture §4.3](../layered-architecture/SKILL.md)).
 - `router.py`:
 
 ```python
@@ -227,5 +227,5 @@ app = create_app()
 ## 완료와 보고
 
 - [api-invariants §7](../api-invariants/SKILL.md)의 게이트 명령을 모두 실행하고 출력을 보고서에 붙인다.
-- 서버를 띄워 확인하고 싶으면 [fastapi-run](../fastapi-run/SKILL.md)을 따르고, 끝나면 반드시 끈다.
+- 서버를 띄워 확인하고 싶으면 [api-invariants §10](../api-invariants/SKILL.md)을 따르고, 끝나면 반드시 끈다.
 - 설계안과 다르게 구현한 점, 모듈 밖에서 바꾼 파일(`pyproject.toml`, `uv.lock`, `.env.example`, 문서)은 보고서에 따로 적는다.

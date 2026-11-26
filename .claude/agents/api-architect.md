@@ -5,6 +5,8 @@ tools: Read, Grep, Glob, Bash, Write, Edit
 model: opus
 effort: high
 skills:
+  - layered-architecture
+  - fsd-architecture
   - api-invariants
   - api-architecture
 ---
@@ -28,7 +30,7 @@ skills:
 
 ## 절차
 
-1. `api-architecture`, `api-invariants` 스킬과 연결 가이드를 읽는다. 같은 슬라이스의 설계안이 있으면 먼저 읽고, 확정된 결정은 유지하며 `Edit`로 바뀌는 부분만 고친다.
+1. 공통 원칙(`layered-architecture`, `fsd-architecture`)과 `api-architecture`, `api-invariants` 스킬, 연결 가이드를 읽는다. 같은 슬라이스의 설계안이 있으면 먼저 읽고, 확정된 결정은 유지하며 `Edit`로 바뀌는 부분만 고친다.
 2. 차단 이슈를 실행해서 확인한다. 추측으로 쓰지 않는다.
    - `uv run python -c "import fastapi"` 등 설계에 쓰는 패키지
    - `uv run python -c "import api.main"` (코드가 있을 때)

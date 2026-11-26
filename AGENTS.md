@@ -35,13 +35,15 @@
 | [security-reviewer](.claude/agents/security-reviewer.md) | PR 전 보안 점검 실행·분류 보고 (읽기 전용)          | security-check                     |
 | [eval](.claude/agents/eval.md)                   | 평가 실행·기록·실패 분석·비교 보고서, 평가셋 의견서          | rag-eval                           |
 | [question-designer](.claude/agents/question-designer.md) | 질문 전용 패킷으로 페르소나별 질문 후보·조건 확인사항 제안 | question-design |
-| [api-architect](.claude/agents/api-architect.md) | FastAPI 슬라이스 설계안 작성 (`docs/design/api/`만 수정) | api-invariants, api-architecture |
-| [api-implementer](.claude/agents/api-implementer.md) | 설계안대로 `api/` 슬라이스 4계층 구현, 완료 게이트 실행 | api-invariants, api-architecture, api-implementation, layer-check |
-| [api-reviewer](.claude/agents/api-reviewer.md) | `api/` 변경 독립 리뷰·실행 검증 (읽기 전용) | api-invariants, api-architecture, api-implementation, layer-check, fastapi-run |
+| [api-architect](.claude/agents/api-architect.md) | FastAPI 슬라이스 설계안 작성 (`docs/design/api/`만 수정) | layered-architecture, fsd-architecture, api-invariants, api-architecture |
+| [api-implementer](.claude/agents/api-implementer.md) | 설계안대로 `api/` 슬라이스 4계층 구현, 완료 게이트 실행 | layered-architecture, api-invariants, api-architecture, api-implementation, layer-check |
+| [api-reviewer](.claude/agents/api-reviewer.md) | `api/` 변경 독립 리뷰·실행 검증 (읽기 전용) | layered-architecture, fsd-architecture, api-invariants, api-architecture, api-implementation, layer-check, fastapi-run |
 
 question-designer는 공식 평가셋 작성 전의 후보 제안 역할이다. v2 입력은 `problem.md`의 세 인물 발화 프로필을 포함하며, '쎄?' 같은 원표현과 기존 질문의 정보 요구를 함께 보존한다. 정답·허용 근거를 생성하거나 `eval/`을 읽고 수정하지 않는다. 후보 채택·정답 검수·평가셋 작성·잠금은 [평가셋 소유 규칙](eval/README.md)에 따라 팀원이 맡는다. 사용·검증·전달 절차는 [질문 설계 안내](docs/references/question-design.md)를 따른다.
 
-API 에이전트 세 개는 저장소 루트 `api/` 패키지(루트 `pyproject.toml` 공유)만 다룬다. DB·로그인·서버 쪽 대화 저장 없이 RAG를 중개하며, RAG 완성 전에는 mock 또는 검색 없는 LLM으로 답한다. RAG 연결은 [연결 가이드](docs/references/api-rag-integration.md)를 따른다. 모노레포 전체 폴더 규칙은 다른 파트가 합쳐진 뒤 정한다.
+API 에이전트 세 개는 저장소 루트 `api/` 패키지(루트 `pyproject.toml` 공유)만 다룬다. DB·로그인·서버 쪽 대화 저장 없이 RAG를 중개하며, RAG 완성 전에는 mock 또는 검색 없는 LLM으로 답한다. RAG 연결은 [연결 가이드](docs/references/api-rag-integration.md)를 따른다.
+
+스킬은 공통과 서비스 전용으로 나눈다. 4계층(layered-architecture), FSD(fsd-architecture), 계층 검사(layer-check), 서버 실행(fastapi-run)은 특정 서비스·도메인 규칙을 담지 않는 공통 스킬이고, 서비스 규칙(금지 패키지, 에러 형식, 실행 정보, smoke)은 서비스 규칙 스킬(`api/`는 api-invariants)이 프로파일·환경 변수로 주입한다. FSD 슬라이스 간 규칙의 강도는 다른 파트가 합쳐진 뒤 정한다.
 
 2차 예정: eval, qa, reviewer(RAG 쪽). 정의되기 전까지 해당 역할은 오케스트레이터가 직접 수행하되, 수정한 에이전트에게 평가를 맡기지 않는다.
 

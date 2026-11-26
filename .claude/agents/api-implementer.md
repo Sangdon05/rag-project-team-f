@@ -5,6 +5,7 @@ tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 effort: medium
 skills:
+  - layered-architecture
   - api-invariants
   - api-architecture
   - api-implementation
