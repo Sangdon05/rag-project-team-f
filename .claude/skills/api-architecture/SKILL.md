@@ -41,7 +41,7 @@ api/
   chat/
     domain/            conversation.py, answer.py, generator.py(포트), exceptions.py
     application/       service.py (AskService)
-    infrastructure/    mock_generator.py, llm_generator.py (나중에 rag_generator.py)
+    infrastructure/    mock_generator.py, llm_generator.py, rag_generator.py
     presentation/      schemas.py, dependencies.py(provide_*), router.py
   tests/
     health/ suggestion/ chat/ documents/ ...
@@ -56,7 +56,7 @@ api/
 | `Conversation` | 한 요청의 대화. `create(raw, limits)`가 빈 대화·빈 메시지·순서·role·수를 검증 (R3, R11) |
 | `Message` | `role`(user \| assistant), `content` |
 | `ConversationLimits` | 메시지 수 한도 값 객체 (환경 변수 값은 container가 넘김) |
-| `Answer` | `text`, `mode`(mock \| llm \| rag), `sources` |
+| `Answer` | `text`, `mode`(mock \| llm \| rag), `sources`, `embedding`(선택, `rag`에서 서비스가 준 경우만) |
 | `Source` | `ref`, `chunk_id`, `source_ref_id` (RAG 값 그대로. `source_ref_id`는 도감번호 3자리, 체인이 주지 않으면 `rag` 어댑터가 `document_id`에서 만든다) |
 | `DocumentStore` | documents 슬라이스 포트. `get(source_ref_id) -> str` ([연결 가이드](../../../docs/references/api-rag-integration.md)) |
 
@@ -69,12 +69,12 @@ class AnswerGenerator(ABC):
 ```
 
 - 계약 원본과 RAG 연결 절차: [API–RAG 연결 가이드](../../../docs/references/api-rag-integration.md) (R9).
-- 구현체: `MockAnswerGenerator`, `LlmAnswerGenerator`, 나중에 `RagAnswerGenerator`. SDK 예외는 `AnswerGenerationError`(502)로 바꾼다 (R7).
+- 구현체: `MockAnswerGenerator`, `LlmAnswerGenerator`, `RagAnswerGenerator`(Solar 대화 서비스 어댑터). SDK 예외는 `AnswerGenerationError`(502)로 바꾼다 (R7).
 - `Answer.mode`는 구현체가 정한다. 프론트가 근거 있는 답인지 구분하는 값이다.
 
 ## 6. 조립
 
-- `container.py`: `ANSWER_BACKEND`(`mock` | `llm`, 나중에 `rag`)로 생성기를 하나 고른다. 알 수 없는 값이면 시작 시점에 실패. `llm`일 때만 `langchain_openai`를 import한다. 서비스·생성기는 앱당 하나.
+- `container.py`: `ANSWER_BACKEND`(`mock` | `llm` | `rag`)로 생성기를 하나 고른다. 알 수 없는 값이면 시작 시점에 실패. `llm`일 때만 `langchain_openai`를, `rag`일 때만 `solar_handoff`를 import한다. 서비스·생성기는 앱당 하나.
 - 주입 지점: `provide_ask_service` → `wire_dependencies(app, settings)`가 연결.
 - `main.py`: `create_app(settings=None)`. 테스트는 설정을 직접 넘긴다.
 
