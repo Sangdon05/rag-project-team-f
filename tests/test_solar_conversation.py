@@ -37,8 +37,17 @@ class FakeProvider:
     def __init__(self):
         self.calls = []
         self.payload = None
+        self.tool_payload = {}
+        self.selection = (conversation.SEARCH, {})
         self.result = {'status': 'answer', 'answer': '자료에 확인된 내용이에요[[pokemon:1#profile]].'}
-        self.failure = None
+        self.failure: str | None = None
+
+    def choose_tool(self, instructions, data, tools):
+        self.calls.append(('choose_tool',))
+        self.tool_payload = copy.deepcopy(data)
+        if self.failure == 'choose_tool':
+            raise RuntimeError('private provider details')
+        return self.selection
 
     def preflight(self, method, answer_provider, rewrite):
         self.calls.append(('preflight', method, answer_provider, rewrite))
@@ -232,11 +241,12 @@ class ConversationTests(unittest.TestCase):
         self.assertIn('Never infer missing rows, global counts', self.provider.instructions)
         self.assertNotIn('single Pokemon\'s Red/Blue learnset section', providers.ANSWER)
 
-    def test_forged_corpus_source_document_is_rejected_before_paid_calls(self):
+    def test_forged_corpus_source_document_is_rejected_after_selection_before_any_search_call(self):
         self.database.records[1]['source_document'] = 'documents/unregistered.md'
         with self.assertRaises(conversation.AnswerGenerationError):
             self.service().answer(self.question())
-        self.assertEqual(self.provider.calls, [])
+        self.assertEqual(self.provider.calls, [('choose_tool',)])
+        self.assertEqual(set(self.provider.tool_payload), {'messages', 'question'})
 
     def test_complete_history_is_data_and_citations_are_first_appearance_order(self):
         history = [{'role': 'user', 'content': '피카츄 타입은?'},
@@ -256,12 +266,13 @@ class ConversationTests(unittest.TestCase):
         self.assertTrue(query.startswith(history[-1]['content']))
         self.assertIn(history[0]['content'], query)
         self.assertNotIn(history[1]['content'], query)
-        self.assertEqual([call[0] for call in self.provider.calls], ['preflight', 'embed', 'openai'])
+        self.assertEqual(self.provider.tool_payload, {'messages': original, 'question': history[-1]['content']})
+        self.assertEqual([call[0] for call in self.provider.calls], ['choose_tool', 'preflight', 'embed', 'openai'])
 
     def test_default_method_is_b_and_a_c_are_explicit(self):
         del self.env['SOLAR_RETRIEVAL_METHOD']
         self.service().answer(self.question())
-        self.assertEqual(self.provider.calls[0], ('preflight', 'B', 'gpt', False))
+        self.assertEqual(self.provider.calls[1], ('preflight', 'B', 'gpt', False))
         for method in ('A', 'C'):
             with self.subTest(method=method):
                 self.env['SOLAR_RETRIEVAL_METHOD'] = method
@@ -303,18 +314,19 @@ class ConversationTests(unittest.TestCase):
                     self.service().answer(messages)
         self.assertEqual(self.factory_calls, [])
 
-    def test_model_binding_or_corpus_mismatch_never_makes_paid_calls(self):
+    def test_model_binding_or_corpus_mismatch_never_reaches_rewrite_search_or_answer(self):
         for field, value in [('dimension', 1536), ('document_model', 'wrong'), ('query_model', 'wrong')]:
             with self.subTest(field=field):
                 self.database.index_info[0]['config'][field] = value
                 with self.assertRaises(conversation.AnswerGenerationError):
                     self.service().answer(self.question())
-                self.assertEqual(self.provider.calls, [])
+                self.assertEqual(self.provider.calls, [('choose_tool',)])
+                self.provider.calls.clear()
                 self.database = FakeDatabase(self.records)
         self.database.records[0]['document_id'] = 'pokemon:151'
         with self.assertRaises(conversation.AnswerGenerationError):
             self.service().answer(self.question())
-        self.assertEqual(self.provider.calls, [])
+        self.assertEqual(self.provider.calls, [('choose_tool',)])
 
     def test_unknown_malformed_missing_and_unmapped_number_citations_fail(self):
         for answer in ['알아요[[pokemon:151#profile]].', '알아요[[pokemon:1#profile].',
@@ -342,10 +354,20 @@ class ConversationTests(unittest.TestCase):
         self.assertEqual(set(event), {'event', 'input_message_count', 'method', 'rewrite',
                                      'retrieval_seed_chunk_ids', 'selected_chunk_ids', 'expanded_chunk_ids',
                                      'context_expansion', 'answer_status', 'cited_chunk_ids',
-                                     'embedding_calls', 'answer_calls'})
+                                     'selected_tool', 'move_source_id', 'tool_selection_calls', 'tool_calls',
+                                     'corpus_reads', 'rewrite_calls', 'embedding_calls', 'vector_search_calls',
+                                     'bm25_calls', 'rerank_calls', 'answer_calls'})
         self.assertEqual(event['input_message_count'], 3)
         self.assertEqual(event['method'], 'B')
         self.assertIs(event['rewrite'], False)
+        self.assertEqual(event['selected_tool'], conversation.SEARCH)
+        self.assertEqual(event['tool_selection_calls'], 1)
+        self.assertEqual(event['tool_calls'], 1)
+        self.assertEqual(event['corpus_reads'], 1)
+        self.assertEqual(event['vector_search_calls'], 1)
+        self.assertEqual(event['bm25_calls'], 1)
+        self.assertEqual(event['rewrite_calls'], 0)
+        self.assertEqual(event['rerank_calls'], 0)
         self.assertEqual(event['embedding_calls'], 1)
         self.assertEqual(event['answer_calls'], 1)
         self.assertEqual(event['answer_status'], 'answer')
@@ -376,7 +398,7 @@ class ConversationTests(unittest.TestCase):
         self.assertEqual(result, {'answer': '자료로 확인할 수 없어요.', 'mode': 'rag', 'sources': []})
 
     def test_failures_do_not_retry_and_messages_do_not_expose_internal_details(self):
-        for failure in ('embed', 'openai'):
+        for failure in ('choose_tool', 'embed', 'openai'):
             with self.subTest(failure=failure):
                 self.provider.calls.clear()
                 self.provider.failure = failure
@@ -421,7 +443,8 @@ class ConversationTests(unittest.TestCase):
         self.database.records[0]['content'] = secret
         with self.assertRaises(conversation.AnswerGenerationError):
             self.service().answer(self.question())
-        self.assertEqual(self.provider.calls, [])
+        self.assertEqual(self.provider.calls, [('choose_tool',)])
+        self.assertNotIn(secret, json.dumps(self.provider.tool_payload))
 
     def test_documents_work_without_database_provider_or_configuration(self):
         service = self.service()

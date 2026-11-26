@@ -7,7 +7,7 @@
 - `data/processed/`, `data/source_manifest.json`, `data/document_register.json`: 정제 데이터, 출처 및 문서 등록부.
 - `documents/`, `document_evidence/`: 문서와 근거 각 151개. `chunks/draft-a-v1/`: 1,504개 청크와 당시 매니페스트. 초안은 사람의 사실 검토나 운영 승인이 아니다.
 - [문서·청크 생성 및 검증](scripts/README.md): 오프라인 생성 절차, 새 출력 경로 조건, 원본 보존 및 한계.
-- `src/`: Solar 임베딩 적재·검색, 번들 내보내기·복원 및 질문 CLI. `db/schema.sql`: 팀 DB 스키마. `config/retrieval.json`: 검색 설정.
+- `src/`: Solar 임베딩 적재·검색, 번들 내보내기·복원, 질문 CLI 및 대화 서비스. 대화의 정형 조회에는 저장소 루트 [`src/pokedex/store.py`](../src/pokedex/store.py)와 팀·기술 도구를 사용한다. `db/schema.sql`: 팀 DB 스키마. `config/retrieval.json`: 검색 설정.
 - `reports/`: 원본 경로를 유지한 과거 보고서 26개. 당시 원본 실험 raw 및 과거 실행 도구는 포함하지 않는다. 최종 평가셋과 잠금 파일은 전달 범위가 아니다.
 
 ### 확인된 실 실행 범위
@@ -16,11 +16,21 @@
 - 2026-11-26 사용자가 명시적으로 승인한 질문 1개에 대해 Solar 질문 임베딩 + C 검색 + 재작성 + GPT 답변이 실제 성공했다. 인용 ID `pokemon:133#profile`과 이브이가 노말 타입이라는 내용은 전달 문서 `documents/133_이브이.md`의 6행·10행에서 확인했다.
 - 위 범위 밖의 다른 조합이나 API는 실 실행 성공을 주장하지 않는다. 인용 ID 유효성은 각 주장의 사실성 검증과 다르다. 자료의 출처·재배포 권리와 승인 상태는 사용 전에 별도 확인한다.
 
+### 도구 연결 후 오프라인 검증
+
+독립 검증에서 정형 도구 8개, Solar 회귀 50개, API 어댑터 6개가 통과했다. 가짜 Responses와 인메모리 청크를 연결한 FastAPI `TestClient`의 세 질문도 HTTP 200이었다. 이는 경로·근거·응답 형식을 확인한 결과다. 실제 GPT·Solar·DB 실행 및 공식 평가는 하지 않았으며 모델의 도구 선택·답변 품질은 확인하지 않았다. 변경 전후에 도감 원문·청크·인덱스·모델 설정을 유지했고 재임베딩하지 않았다.
+
+```sh
+uv run --offline --no-sync --no-env-file python -B -m unittest discover -s tests -p test_pokedex_structured_tools.py
+uv run --offline --no-sync --no-env-file python -B -m unittest discover -s tests -p 'test_solar*.py'
+uv run --offline --no-sync --no-env-file python -B -m unittest discover -s api/tests/chat -p test_rag_generator.py
+```
+
 ## 환경과 안전 경계
 
 저장소 루트에서 기존 환경을 준비한다. 패키지·Python 준비는 [루트 안내](../README.md#개발-환경)를 참조한다. 루트 Compose의 5432 포트는 이미 사용 중일 수 있으므로 기존 서비스·데이터를 먼저 확인한다. 기존 DB나 볼륨을 중지·삭제·초기화하지 말고, 충돌 시 팀과 별도 대상 및 접근 방법을 합의한다. 실제 작업 전 DB 대상·스키마·권한과 백업을 확인하고 별도 승인을 받는다. `solar_handoff` 스키마는 지정된 팀 DB에만 생성한다.
 
-환경 변수는 각자의 안전한 환경에 설정한다. 아래는 **이름만**이며 값·API 키·접속 문자열을 문서, Git, 번들 또는 채팅에 넣지 않는다. 코드는 `.env`를 자동으로 읽지 않는다. 필요한 변수를 각자의 셸 환경에 안전하게 전달하거나, 저장소 루트에서 `uv run --env-file .env` 뒤에 실행할 Python 명령을 명시한다. 예를 들어 `uv run --env-file .env python -B -m solar_handoff.src.cli --help`를 사용할 수 있다. 아래의 `python` 예시는 필요한 환경 변수가 이미 전달됐다는 전제다.
+환경 변수는 각자의 안전한 환경에 설정한다. 아래는 **이름만**이며 값·API 키·접속 문자열을 문서, Git, 번들 또는 채팅에 넣지 않는다. Solar 모듈과 CLI는 `.env`를 자동으로 읽지 않는다. 필요한 변수를 각자의 셸 환경에 안전하게 전달하거나, 저장소 루트에서 `uv run --env-file .env` 뒤에 실행할 Python 명령을 명시한다. 예를 들어 `uv run --env-file .env python -B -m solar_handoff.src.cli --help`를 사용할 수 있다. 아래의 `python` 예시는 필요한 환경 변수가 이미 전달됐다는 전제다.
 
 | 이름 | 역할 |
 | --- | --- |
@@ -28,9 +38,9 @@
 | `UPSTAGE_API_KEY` | Solar 임베딩 API 인증 |
 | `UPSTAGE_EMBEDDING_MODEL` | 문서 임베딩 모델 ID |
 | `UPSTAGE_QUERY_MODEL` | 질문 임베딩 모델 ID; 문서 모델 ID와 달라야 하며 인덱스에 기록된 모델과 일치해야 함 |
-| `OPENAI_CHAT_MODEL`, `OPENAI_API_KEY` | GPT 답변, 재작성 또는 C 방식 재순위화에 필요. 모델 ID는 환경에서 읽으며 `gpt-` 접두사만 허용하고 그 외 ID는 거부한다. 응답의 실제 모델 ID도 `gpt-`여야 하나 설정 ID와의 정확한 일치는 요구하지 않는다 (alias가 날짜가 붙은 revision으로 응답할 수 있음) |
+| `OPENAI_CHAT_MODEL`, `OPENAI_API_KEY` | 대화의 GPT 도구 선택과 GPT 답변, 선택적 재작성, C 방식 재순위화에 필요. 모델 ID는 환경에서 읽으며 `gpt-` 접두사만 허용하고 그 외 ID는 거부한다. 응답의 실제 모델 ID도 `gpt-`여야 하나 설정 ID와의 정확한 일치는 요구하지 않는다 (alias가 날짜가 붙은 revision으로 응답할 수 있음) |
 
-Solar 임베딩은 Upstage로 질문 또는 청크 본문을 전송한다. GPT 사용 시 질문과 검색 문맥이 OpenAI로 전송될 수 있다. 민감정보·전송 범위·라이선스·비용을 사전에 검토하고 각 실행을 승인한다. 모델별 실제 비용은 미상이며 새 유료 호출마다 사용자에게 별도 승인을 받아야 한다. 코드의 민감정보 검사로 알려지지 않은 민감정보나 모든 변형을 자동 탐지한다고 보장할 수 없다. 실패한 요청도 과금됐을 수 있으므로 자동 재시도하지 말고 먼저 확인한다. 이번 README 수정에서는 실제 DB나 API에 접근하지 않았다.
+Solar 임베딩은 Upstage로 질문 또는 청크 본문을 전송한다. 대화에서 GPT 도구를 선택할 때 전체 대화가, 답변을 생성할 때는 선택된 근거도 OpenAI로 전송된다. 확인 질문도 도구 선택에는 GPT를 사용한다. 민감정보·전송 범위·라이선스·비용을 사전에 검토하고 각 실행을 승인한다. 모델별 실제 비용은 미상이며 새 유료 호출마다 사용자에게 별도 승인을 받아야 한다. 코드의 민감정보 검사로 알려지지 않은 민감정보나 모든 변형을 자동 탐지한다고 보장할 수 없다. 실패한 요청도 과금됐을 수 있으므로 자동 재시도하지 말고 먼저 확인한다.
 
 ## 기존 Solar 벡터를 팀 DB로 전달
 
@@ -72,7 +82,15 @@ python -B -m solar_handoff.src.export verify --bundle "저장소_밖_비공개_�
 
 ## 질문 실행
 
-대화 API용 진입점은 [`src/conversation.py`](src/conversation.py)의 `create_service()`입니다. 전체 대화 이력을 답변 생성에 전달합니다. 기본 B 검색의 상위5개 청크를 보존하고 같은 문서의 형제 청크를 최대50개·직렬화된 UTF-8 96,000바이트까지 통째로 추가합니다. CLI A/B/C의 후보 생성·상위5개 비교는 변경하지 않는 별도 대화 컨텍스트 확장입니다. 실제 전달 근거에서 인용한 청크만 번호 출처로 반환하며, 검증한 질의 임베딩 모델과 인덱스의 문서 모델을 답변 메타데이터로 제공합니다. `SOLAR_RETRIEVAL_METHOD`로 A/B/C를 선택하고 `SOLAR_REWRITE`는 기본 `false`입니다. HTTP 원문 조회는 기존 documents 슬라이스를 사용합니다. 요청·응답과 오류 경계는 [API–RAG 연결 가이드](../docs/references/api-rag-integration.md)를 따릅니다.
+### 대화 API
+
+진입점은 [`src/conversation.py`](src/conversation.py)의 `create_service().answer(messages)`다. 같은 설정의 GPT가 전체 대화에서 마지막 질문을 보고 등록된 도구 하나를 고른다. 별도 라우터는 없으며 일반 질문에도 이전보다 GPT 선택 호출 1회가 추가된다.
+
+- **일반 도감 질문:** Solar 대화의 `search_pokedex`는 인수 없이 호출한다. 원질문과 최근 사용자 질문으로 기존 검색 입력을 구성한다. `SOLAR_RETRIEVAL_METHOD`(기본 B)로 A/B/C를 정하고, `SOLAR_REWRITE`는 기본 `false`다. 후보 생성·상위 5개 선택·C 재순위화 규칙은 CLI와 동일하다. 대화의 답변 근거는 검색 청크를 보존하고 같은 문서의 형제 청크를 더하되 총 50개·직렬화 UTF-8 96,000바이트 한도를 적용한다.
+- **정형 도구:** 확인된 팀원·후보·기술 ID로 방어 상성을 계산한다. 포켓몬 근거가 필요할 때만 기존 DB 청크 기록을 읽고 정확한 ID를 선택한다. 질문 임베딩·BM25·벡터 검색·재순위화를 실행하지 않는다. 직접 피해가 없는 기술과 별도 피해·미확정 분류에 일반 배율을 붙이지 않는다. 이름이 모호하거나 다른 이름에 포함된 부분 일치뿐이면 확인 질문을 반환한다. 자세한 도구 계약은 [tool-calling 스킬](../.claude/skills/tool-calling/SKILL.md)을 따른다.
+- **응답:** 인용한 포켓몬 청크만 번호 출처로 반환한다. 기술 분류는 기술 ID와 정제 레코드를 본문에 따로 표시한다. 질의 임베딩을 호출하지 않으면 `embedding`은 생략한다. HTTP 원문 조회는 기존 documents 슬라이스를 사용하며 요청·응답 형식은 [API–RAG 연결 가이드](../docs/references/api-rag-integration.md)와 같다.
+
+### 기존 단일 질문 CLI
 
 저장소 루트에서 CLI 옵션을 확인한다.
 
@@ -80,7 +98,7 @@ python -B -m solar_handoff.src.export verify --bundle "저장소_밖_비공개_�
 python -B -m solar_handoff.src.cli --help
 ```
 
-CLI는 `--question` 또는 표준입력으로 한 질문을 받는다. `--method A`는 Solar 벡터 검색, `B`는 벡터와 BM25의 RRF 결합, 기본 `C`는 B의 상위 5개를 GPT로 재순위화한다. `--rewrite`는 GPT 질문 재작성에 사용하며 답변은 GPT 전용이다 (`--answer gpt`). 실제 질문 실행에는 별도로 승인된 DB 접근과 비용을 확인하는 `--allow-cost`가 필요하다. `--qid`는 선택적 식별자다. CLI가 JSON 트레이스를 출력하므로 질문·청크·응답 등 포함 내용을 확인하고 외부 공유를 제한한다. 인용 ID 검사는 근거의 사실 지원 여부에 대한 사람 검토나 평가를 대신하지 않는다.
+CLI는 도구 선택 없이 `--question` 또는 표준입력으로 한 질문을 받는다. `--method A`는 Solar 벡터 검색, `B`는 벡터와 BM25의 RRF 결합, 기본 `C`는 B의 상위 5개를 GPT로 재순위화한다. `--rewrite`는 GPT 질문 재작성에 사용하며 답변은 GPT 전용이다 (`--answer gpt`). 실제 질문 실행에는 별도로 승인된 DB 접근과 비용을 확인하는 `--allow-cost`가 필요하다. `--qid`는 선택적 식별자다. CLI가 JSON 트레이스를 출력하므로 질문·청크·응답 등 포함 내용을 확인하고 외부 공유를 제한한다. 인용 ID 검사는 근거의 사실 지원 여부에 대한 사람 검토나 평가를 대신하지 않는다.
 
 승인 후 질문 예시 (`--allow-cost`는 실제 DB 접근과 API 호출을 허용함):
 

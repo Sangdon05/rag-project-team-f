@@ -12,9 +12,9 @@ FastAPI 서비스(`api/`)와 RAG 체인을 잇는 계약과 절차다. Solar 대
 | --- | --- | --- | --- | --- |
 | `mock` (기본) | `MockAnswerGenerator` | 고정 문구 + 받은 질문 | 빈 목록 | 프론트 연동, 테스트, smoke |
 | `llm` | `LlmAnswerGenerator` | 검색 없이 LLM이 답함 (Red·Blue 기준 시스템 프롬프트) | 빈 목록 | 임시 데모. 근거가 없으므로 평가에 쓰지 않는다 |
-| `rag` | `RagAnswerGenerator` | Solar 대화 서비스 답변 | 실제 검색·확장 청크 | 로컬 DB·Solar·GPT 설정이 있는 환경 |
+| `rag` | `RagAnswerGenerator` | Solar 대화의 일반 검색, 팀·기술 정형 조회 또는 확인 질문 | 인용한 포켓몬 청크. 포켓몬 인용이 없으면 빈 목록 | 경로에 따라 GPT, DB 및 Solar 설정을 사용 |
 
-응답의 `mode`로 어떤 방식으로 답했는지 구분한다. 프론트는 `mode`가 `rag`가 아니면 "근거 없는 답변"임을 표시할 수 있다.
+응답의 `mode`는 답변 생성기를 구분한다. `rag`가 검색이나 임베딩 호출을 뜻하지는 않는다. Solar 대화는 동일한 GPT에 단일 도구를 선택하도록 요청한다. 일반 검색만 A/B/C 정책을 쓰며, 정형 경로는 필요한 청크를 ID로 읽고 확인 질문에는 DB를 쓰지 않는다. 내부 동작은 [langchain-rag 스킬](../../.claude/skills/langchain-rag/SKILL.md)을 따른다.
 
 ## 2. 계약
 
@@ -41,14 +41,16 @@ class AnswerGenerator(ABC):
 
 실패 규약:
 
-- 체인이 답을 만들지 못하면(네트워크, 모델, DB 오류) 어댑터가 `AnswerGenerationError`로 바꿔 올린다 → 502 `ANSWER_GENERATION_FAILED`. 원문 오류는 로그에만 남긴다.
-- "근거가 부족해 확인할 수 없다"는 실패가 아니라 정상 답변이다. 체인이 그런 답을 내면 `text`에 담고 `sources`는 빈 목록으로 돌려준다.
+- 체인이 답을 만들지 못하면(네트워크, 모델, DB 오류) 어댑터가 `AnswerGenerationError`로 바꿔 올린다 → 502 `ANSWER_GENERATION_FAILED`. 원문 오류나 모델 원문을 응답에 노출하지 않는다.
+- 확인 질문 또는 "근거가 부족해 확인할 수 없다"는 안내는 정상 `rag` 답변이다. 인용한 포켓몬 청크가 없으면 `sources`는 빈 목록이다.
 - 체인 안에서 대화 기록을 저장하지 않는다. 대화 맥락은 매 요청의 `messages`로만 받는다.
-- RAG 반환값의 선택 `embedding`은 `{"query_model": str, "document_model": str}`이다. 질의 임베딩 호출 뒤 확인한 실제 query 모델과 인덱스에 결합된 document 모델만 사용한다. 임베딩을 호출하지 않은 경로는 필드를 생략한다. API는 환경 변수나 답변 모델명으로 추정·보충하지 않는다. 필드가 제공됐지만 `null`·비객체·필수 값 누락·잘못된 모델 ID인 경우에는 전체 답변을 502 `ANSWER_GENERATION_FAILED`로 거부한다. mock·llm 및 이 필드를 제공하지 않는 기존 RAG는 기존 세 필드 응답을 유지한다.
+- RAG 반환값의 선택 `embedding`은 `{"query_model": str, "document_model": str}`이다. 질의 임베딩 호출 뒤 확인한 실제 query 모델과 인덱스에 결합된 document 모델만 사용한다. 정형 조회·확인 질문 등 질의 임베딩을 호출하지 않은 응답은 필드를 생략한다. API는 환경 변수나 답변 모델명으로 추정·보충하지 않는다. 필드가 제공됐지만 `null`·비객체·필수 값 누락·잘못된 모델 ID인 경우에는 전체 답변을 502 `ANSWER_GENERATION_FAILED`로 거부한다. mock·llm 및 이 필드를 제공하지 않는 기존 RAG는 기존 세 필드 응답을 유지한다.
 
 ### Solar 어댑터의 문서 ID 변환
 
-Solar 서비스는 기존 `source_ref_id="pokemon:7"`을 반환한다. 어댑터는 검증한 `pokemon:1`–`pokemon:151`을 `001`–`151`로 바꾸고 이미 세 자리인 ID는 유지한다. `source_ref_id`가 없으면 `document_id`를 같은 규칙으로 사용한다. 답변·ref·chunk_id·출처 순서는 바꾸지 않고 잘못된 ID나 non-rag 결과는502로 처리한다. DB·임베딩 메타데이터는 변경하지 않는다.
+일반 검색과 정형 조회 모두, Solar 대화 서비스는 인용한 포켓몬 청크에 `source_ref_id="pokemon:7"` 같은 값을 반환한다. 어댑터는 검증한 `pokemon:1`–`pokemon:151`을 `001`–`151`로 바꾸고 이미 세 자리인 ID는 유지한다. `source_ref_id`가 없으면 `document_id`를 같은 규칙으로 사용한다. 답변·`ref`·`chunk_id`·출처 순서는 바꾸지 않고 잘못된 ID나 non-rag 결과는 502로 처리한다. DB·임베딩 메타데이터는 변경하지 않는다.
+
+기술 분류의 근거는 번호가 아니라 답변 본문에 표시한다. 예: `move:133` · `data/processed/red_blue_move_damage_classification.json#/moves/132` · `status` (`SPECIAL_UP2_EFFECT`). 기술 레코드는 포켓몬 문서가 아니므로 `sources`나 문서 조회 키에 넣지 않는다. 포켓몬 근거가 필요 없는 변화기 등의 답변은 `sources: []`여도 기술 레코드 근거를 본문에 포함할 수 있다. HTTP 요청·응답 스키마는 바꾸지 않는다.
 
 ### 문서 저장소 포트
 
@@ -81,9 +83,9 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 
 1. **import 가능한 진입점.** API 어댑터가 부를 함수 또는 객체 하나. 예: `answer(question: str, history: list[dict]) -> {"answer": str, "sources": [...]}` (비동기면 더 좋다).
    - `solar_handoff.src.conversation.create_service().answer(messages)`가 동기 진입점이다. 어댑터는 전체 대화를 role/content 목록으로 넘기고 조립부가 주입한 스레드 실행기로 호출한다. 서비스는 질문 UTF-8 3,800바이트·총 대화128,000바이트 제한을 별도로 검증하며 위반은400으로 변환한다.
-2. **설정은 환경 변수로.** 모델명, `DATABASE_URL`, `PGVECTOR_COLLECTION` 등을 체인이 직접 읽는다. API는 DB 접속 정보를 알지 않는다.
-3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 도감번호 3자리다. Solar 질문 CLI는 `source_ref_id` 대신 `document_id`·`source_document`를 내보내므로 어댑터가 변환한다(2절 `Source`). 체인 쪽 변경은 필요 없다.
-4. **동작 확인 기록.** 툴·체인 테스트 통과, 사용한 `index_version` 기록(langchain-rag 스킬의 완료 조건).
+2. **설정은 환경 변수로.** GPT와 Solar 모델명, 필요한 경우 `DATABASE_URL` 등은 Solar 서비스가 읽는다. API는 DB에 직접 접속하지 않는다.
+3. **출처 형식.** 대화 서비스의 `ref`, `chunk_id`, `source_ref_id`를 사용한다. 본문 `[n]`은 `ref`와 맞아야 하며 HTTP의 `source_ref_id`는 2절의 변환을 거친 도감번호다. 단일 질문 CLI 트레이스는 이 어댑터의 입력이 아니다.
+4. **동작 확인 기록.** 툴·체인 테스트 결과와 실 인덱스를 쓴 경우의 `index_version`을 기록한다. [Solar 전달본](../../solar_handoff/README.md)의 새 대화 검증은 가짜 Responses와 인메모리 청크를 연결한 오프라인 검증이며 실 인덱스나 실제 모델의 품질을 확인한 것은 아니다.
 
 ## 4. 연결 절차
 

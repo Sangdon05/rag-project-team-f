@@ -6,6 +6,10 @@
 
 Solar CLI의 stdout JSON은 한 질문의 개발용 트레이스로, 이 정식 JSONL 기록과 자동 호환되는 것은 아니다. 평가 전에 필드 매핑과 호출 상태(`completed`/`no_evidence`/`failed`), 선택 입력인 `qid`, 검색 후보와 최종 순위(C의 `rerank_rank` 포함), 인용(`citations.cited_ids` 및 위치·근거 검토 상태)을 확인해야 한다. 예를 들어 `config_sha256`은 아래 `config_hash`와 이름이 다르며, 인용 ID 검증만으로 주장에 대한 근거 적합성이 확인되는 것은 아니다. 변환 구현이나 평가 완료를 전제하지 않는다.
 
+정상 응답에 남기는 [Solar 대화 감사 이벤트](../../langchain-rag/SKILL.md) `conversation_answer_completed`는 CLI 개발용 트레이스도, 정식 `qid`별 평가 트레이스도 아니다. 정형 경로에서 `selected_tool`은 고른 도구, `selected_chunk_ids`는 답변에 전달한 근거 청크, `cited_chunk_ids`는 실제 인용한 청크를 가리킨다. `corpus_reads`는 근거 조회 횟수이며 `embedding_calls`, `vector_search_calls`, `bm25_calls`, `rerank_calls`가 `0`인 것은 해당 호출을 하지 않았다는 뜻이다.
+
+정형 도구가 ID로 조회한 근거를 `retrieval.final`에 넣거나 검색 순위를 만들어 채우지 않는다. 감사 이벤트는 정식 평가의 입력을 대신하지 않으며, 아래의 기존 지표와 분모는 그대로다.
+
 ## 디렉터리
 
 ```
