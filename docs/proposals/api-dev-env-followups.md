@@ -25,7 +25,7 @@ PR #9(API 개발 환경 추가) 비판 리뷰에서 나온 지적이다. 다른 
 | S9 | `check_layers.py` | TODO | 프로파일 값 형식 검증 없음. `fsd`가 문자열이면 예외로 종료 코드 1, 리스트 자리에 문자열이면 검사가 조용히 약해진다. `--root`가 있어도 `root` 키를 요구한다 |
 | S10 | `layer-profile.json` | TODO | 접두어 일치가 `_`만 인정해 `psycopg2`를 놓친다. 목록에 추가하거나 일치 규칙을 문서화 |
 | S11 | `smoke.sh` | 일부 완료 (docs/api-ep-contracts) | 교대 순서·`error_code` 확인은 반영. 남은 것: `openapi.json`이 JSON이 아닐 때 처리. 원문: 메시지 수 초과 검사: `MAX_MESSAGES`가 홀수면 user가 연속돼 순서 오류 400으로도 통과한다. 교대 순서로 만들고 `error_code`도 확인. `openapi.json`이 JSON이 아니면 FAIL이 아니라 "미구현"으로 넘어간다 |
-| S13 | `doc-sync/scripts/check_docs.py` `check_deps_docs` | TODO | `dependencies\s*=\s*\[(.*?)\]`가 `psycopg[binary,pool]`의 `]`에서 끝나 뒤 패키지(`pydantic`, `python-dotenv`, `ragas`, `uvicorn`)를 검사하지 않는다. TOML 파서(`tomllib`)로 읽도록 고친다 |
+| S13 | `doc-sync/scripts/check_docs.py` `check_deps_docs` | 완료 (fix/doc-sync-deps-parse 88196cb) | `tomllib`로 `[project].dependencies`를 읽도록 바꿨다. 예전 정규식은 `psycopg[binary,pool]`의 `]`에서 끊겨 `psycopg`부터 뒤 패키지를 검사하지 않았다. 회귀 테스트 `tests/test_doc_sync_deps.py` |
 | S12 | 검증 재현성 | TODO | PR 본문의 검증 결과(unittest 12개, smoke 9항목, 위반 검출)를 재현할 파일이 저장소에 없다. layer-check·smoke 자체 테스트 fixture를 커밋 |
 
 ## 2. 문서 정합성
@@ -54,6 +54,6 @@ PR #9(API 개발 환경 추가) 비판 리뷰에서 나온 지적이다. 다른 
 | G3 | 규모 | TODO | `api-architect` opus/high → sonnet/medium 검토. R1~R16이 여러 문서에 반복되므로 8개 안팎으로 통합 검토. 리뷰 에이전트가 읽는 스킬 수(7개) 축소 검토 |
 | G4 | PR 범위 | TODO | eval 문서 최신화(c900f45)가 API PR에 섞여 있다. 다음부터 별도 PR로 낸다 |
 | G5 | RAG 경계 목록 | TODO | 아직 없는 `pokedex`·`src/pokedex/`를 경계 규칙에 미리 넣었다. RAG 진입점이 정해지면 실제 이름으로 갱신 (연결 가이드 3절 [미정]) |
-| G7 | RAG 체인 `reasoning_effort` | TODO | `gpt-6-luna`는 `reasoning_effort=low`로 쓴다(팀 결정, temperature 0 유지). API `llm` 모드는 `OPENAI_REASONING_EFFORT`(기본 `low`)로 반영함. RAG 체인(langchain-rag 스킬 45행, 체인 코드)은 rag-developer가 같은 변수로 반영. 실제 키로 temperature 0과 함께 받아지는지 1회 확인 필요 |
-| G8 | Solar 질문 CLI 출처 | TODO | API는 `sources[].source_ref_id`를 도감번호 3자리(`001`)로 받아 `solar_handoff/documents/001_*.md`를 연다. Solar CLI 결과(`source_document`, `pokemon_id`)에서 이 값을 내보내도록 rag-developer가 반영 |
+| G7 | `gpt-6-luna` 생성 파라미터 | 일부 완료 | RAG 체인(Solar, `solar_handoff/src/providers.py`)은 이미 `reasoning.effort=low`이고 temperature를 보내지 않는다(Solar 보고서에 의도적으로 기록). API `llm` 모드는 `reasoning_effort=low` + temperature 0(사용자 결정). 남은 것: 실제 키로 API `llm` 모드 1회 호출해 temperature 0이 받아지는지 확인(`.env`의 `OPENAI_API_KEY`가 비어 있어 미실행). 거부되면 temperature를 빼는 안을 다시 결정 |
+| G8 | `rag` 모드 출처 `source_ref_id` | 결정 (어댑터 변환) | Solar CLI는 `document_id`(`pokemon:{id}`)·`source_document`를 내보내고 `source_ref_id`는 없다. 임베딩·저장 메타데이터는 그대로 두고, `rag` 연결 때 `RagAnswerGenerator`가 `document_id`에서 `{id:03d}`를 만든다(연결 가이드 2절 `Source`, 4절 2단계). 저장 메타데이터에 필드를 추가하면 Solar 복원 검사(`store.py` readback)가 스냅샷과 어긋나므로 하지 않는다 |
 | G6 | FSD 강도 | TODO | `fsd.cross_slice: off`. 다른 파트 합류 후 `warn`/`error` 결정 |

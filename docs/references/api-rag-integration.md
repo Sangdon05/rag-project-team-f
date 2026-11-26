@@ -35,7 +35,7 @@ class AnswerGenerator(ABC):
 | | `mode: "mock" \| "llm" \| "rag"` | 생성 방식 |
 | | `sources: tuple[Source, ...]` | 근거. 근거가 없으면 빈 목록 |
 | `Source` | `ref: int` | 출처 번호. `text` 안의 `[n]`과 같은 값이며 체인이 정한다. API는 번호를 바꾸거나 목록을 자르지 않는다 |
-| | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 값 그대로. `source_ref_id`는 도감번호 3자리(예: `001`)이며 문서 조회 키로 쓴다 |
+| | `chunk_id`, `source_ref_id` | [chunking 스킬](../../.claude/skills/chunking/SKILL.md)의 청크 메타데이터 값 그대로. `source_ref_id`는 도감번호 3자리(예: `001`)이며 문서 조회 키로 쓴다. 체인이 `source_ref_id`를 주지 않으면 `rag` 어댑터가 `document_id`(`pokemon:{id}`)에서 `f"{id:03d}"`로 만든다(저장된 메타데이터·임베딩은 바꾸지 않는다) |
 
 실패 규약:
 
@@ -75,7 +75,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 1. **import 가능한 진입점.** API 어댑터가 부를 함수 또는 객체 하나. 예: `answer(question: str, history: list[dict]) -> {"answer": str, "sources": [...]}` (비동기면 더 좋다).
    - 지금 체인 코드는 패키지가 아니다. 진입점의 위치(예: `src/pokedex/`)와 import 방법(루트 `pyproject.toml`의 패키지 설정 등)은 [미정]이다. 정해지면 이 절에 적는다.
 2. **설정은 환경 변수로.** 모델명, `DATABASE_URL`, `PGVECTOR_COLLECTION` 등을 체인이 직접 읽는다. API는 DB 접속 정보를 알지 않는다.
-3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 도감번호 3자리다. Solar 질문 CLI는 아직 내보내지 않는다(후속 G8).
+3. **출처 형식.** 답변 근거를 `ref`, `chunk_id`, `source_ref_id`로 돌려준다. 답변 안의 `[n]`은 `ref`와 맞아야 한다. `source_ref_id`는 도감번호 3자리다. Solar 질문 CLI는 `source_ref_id` 대신 `document_id`·`source_document`를 내보내므로 어댑터가 변환한다(2절 `Source`). 체인 쪽 변경은 필요 없다.
 4. **동작 확인 기록.** 툴·체인 테스트 통과, 사용한 `index_version` 기록(langchain-rag 스킬의 완료 조건).
 
 ## 4. 연결 절차
@@ -83,7 +83,7 @@ API 쪽에서 요구하는 연결 전제 조건이다. RAG 에이전트·스킬�
 | 단계 | 담당 | 내용 |
 | --- | --- | --- |
 | 1 | 오케스트레이터 | 3절 준비 상태 확인, api-architect에게 설계안 갱신 발주 (`rag` 백엔드, 에러, 타임아웃) |
-| 2 | api-implementer | `api/chat/infrastructure/rag_generator.py`에 `RagAnswerGenerator` 작성. 체인 진입점을 생성자로 받고, 결과를 `Answer(mode=rag)`와 `Source`로 바꾸고, 예외를 `AnswerGenerationError`로 바꾼다 |
+| 2 | api-implementer | `api/chat/infrastructure/rag_generator.py`에 `RagAnswerGenerator` 작성. 체인 진입점을 생성자로 받고, 결과를 `Answer(mode=rag)`와 `Source`로 바꾸고(`source_ref_id`가 없으면 `document_id` `pokemon:{id}` → `{id:03d}`, 형식이 다르면 `AnswerGenerationError`), 예외를 `AnswerGenerationError`로 바꾼다 |
 | 3 | api-implementer | `api/container.py`에 `ANSWER_BACKEND=rag` 분기 추가. 체인 import는 이 분기 안에서만 한다(mock 모드는 체인·DB 없이 떠야 한다) |
 | 4 | api-implementer | 테스트: fake 체인으로 변환·예외 처리 확인. 실제 체인·DB를 부르지 않는다 |
 | 5 | api-reviewer | 완료 게이트, smoke(mock), 발주서에 명시되면 `rag` 모드 실제 호출 1~2회 |
