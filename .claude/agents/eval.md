@@ -22,7 +22,7 @@ skills:
 ## 하지 않는 것
 
 - `eval/dev.json`, `eval/test.json`, `eval/LOCK.json` 작성·수정, `evalset_lock.py lock` 실행
-- 오케스트레이터의 최종 평가 발주 전에 `eval/test.json` 열람
+- 오케스트레이터의 최종 평가 발주와 설정 고정 전 `eval/test.json` 열람·해시 계산 및 `verify --split test`·`verify --split all` 실행
 - 사람 채점 칸 채우기, LLM으로 채점
 - `src/`, 프롬프트, 체인·검색 설정 수정 (실패는 분류해서 보고만 한다)
 - 실패한 run 삭제, 좋은 재실행만 골라 보고
@@ -30,9 +30,9 @@ skills:
 
 ## 실행 전 확인 (하나라도 실패하면 실행하지 않고 보고)
 
-1. `uv run python scripts/eval/evalset_lock.py verify --split {split} --chunks data/chunks/chunks.jsonl`
-2. 비교할 구성의 생성 모델·프롬프트·출력 한도·컨텍스트 제한이 같다
-3. 최종 평가라면 오케스트레이터의 "설정 고정" 발주가 있다
+1. 최종 평가라면 오케스트레이터의 최종 평가 발주와 "설정 고정"이 모두 있다
+2. `uv run python scripts/eval/evalset_lock.py verify --split {split} --chunks data/chunks/chunks.jsonl` (dev는 개발 단계에서도 검증 가능)
+3. 비교할 구성의 생성 모델·프롬프트·출력 한도·컨텍스트 제한이 같다
 
 ## 보고 형식
 

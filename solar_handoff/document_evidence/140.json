@@ -1,0 +1,2633 @@
+{
+  "schema_version": 1,
+  "document_path": "documents/140_투구.md",
+  "pokemon_id": 140,
+  "document_sha256": "7a10ecd5fe74b3d38a26a52059ccf6ce0a1c2f6e75cffd12cf8a6e7207041db3",
+  "source_revision": "e58a02d6a952d7e79378cac3df9537adbb6c700a",
+  "provenance_manifests": {
+    "snapshot_manifest.json": "86450d4267c94ed9b94261cfb5fd0e5934ff706bf88a9ab60574eb366aa5d80d",
+    "data/source_manifest.json": "2a78058bbe17b9331d5d13b4db07e56ca7d3565d08d65671f4c6c883eaf0ebbe"
+  },
+  "sources": {
+    "processed:pokemon": {
+      "path": "data/processed/pokemon.json",
+      "sha256": "d0010f89c3408e3a3b9e8bf80303c40bdd9f42199783b8e143419f2dc69ea716"
+    },
+    "processed:moves": {
+      "path": "data/processed/moves.json",
+      "sha256": "617fde5ccf1d1de9b4afb8c3bb7eba0b7ce33d766001efea39c315196c2059bf"
+    },
+    "processed:types": {
+      "path": "data/processed/types.json",
+      "sha256": "f75cd12064eef9e6ffec367a59aef40e068952f8a6a7e677b2fb2db87ab8c514"
+    },
+    "processed:type_chart": {
+      "path": "data/processed/type_chart.json",
+      "sha256": "278f2a56276cb242020d26a66ac28b3f7e6303d06264ca22e5a9e6c9e1a107c2"
+    },
+    "processed:red_blue_move_damage_classification": {
+      "path": "data/processed/red_blue_move_damage_classification.json",
+      "sha256": "bf11f3e438176111d68c0972025bf674580aae27e7d97226a9262f3db511c89b"
+    },
+    "processed:machines_red_blue": {
+      "path": "data/processed/machines_red_blue.json",
+      "sha256": "4ddcb121d75239b43b8af960705d47b900ddd81d171dd4c674265bd2d3d99abb"
+    },
+    "processed:machine_acquisition_red_blue": {
+      "path": "data/processed/machine_acquisition_red_blue.json",
+      "sha256": "b4bebce1654caf1bc0def46bd4a36a754c0452f5042d222a7b408bf4057306ed"
+    },
+    "processed:location_names_ko_red_blue": {
+      "path": "data/processed/location_names_ko_red_blue.json",
+      "sha256": "f33fc190766a80cab3602f1f2a4617b11c3117d637bc2ba40686173c7b31247f"
+    },
+    "processed:evolutions_red_blue": {
+      "path": "data/processed/evolutions_red_blue.json",
+      "sha256": "24c720a0d25a8ecd57cbbc5d737ce1a277ec8f6147481bdb3131eaea6007e4e4"
+    },
+    "processed:evolution_items_red_blue": {
+      "path": "data/processed/evolution_items_red_blue.json",
+      "sha256": "69d4632ebea6a200346aea7129677fd45a661eaaf4e3e123340f6f7dd63e9fbc"
+    },
+    "processed:encounters_red_blue": {
+      "path": "data/processed/encounters_red_blue.json",
+      "sha256": "d308cc1f07c10fb376ee0d1118fbf064c23f3f9ea3ddb95d7e71a721de369a1c"
+    }
+  },
+  "calculator": {
+    "path": "scripts/gen1_battle/gen1_battle_rules.py",
+    "sha256": "1acf5b02611945715f77a97eb0e948c5c9815bb6a7b87e449d27f0bcffbfd96d",
+    "helper": {
+      "path": "scripts/gen1_battle/data_integrity.py",
+      "sha256": "e87db835fea69425a513bc5f98b50faa9aeb6263837e33a83c619c47bc939e1e"
+    },
+    "version": "red-blue",
+    "user_id": 140,
+    "target_id": 140,
+    "classification_source_commit": "ba9c0568f64ae602fadda577a08c66639f93082a",
+    "attack_and_stab_probes": {
+      "rock": 88,
+      "water": 55
+    },
+    "defense_probes": {
+      "bug": 41,
+      "dragon": null,
+      "electric": 9,
+      "fighting": 24,
+      "fire": 7,
+      "flying": 17,
+      "ghost": 122,
+      "grass": 22,
+      "ground": 89,
+      "ice": 8,
+      "normal": 1,
+      "poison": 40,
+      "psychic": 60,
+      "rock": 88,
+      "water": 55
+    },
+    "calculator_unchecked_attack_types": [],
+    "calculator_unchecked_defense_types": [
+      "dragon"
+    ],
+    "stab_examples": [
+      {
+        "type": "rock",
+        "move_id": 88,
+        "kind": "hypothetical"
+      },
+      {
+        "type": "water",
+        "move_id": 56,
+        "kind": "learnable"
+      }
+    ],
+    "method": "BattleRules.calculate type_effectiveness; single-type target override for attack; actual target for defense; STAB separately; missing regular-damage probes chart-only"
+  },
+  "references": [
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "profile_and_stats"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/0",
+      "record_id": "type:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/1",
+      "record_id": "type:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/2",
+      "record_id": "type:3",
+      "identity_field": "id",
+      "identity_value": 3,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/3",
+      "record_id": "type:4",
+      "identity_field": "id",
+      "identity_value": 4,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/4",
+      "record_id": "type:5",
+      "identity_field": "id",
+      "identity_value": 5,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/5",
+      "record_id": "type:6",
+      "identity_field": "id",
+      "identity_value": 6,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/6",
+      "record_id": "type:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/7",
+      "record_id": "type:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/8",
+      "record_id": "type:10",
+      "identity_field": "id",
+      "identity_value": 10,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/9",
+      "record_id": "type:11",
+      "identity_field": "id",
+      "identity_value": 11,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/10",
+      "record_id": "type:12",
+      "identity_field": "id",
+      "identity_value": 12,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/11",
+      "record_id": "type:13",
+      "identity_field": "id",
+      "identity_value": 13,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/12",
+      "record_id": "type:14",
+      "identity_field": "id",
+      "identity_value": 14,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/13",
+      "record_id": "type:15",
+      "identity_field": "id",
+      "identity_value": 15,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/14",
+      "record_id": "type:16",
+      "identity_field": "id",
+      "identity_value": 16,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/0",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "absorb",
+        "method": "level-up",
+        "level": 34,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/70",
+      "record_id": "move:71",
+      "identity_field": "id",
+      "identity_value": 71,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/70",
+      "record_id": "move:71",
+      "identity_field": "id",
+      "identity_value": 71,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/1",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "bide",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/116",
+      "record_id": "move:117",
+      "identity_field": "id",
+      "identity_value": 117,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/116",
+      "record_id": "move:117",
+      "identity_field": "id",
+      "identity_value": 117,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/33",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/33",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/33/locations/0",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/33",
+      "expected_subrecord": {
+        "map_id_raw": "PewterGym",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/134",
+      "record_id": "location_name:pokered_map:PewterGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PewterGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/2",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "blizzard",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/58",
+      "record_id": "move:59",
+      "identity_field": "id",
+      "identity_value": 59,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/58",
+      "record_id": "move:59",
+      "identity_field": "id",
+      "identity_value": 59,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/13",
+      "record_id": "machine:TM14",
+      "identity_field": "code",
+      "identity_value": "TM14",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/13",
+      "record_id": "machine:TM14",
+      "identity_field": "code",
+      "identity_value": "TM14",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/13/locations/0",
+      "record_id": "machine:TM14",
+      "identity_field": "code",
+      "identity_value": "TM14",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/13",
+      "expected_subrecord": {
+        "map_id_raw": "PokemonMansionB1F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/135",
+      "record_id": "location_name:pokered_map:PokemonMansionB1F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PokemonMansionB1F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/3",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "body-slam",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/33",
+      "record_id": "move:34",
+      "identity_field": "id",
+      "identity_value": 34,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/33",
+      "record_id": "move:34",
+      "identity_field": "id",
+      "identity_value": 34,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/7",
+      "record_id": "machine:TM08",
+      "identity_field": "code",
+      "identity_value": "TM08",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/7",
+      "record_id": "machine:TM08",
+      "identity_field": "code",
+      "identity_value": "TM08",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/7/locations/0",
+      "record_id": "machine:TM08",
+      "identity_field": "code",
+      "identity_value": "TM08",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/7",
+      "expected_subrecord": {
+        "map_id_raw": "SSAnne1FRooms",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/149",
+      "record_id": "location_name:pokered_map:SSAnne1FRooms",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SSAnne1FRooms",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/4",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "bubble-beam",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/60",
+      "record_id": "move:61",
+      "identity_field": "id",
+      "identity_value": 61,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/60",
+      "record_id": "move:61",
+      "identity_field": "id",
+      "identity_value": 61,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/10",
+      "record_id": "machine:TM11",
+      "identity_field": "code",
+      "identity_value": "TM11",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/10",
+      "record_id": "machine:TM11",
+      "identity_field": "code",
+      "identity_value": "TM11",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/10/locations/0",
+      "record_id": "machine:TM11",
+      "identity_field": "code",
+      "identity_value": "TM11",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/10",
+      "expected_subrecord": {
+        "map_id_raw": "CeruleanGym",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/125",
+      "record_id": "location_name:pokered_map:CeruleanGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeruleanGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/5",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "double-edge",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/37",
+      "record_id": "move:38",
+      "identity_field": "id",
+      "identity_value": 38,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/37",
+      "record_id": "move:38",
+      "identity_field": "id",
+      "identity_value": 38,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/9",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/9",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/9/locations/0",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/9",
+      "expected_subrecord": {
+        "map_id_raw": "RocketHideoutB3F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/138",
+      "record_id": "location_name:pokered_map:RocketHideoutB3F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:RocketHideoutB3F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/6",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "double-team",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/103",
+      "record_id": "move:104",
+      "identity_field": "id",
+      "identity_value": 104,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/103",
+      "record_id": "move:104",
+      "identity_field": "id",
+      "identity_value": 104,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/31",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/31",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/31/locations/0",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/31",
+      "expected_subrecord": {
+        "map_id_raw": "SafariZoneWest",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/155",
+      "record_id": "location_name:pokered_map:SafariZoneWest",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SafariZoneWest",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/31/locations/1",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/31",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMart2F",
+        "method": "shop",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/121",
+      "record_id": "location_name:pokered_map:CeladonMart2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeladonMart2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/7",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "harden",
+        "method": "level-up",
+        "level": 1,
+        "version_group": "red-blue",
+        "order": 2
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/105",
+      "record_id": "move:106",
+      "identity_field": "id",
+      "identity_value": 106,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/105",
+      "record_id": "move:106",
+      "identity_field": "id",
+      "identity_value": 106,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/8",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "hydro-pump",
+        "method": "level-up",
+        "level": 49,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/55",
+      "record_id": "move:56",
+      "identity_field": "id",
+      "identity_value": 56,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/55",
+      "record_id": "move:56",
+      "identity_field": "id",
+      "identity_value": 56,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/9",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "ice-beam",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/57",
+      "record_id": "move:58",
+      "identity_field": "id",
+      "identity_value": 58,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/57",
+      "record_id": "move:58",
+      "identity_field": "id",
+      "identity_value": 58,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/12",
+      "record_id": "machine:TM13",
+      "identity_field": "code",
+      "identity_value": "TM13",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/12",
+      "record_id": "machine:TM13",
+      "identity_field": "code",
+      "identity_value": "TM13",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/12/locations/0",
+      "record_id": "machine:TM13",
+      "identity_field": "code",
+      "identity_value": "TM13",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/12",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMartRoof",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/123",
+      "record_id": "location_name:pokered_map:CeladonMartRoof",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeladonMartRoof",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/10",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "leer",
+        "method": "level-up",
+        "level": 44,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/42",
+      "record_id": "move:43",
+      "identity_field": "id",
+      "identity_value": 43,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/42",
+      "record_id": "move:43",
+      "identity_field": "id",
+      "identity_value": 43,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/11",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "mimic",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/101",
+      "record_id": "move:102",
+      "identity_field": "id",
+      "identity_value": 102,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/101",
+      "record_id": "move:102",
+      "identity_field": "id",
+      "identity_value": 102,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/30",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/30",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/30/locations/0",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/30",
+      "expected_subrecord": {
+        "map_id_raw": "CopycatsHouse2F",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/128",
+      "record_id": "location_name:pokered_map:CopycatsHouse2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CopycatsHouse2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/12",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "rage",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/98",
+      "record_id": "move:99",
+      "identity_field": "id",
+      "identity_value": 99,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/98",
+      "record_id": "move:99",
+      "identity_field": "id",
+      "identity_value": 99,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/19",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/19",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/19/locations/0",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/19",
+      "expected_subrecord": {
+        "map_id_raw": "Route15",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/142",
+      "record_id": "location_name:pokered_map:Route15",
+      "identity_field": "id",
+      "identity_value": "pokered_map:Route15",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/13",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "reflect",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/114",
+      "record_id": "move:115",
+      "identity_field": "id",
+      "identity_value": 115,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/114",
+      "record_id": "move:115",
+      "identity_field": "id",
+      "identity_value": 115,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/32",
+      "record_id": "machine:TM33",
+      "identity_field": "code",
+      "identity_value": "TM33",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/32",
+      "record_id": "machine:TM33",
+      "identity_field": "code",
+      "identity_value": "TM33",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/32/locations/0",
+      "record_id": "machine:TM33",
+      "identity_field": "code",
+      "identity_value": "TM33",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/32",
+      "expected_subrecord": {
+        "map_id_raw": "PowerPlant",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/136",
+      "record_id": "location_name:pokered_map:PowerPlant",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PowerPlant",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/32/locations/1",
+      "record_id": "machine:TM33",
+      "identity_field": "code",
+      "identity_value": "TM33",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/32",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMart2F",
+        "method": "shop",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/14",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "rest",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/155",
+      "record_id": "move:156",
+      "identity_field": "id",
+      "identity_value": 156,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/155",
+      "record_id": "move:156",
+      "identity_field": "id",
+      "identity_value": 156,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/43",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/43",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/43/locations/0",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/43",
+      "expected_subrecord": {
+        "map_id_raw": "SSAnneB1FRooms",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/150",
+      "record_id": "location_name:pokered_map:SSAnneB1FRooms",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SSAnneB1FRooms",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/15",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "scratch",
+        "method": "level-up",
+        "level": 1,
+        "version_group": "red-blue",
+        "order": 1
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/9",
+      "record_id": "move:10",
+      "identity_field": "id",
+      "identity_value": 10,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/9",
+      "record_id": "move:10",
+      "identity_field": "id",
+      "identity_value": 10,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/16",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "slash",
+        "method": "level-up",
+        "level": 39,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/162",
+      "record_id": "move:163",
+      "identity_field": "id",
+      "identity_value": 163,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/162",
+      "record_id": "move:163",
+      "identity_field": "id",
+      "identity_value": 163,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/17",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "substitute",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/163",
+      "record_id": "move:164",
+      "identity_field": "id",
+      "identity_value": 164,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/163",
+      "record_id": "move:164",
+      "identity_field": "id",
+      "identity_value": 164,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/49",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/49",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/49/locations/0",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/49",
+      "expected_subrecord": {
+        "map_id_raw": "GameCornerPrizeRoom",
+        "method": "game_corner_prize",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/130",
+      "record_id": "location_name:pokered_map:GameCornerPrizeRoom",
+      "identity_field": "id",
+      "identity_value": "pokered_map:GameCornerPrizeRoom",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/18",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "surf",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/56",
+      "record_id": "move:57",
+      "identity_field": "id",
+      "identity_value": 57,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/56",
+      "record_id": "move:57",
+      "identity_field": "id",
+      "identity_value": 57,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/52",
+      "record_id": "machine:HM03",
+      "identity_field": "code",
+      "identity_value": "HM03",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/52",
+      "record_id": "machine:HM03",
+      "identity_field": "code",
+      "identity_value": "HM03",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/52/locations/0",
+      "record_id": "machine:HM03",
+      "identity_field": "code",
+      "identity_value": "HM03",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/52",
+      "expected_subrecord": {
+        "map_id_raw": "SafariZoneSecretHouse",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/154",
+      "record_id": "location_name:pokered_map:SafariZoneSecretHouse",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SafariZoneSecretHouse",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/19",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "take-down",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/35",
+      "record_id": "move:36",
+      "identity_field": "id",
+      "identity_value": 36,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/35",
+      "record_id": "move:36",
+      "identity_field": "id",
+      "identity_value": 36,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/8",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/8",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/8/locations/0",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/8",
+      "expected_subrecord": {
+        "map_id_raw": "SilphCo5F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/159",
+      "record_id": "location_name:pokered_map:SilphCo5F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SilphCo5F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/8/locations/1",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/8",
+      "expected_subrecord": {
+        "map_id_raw": "CeladonMart2F",
+        "method": "shop",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/20",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "toxic",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/91",
+      "record_id": "move:92",
+      "identity_field": "id",
+      "identity_value": 92,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/91",
+      "record_id": "move:92",
+      "identity_field": "id",
+      "identity_value": 92,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/5",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/5",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/5/locations/0",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/5",
+      "expected_subrecord": {
+        "map_id_raw": "FuchsiaGym",
+        "method": "reward_npc",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/129",
+      "record_id": "location_name:pokered_map:FuchsiaGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:FuchsiaGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139/learnset/21",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "learnset",
+      "record_pointer": "/139",
+      "expected_subrecord": {
+        "move": "water-gun",
+        "method": "machine",
+        "level": 0,
+        "version_group": "red-blue",
+        "order": null
+      }
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/11",
+      "record_id": "machine:TM12",
+      "identity_field": "code",
+      "identity_value": "TM12",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/11",
+      "record_id": "machine:TM12",
+      "identity_field": "code",
+      "identity_value": "TM12",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/11/locations/0",
+      "record_id": "machine:TM12",
+      "identity_field": "code",
+      "identity_value": "TM12",
+      "section": "machine_acquisition",
+      "record_pointer": "/machines/11",
+      "expected_subrecord": {
+        "map_id_raw": "MtMoon1F",
+        "method": "ground_item",
+        "versions": [
+          "red",
+          "blue"
+        ]
+      }
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/132",
+      "record_id": "location_name:pokered_map:MtMoon1F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:MtMoon1F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/139",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/139",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/139/evolves_to/0",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "evolution",
+      "record_pointer": "/records/139",
+      "expected_subrecord": {
+        "from_id": 140,
+        "to_id": 141,
+        "trigger": "level-up",
+        "min_level": 40,
+        "item": null
+      }
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/140",
+      "record_id": "pokemon:141",
+      "identity_field": "id",
+      "identity_value": 141,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/140",
+      "record_id": "pokemon:141",
+      "identity_field": "id",
+      "identity_value": 141,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/140/evolves_from/0",
+      "record_id": "pokemon:141",
+      "identity_field": "id",
+      "identity_value": 141,
+      "section": "evolution",
+      "record_pointer": "/records/140",
+      "expected_subrecord": {
+        "from_id": 140,
+        "to_id": 141,
+        "trigger": "level-up",
+        "min_level": 40,
+        "item": null
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/139",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/53",
+      "record_id": "location_name:pokeapi_location_area:cinnabar-island-cinnabar-lab",
+      "identity_field": "id",
+      "identity_value": "pokeapi_location_area:cinnabar-island-cinnabar-lab",
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/139/versions/red/encounters/0",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "encounter",
+      "record_pointer": "/pokemon/139",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cinnabar-island-cinnabar-lab",
+          "url": "https://pokeapi.co/api/v2/location-area/833/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "red",
+            "url": "https://pokeapi.co/api/v2/version/1/"
+          },
+          "max_chance": 100,
+          "encounter_details": [
+            {
+              "min_level": 30,
+              "max_level": 30,
+              "chance": 100,
+              "method": {
+                "name": "gift",
+                "url": "https://pokeapi.co/api/v2/encounter-method/18/"
+              },
+              "condition_values": [
+                {
+                  "name": "item-dome-fossil",
+                  "url": "https://pokeapi.co/api/v2/encounter-condition-value/47/"
+                }
+              ],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/139/versions/blue/encounters/0",
+      "record_id": "pokemon:140",
+      "identity_field": "id",
+      "identity_value": 140,
+      "section": "encounter",
+      "record_pointer": "/pokemon/139",
+      "expected_subrecord": {
+        "location_area": {
+          "name": "cinnabar-island-cinnabar-lab",
+          "url": "https://pokeapi.co/api/v2/location-area/833/"
+        },
+        "version_detail": {
+          "version": {
+            "name": "blue",
+            "url": "https://pokeapi.co/api/v2/version/2/"
+          },
+          "max_chance": 100,
+          "encounter_details": [
+            {
+              "min_level": 30,
+              "max_level": 30,
+              "chance": 100,
+              "method": {
+                "name": "gift",
+                "url": "https://pokeapi.co/api/v2/encounter-method/18/"
+              },
+              "condition_values": [
+                {
+                  "name": "item-dome-fossil",
+                  "url": "https://pokeapi.co/api/v2/encounter-condition-value/47/"
+                }
+              ],
+              "pokemon_details": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/bug",
+      "record_id": "type_matchup:rock:bug",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/dragon",
+      "record_id": "type_matchup:rock:dragon",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/electric",
+      "record_id": "type_matchup:rock:electric",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/fighting",
+      "record_id": "type_matchup:rock:fighting",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/fire",
+      "record_id": "type_matchup:rock:fire",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/flying",
+      "record_id": "type_matchup:rock:flying",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/ghost",
+      "record_id": "type_matchup:rock:ghost",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/grass",
+      "record_id": "type_matchup:rock:grass",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/ground",
+      "record_id": "type_matchup:rock:ground",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/ice",
+      "record_id": "type_matchup:rock:ice",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/normal",
+      "record_id": "type_matchup:rock:normal",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/poison",
+      "record_id": "type_matchup:rock:poison",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/psychic",
+      "record_id": "type_matchup:rock:psychic",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/rock",
+      "record_id": "type_matchup:rock:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/water",
+      "record_id": "type_matchup:rock:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/bug",
+      "record_id": "type_matchup:water:bug",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/dragon",
+      "record_id": "type_matchup:water:dragon",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/electric",
+      "record_id": "type_matchup:water:electric",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/fighting",
+      "record_id": "type_matchup:water:fighting",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/fire",
+      "record_id": "type_matchup:water:fire",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/flying",
+      "record_id": "type_matchup:water:flying",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/ghost",
+      "record_id": "type_matchup:water:ghost",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/grass",
+      "record_id": "type_matchup:water:grass",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/ground",
+      "record_id": "type_matchup:water:ground",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/ice",
+      "record_id": "type_matchup:water:ice",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/normal",
+      "record_id": "type_matchup:water:normal",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/poison",
+      "record_id": "type_matchup:water:poison",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/psychic",
+      "record_id": "type_matchup:water:psychic",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/rock",
+      "record_id": "type_matchup:water:rock",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/water",
+      "record_id": "type_matchup:water:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/bug/rock",
+      "record_id": "type_matchup:bug:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/bug/water",
+      "record_id": "type_matchup:bug:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/dragon/rock",
+      "record_id": "type_matchup:dragon:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/dragon/water",
+      "record_id": "type_matchup:dragon:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/electric/rock",
+      "record_id": "type_matchup:electric:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/electric/water",
+      "record_id": "type_matchup:electric:water",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fighting/rock",
+      "record_id": "type_matchup:fighting:rock",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fighting/water",
+      "record_id": "type_matchup:fighting:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fire/rock",
+      "record_id": "type_matchup:fire:rock",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fire/water",
+      "record_id": "type_matchup:fire:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/flying/rock",
+      "record_id": "type_matchup:flying:rock",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/flying/water",
+      "record_id": "type_matchup:flying:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ghost/rock",
+      "record_id": "type_matchup:ghost:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ghost/water",
+      "record_id": "type_matchup:ghost:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/rock",
+      "record_id": "type_matchup:grass:rock",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/water",
+      "record_id": "type_matchup:grass:water",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ground/rock",
+      "record_id": "type_matchup:ground:rock",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ground/water",
+      "record_id": "type_matchup:ground:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ice/rock",
+      "record_id": "type_matchup:ice:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ice/water",
+      "record_id": "type_matchup:ice:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/normal/rock",
+      "record_id": "type_matchup:normal:rock",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/normal/water",
+      "record_id": "type_matchup:normal:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/rock",
+      "record_id": "type_matchup:poison:rock",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/water",
+      "record_id": "type_matchup:poison:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/psychic/rock",
+      "record_id": "type_matchup:psychic:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/psychic/water",
+      "record_id": "type_matchup:psychic:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/rock",
+      "record_id": "type_matchup:rock:rock",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/water",
+      "record_id": "type_matchup:rock:water",
+      "identity_field": null,
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/rock",
+      "record_id": "type_matchup:water:rock",
+      "identity_field": null,
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/water",
+      "record_id": "type_matchup:water:water",
+      "identity_field": null,
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "attack_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "attack_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "stab_example"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "stab_example"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "attack_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "attack_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/55",
+      "record_id": "move:56",
+      "identity_field": "id",
+      "identity_value": 56,
+      "section": "stab_example"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/55",
+      "record_id": "move:56",
+      "identity_field": "id",
+      "identity_value": 56,
+      "section": "stab_example"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/40",
+      "record_id": "move:41",
+      "identity_field": "id",
+      "identity_value": 41,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/40",
+      "record_id": "move:41",
+      "identity_field": "id",
+      "identity_value": 41,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/8",
+      "record_id": "move:9",
+      "identity_field": "id",
+      "identity_value": 9,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/8",
+      "record_id": "move:9",
+      "identity_field": "id",
+      "identity_value": 9,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/23",
+      "record_id": "move:24",
+      "identity_field": "id",
+      "identity_value": 24,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/23",
+      "record_id": "move:24",
+      "identity_field": "id",
+      "identity_value": 24,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/6",
+      "record_id": "move:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/6",
+      "record_id": "move:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/16",
+      "record_id": "move:17",
+      "identity_field": "id",
+      "identity_value": 17,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/16",
+      "record_id": "move:17",
+      "identity_field": "id",
+      "identity_value": 17,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/121",
+      "record_id": "move:122",
+      "identity_field": "id",
+      "identity_value": 122,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/121",
+      "record_id": "move:122",
+      "identity_field": "id",
+      "identity_value": 122,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/88",
+      "record_id": "move:89",
+      "identity_field": "id",
+      "identity_value": 89,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/88",
+      "record_id": "move:89",
+      "identity_field": "id",
+      "identity_value": 89,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/7",
+      "record_id": "move:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/7",
+      "record_id": "move:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/0",
+      "record_id": "move:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/0",
+      "record_id": "move:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/59",
+      "record_id": "move:60",
+      "identity_field": "id",
+      "identity_value": 60,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/59",
+      "record_id": "move:60",
+      "identity_field": "id",
+      "identity_value": 60,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "defense_probe"
+    }
+  ],
+  "section_dependencies": {
+    "profile_and_stats": [],
+    "learnset": [
+      "profile_and_stats"
+    ],
+    "machine": [
+      "profile_and_stats",
+      "learnset"
+    ],
+    "machine_acquisition": [
+      "profile_and_stats",
+      "learnset",
+      "machine"
+    ],
+    "evolution": [],
+    "encounter_trade": [],
+    "encounter": [
+      "profile_and_stats",
+      "encounter_trade"
+    ],
+    "type_calculations": [
+      "profile_and_stats"
+    ],
+    "attack_probe": [],
+    "defense_probe": [],
+    "attack": [
+      "profile_and_stats",
+      "type_calculations",
+      "attack_probe"
+    ],
+    "defense": [
+      "profile_and_stats",
+      "type_calculations",
+      "defense_probe"
+    ],
+    "stab_example": [
+      "profile_and_stats",
+      "learnset",
+      "type_calculations",
+      "attack_probe"
+    ]
+  },
+  "limitations": [
+    "Evidence links inputs and calculations, not document truth or review approval.",
+    "Encounter and machine acquisition records may be incomplete; absence is not impossibility.",
+    "Historical move and stat values may include present-value fallbacks; see source manifest.",
+    "The classification source records a historical moves input hash different from this snapshot.",
+    "Chart-only types without a regular-damage probe are not calculator-verified."
+  ]
+}

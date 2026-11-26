@@ -38,6 +38,12 @@ description: Use when preparing or verifying normalized Red/Blue data and source
 
 외형·생태·도감 설명, 키·몸무게는 현재 포켓몬 문서의 필수 보강 범위가 아니다. `pokedex_extra.json`이나 별도 수집 스크립트의 존재·151건 생성을 전제하지 않는다. 추가 데이터가 필요하면 먼저 질문·출처·사용 범위를 확인하고 별도 산출물로 보강한다.
 
+## Solar 전달본
+
+[`solar_handoff/`](../../../solar_handoff/README.md)는 `data/processed/` 정제 JSON 11개와 `data/source_manifest.json`, `data/document_register.json`, 문서·근거 각 151개를 포함한다. 문서·근거와 청크 생성 CLI 및 `--check` 사용법은 [생성 안내](../../../solar_handoff/scripts/README.md)를 따른다. 001·002는 역사적 특수 문서와 근거를 보존하고 003–151만 생성한다. 과거 경로·해시·revision은 이력이지 현재 코드의 검증값이 아니다.
+
+등록된 원본 초안은 pending이며 자동 검증은 사람의 사실 검토가 아니다. 별도로 사용자의 151문서 승인 의사가 있었으나 새 데이터 변경·적재는 정확한 입력과 사용 범위에 대한 별도 확인을 따른다. 출처 기록은 원본의 완전한 보존·재현이나 재배포 권리를 보장하지 않는다.
+
 ## 절차
 
 1. 대상 질문과 필요한 필드를 확인하고 `verify_bundle()`로 해시 고정 파일의 무결성을 검사한다.

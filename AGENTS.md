@@ -13,6 +13,7 @@
 | 에이전트 개요, 에이전트 간 계약          | [docs/references/agents/README.md](docs/references/agents/README.md)                                                    |
 | 스킬 개요, 설계 원칙, 데이터 현황        | [docs/references/skills/README.md](docs/references/skills/README.md)                                                    |
 | 개발 환경 (Python, uv, .env, PostgreSQL) | [docs/references/environment.md](docs/references/environment.md)                                                        |
+| Solar 데이터·검색 팀 전달본              | [solar_handoff/README.md](solar_handoff/README.md)                                                                      |
 | 문서 동기화 규칙, 검사 스크립트          | [.claude/skills/doc-sync/SKILL.md](.claude/skills/doc-sync/SKILL.md)                                                    |
 | PR 전 보안 점검 규칙, 검사 스크립트      | [.claude/skills/security-check/SKILL.md](.claude/skills/security-check/SKILL.md)                                        |
 | 포켓몬 번호·이름·타입 참조표             | [docs/references/pokemon-gen1-reference.md](docs/references/pokemon-gen1-reference.md)                                  |

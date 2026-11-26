@@ -21,6 +21,11 @@ skills:
 - 임베딩, 컬렉션 빌드·증분 sync (PostgreSQL + pgvector)
 - 위 단계의 `runs/manifest.jsonl` 기록
 
+### Solar 전달본
+
+- 현재 `solar_handoff/`의 정제 데이터·문서·근거·청크와 단일 Solar 벡터 전달은 각각 `data-normalize`, `chunking`, `vectordb`의 Solar 절을 따른다. 기존 PGVector 컬렉션 절차와 구분한다.
+- 원본 청크의 pending 상태와 별도로 사용자의 151문서 승인 의사가 있었음을 구분해 보고한다. 생성·검증이나 과거 의사만으로 새 입력과 새 DB 작업의 승인을 가정하지 않는다. 실제 대상과 변경 범위, 보안·사용자 확인과 추가 유료 호출 승인을 확인한다.
+
 ## 하지 않는 것
 
 - `data/processed/`의 해시 고정 파일 수정
@@ -34,7 +39,7 @@ skills:
 - 작업 대상 정제 데이터가 `verify_bundle()` 및 해당 데이터의 ID·버전·근거 검증을 통과한다. 전체 151마리 작업에서는 151종의 누락·중복을 확인한다.
 - Markdown 작업은 대상 문서의 사실과 계산 근거를 대조하고 검토 상태를 보고한다. 승인 전 초안은 초안으로만 보고한다.
 - 청킹·인덱싱 작업은 승인된 문서만 대상으로 하며, 청크·근거 연결의 누락·중복 및 계약이 구현된 경우 스키마를 검증한다.
-- 인덱싱 작업은 컬렉션 누락 0, 이름 검색 smoke test 통과, sync 결과(embedded / meta_only / deleted / unchanged)의 manifest 기록이 필요하다.
+- 기존 PGVector 컬렉션 인덱싱 작업은 컬렉션 누락 0, 이름 검색 smoke test 통과, sync 결과(embedded / meta_only / deleted / unchanged)의 manifest 기록이 필요하다. Solar 전달본은 별도 테이블과 실행 결과를 `vectordb` Solar 절에 따라 확인한다.
 - 검증·계약·실행 기록 등의 선행 조건이 없으면 구현된 것으로 가정하지 않고 `blocked`와 사유를 보고한다. `pokedex_extra.json` 151건 생성은 공통 완료 조건이 아니다.
 
 ## 보고 형식

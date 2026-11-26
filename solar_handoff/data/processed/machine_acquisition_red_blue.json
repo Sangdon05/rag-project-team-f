@@ -1,0 +1,4620 @@
+{
+  "scope": {
+    "games": [
+      "red",
+      "blue"
+    ],
+    "game_language": "English",
+    "source_kind": "community disassembly; no gameplay validation",
+    "warning": "All coverage partial. Empty locations means not yet established, not unavailable. Map IDs are source identifiers, not verified Korean names."
+  },
+  "provenance": {
+    "commit": "ba9c0568f64ae602fadda577a08c66639f93082a",
+    "archive": "pokeapi/sources/machine_acquisition_red_blue/pokered-ba9c056.zip",
+    "archive_sha256": "e44f7858e57aaf2e81eaf8bf90592a048e34cde1b89fd25a8ebed33622de4fd6",
+    "inventory": "data/processed/machines_red_blue.json",
+    "inventory_sha256": "4ddcb121d75239b43b8af960705d47b900ddd81d171dd4c674265bd2d3d99abb",
+    "review": "rule-based extraction plus explicitly curated cases; not exhaustive human review"
+  },
+  "summary": {
+    "inventory_records": 55,
+    "records_with_locations": 55,
+    "locations": 64,
+    "records_without_locations": 0,
+    "script_reference_candidates": 26
+  },
+  "machines": [
+    {
+      "code": "TM01",
+      "move": "mega-punch",
+      "source_item_constant": "TM_MEGA_PUNCH",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 161,
+        "line_end": 161,
+        "raw_lines": [
+          "\tadd_tm MEGA_PUNCH   ; $C9"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L161"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "MtMoonB2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/MtMoonB2F.asm",
+              "line_start": 32,
+              "line_end": 32,
+              "raw_lines": [
+                "\tobject_event 29,  5, SPRITE_POKE_BALL, STAY, NONE, TEXT_MTMOONB2F_TM_MEGA_PUNCH, TM_MEGA_PUNCH"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/MtMoonB2F.asm#L32"
+            },
+            {
+              "path": "scripts/MtMoonB2F.asm",
+              "line_start": 168,
+              "line_end": 168,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                       TEXT_MTMOONB2F_TM_MEGA_PUNCH"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/MtMoonB2F.asm#L168"
+            }
+          ],
+          "coordinates": {
+            "x": 29,
+            "y": 5,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM02",
+      "move": "razor-wind",
+      "source_item_constant": "TM_RAZOR_WIND",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 162,
+        "line_end": 162,
+        "raw_lines": [
+          "\tadd_tm RAZOR_WIND   ; $CA"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L162"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "RocketHideoutB4F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/RocketHideoutB4F.asm",
+              "line_start": 28,
+              "line_end": 28,
+              "raw_lines": [
+                "\tobject_event  9,  4, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROCKETHIDEOUTB4F_TM_RAZOR_WIND, TM_RAZOR_WIND"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/RocketHideoutB4F.asm#L28"
+            },
+            {
+              "path": "scripts/RocketHideoutB4F.asm",
+              "line_start": 83,
+              "line_end": 83,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                              TEXT_ROCKETHIDEOUTB4F_TM_RAZOR_WIND"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/RocketHideoutB4F.asm#L83"
+            }
+          ],
+          "coordinates": {
+            "x": 9,
+            "y": 4,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM03",
+      "move": "swords-dance",
+      "source_item_constant": "TM_SWORDS_DANCE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 163,
+        "line_end": 163,
+        "raw_lines": [
+          "\tadd_tm SWORDS_DANCE ; $CB"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L163"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SilphCo7F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SilphCo7F.asm",
+              "line_start": 39,
+              "line_end": 39,
+              "raw_lines": [
+                "\tobject_event 24, 11, SPRITE_POKE_BALL, STAY, NONE, TEXT_SILPHCO7F_TM_SWORDS_DANCE, TM_SWORDS_DANCE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SilphCo7F.asm#L39"
+            },
+            {
+              "path": "scripts/SilphCo7F.asm",
+              "line_start": 278,
+              "line_end": 278,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                  TEXT_SILPHCO7F_TM_SWORDS_DANCE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SilphCo7F.asm#L278"
+            }
+          ],
+          "coordinates": {
+            "x": 24,
+            "y": 11,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM04",
+      "move": "whirlwind",
+      "source_item_constant": "TM_WHIRLWIND",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 164,
+        "line_end": 164,
+        "raw_lines": [
+          "\tadd_tm WHIRLWIND    ; $CC"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L164"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "Route4",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/Route4.asm",
+              "line_start": 22,
+              "line_end": 22,
+              "raw_lines": [
+                "\tobject_event 57,  3, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE4_TM_WHIRLWIND, TM_WHIRLWIND"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route4.asm#L22"
+            },
+            {
+              "path": "scripts/Route4.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,          TEXT_ROUTE4_TM_WHIRLWIND"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route4.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 57,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM05",
+      "move": "mega-kick",
+      "source_item_constant": "TM_MEGA_KICK",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 165,
+        "line_end": 165,
+        "raw_lines": [
+          "\tadd_tm MEGA_KICK    ; $CD"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L165"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "VictoryRoad2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/VictoryRoad2F.asm",
+              "line_start": 39,
+              "line_end": 39,
+              "raw_lines": [
+                "\tobject_event  9, 11, SPRITE_POKE_BALL, STAY, NONE, TEXT_VICTORYROAD2F_TM_MEGA_KICK, TM_MEGA_KICK"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/VictoryRoad2F.asm#L39"
+            },
+            {
+              "path": "scripts/VictoryRoad2F.asm",
+              "line_start": 81,
+              "line_end": 81,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                TEXT_VICTORYROAD2F_TM_MEGA_KICK"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/VictoryRoad2F.asm#L81"
+            }
+          ],
+          "coordinates": {
+            "x": 9,
+            "y": 11,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM06",
+      "move": "toxic",
+      "source_item_constant": "TM_TOXIC",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 166,
+        "line_end": 166,
+        "raw_lines": [
+          "\tadd_tm TOXIC        ; $CE"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L166"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "FuchsiaGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/FuchsiaGym.asm",
+              "line_start": 40,
+              "line_end": 61,
+              "raw_lines": [
+                "",
+                "FuchsiaGymKogaPostBattleScript:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, FuchsiaGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "; fallthrough",
+                "FuchsiaGymReceiveTM06:",
+                "\tld a, TEXT_FUCHSIAGYM_KOGA_SOUL_BADGE_INFO",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_KOGA",
+                "\tlb bc, TM_TOXIC, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .BagFull",
+                "\tld a, TEXT_FUCHSIAGYM_KOGA_RECEIVED_TM06",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM06",
+                "\tjr .gymVictory",
+                ".BagFull"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/FuchsiaGym.asm#L40-L61"
+            },
+            {
+              "path": "data/maps/objects/FuchsiaGym.asm",
+              "line_start": 21,
+              "line_end": 21,
+              "raw_lines": [
+                "\tobject_event  4, 10, SPRITE_KOGA, STAY, DOWN, TEXT_FUCHSIAGYM_KOGA, OPP_KOGA, 1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/FuchsiaGym.asm#L21"
+            }
+          ],
+          "coordinates": {
+            "x": 4,
+            "y": 10,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader KOGA; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/FuchsiaGym.asm",
+          "line_start": 53,
+          "line_end": 53,
+          "raw_lines": [
+            "\tlb bc, TM_TOXIC, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/FuchsiaGym.asm#L53"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM07",
+      "move": "horn-drill",
+      "source_item_constant": "TM_HORN_DRILL",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 167,
+        "line_end": 167,
+        "raw_lines": [
+          "\tadd_tm HORN_DRILL   ; $CF"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L167"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "RocketHideoutB2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/RocketHideoutB2F.asm",
+              "line_start": 24,
+              "line_end": 24,
+              "raw_lines": [
+                "\tobject_event  6, 12, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROCKETHIDEOUTB2F_TM_HORN_DRILL, TM_HORN_DRILL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/RocketHideoutB2F.asm#L24"
+            },
+            {
+              "path": "scripts/RocketHideoutB2F.asm",
+              "line_start": 278,
+              "line_end": 278,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,             TEXT_ROCKETHIDEOUTB2F_TM_HORN_DRILL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/RocketHideoutB2F.asm#L278"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 12,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM08",
+      "move": "body-slam",
+      "source_item_constant": "TM_BODY_SLAM",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 168,
+        "line_end": 168,
+        "raw_lines": [
+          "\tadd_tm BODY_SLAM    ; $D0"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L168"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SSAnne1FRooms",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SSAnne1FRooms.asm",
+              "line_start": 37,
+              "line_end": 37,
+              "raw_lines": [
+                "\tobject_event 12, 15, SPRITE_POKE_BALL, STAY, NONE, TEXT_SSANNE1FROOMS_TM_BODY_SLAM, TM_BODY_SLAM"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SSAnne1FRooms.asm#L37"
+            },
+            {
+              "path": "scripts/SSAnne1FRooms.asm",
+              "line_start": 27,
+              "line_end": 27,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                 TEXT_SSANNE1FROOMS_TM_BODY_SLAM"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SSAnne1FRooms.asm#L27"
+            }
+          ],
+          "coordinates": {
+            "x": 12,
+            "y": 15,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM09",
+      "move": "take-down",
+      "source_item_constant": "TM_TAKE_DOWN",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 169,
+        "line_end": 169,
+        "raw_lines": [
+          "\tadd_tm TAKE_DOWN    ; $D1"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L169"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SilphCo5F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SilphCo5F.asm",
+              "line_start": 34,
+              "line_end": 34,
+              "raw_lines": [
+                "\tobject_event  2, 13, SPRITE_POKE_BALL, STAY, NONE, TEXT_SILPHCO5F_TM_TAKE_DOWN, TM_TAKE_DOWN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SilphCo5F.asm#L34"
+            },
+            {
+              "path": "scripts/SilphCo5F.asm",
+              "line_start": 81,
+              "line_end": 81,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,              TEXT_SILPHCO5F_TM_TAKE_DOWN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SilphCo5F.asm#L81"
+            }
+          ],
+          "coordinates": {
+            "x": 2,
+            "y": 13,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM10",
+      "move": "double-edge",
+      "source_item_constant": "TM_DOUBLE_EDGE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 170,
+        "line_end": 170,
+        "raw_lines": [
+          "\tadd_tm DOUBLE_EDGE  ; $D2"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L170"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "RocketHideoutB3F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/RocketHideoutB3F.asm",
+              "line_start": 19,
+              "line_end": 19,
+              "raw_lines": [
+                "\tobject_event 26, 17, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROCKETHIDEOUTB3F_TM_DOUBLE_EDGE, TM_DOUBLE_EDGE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/RocketHideoutB3F.asm#L19"
+            },
+            {
+              "path": "scripts/RocketHideoutB3F.asm",
+              "line_start": 132,
+              "line_end": 132,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,              TEXT_ROCKETHIDEOUTB3F_TM_DOUBLE_EDGE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/RocketHideoutB3F.asm#L132"
+            }
+          ],
+          "coordinates": {
+            "x": 26,
+            "y": 17,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM11",
+      "move": "bubble-beam",
+      "source_item_constant": "TM_BUBBLEBEAM",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 171,
+        "line_end": 171,
+        "raw_lines": [
+          "\tadd_tm BUBBLEBEAM   ; $D3"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L171"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeruleanGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeruleanGym.asm",
+              "line_start": 38,
+              "line_end": 59,
+              "raw_lines": [
+                "",
+                "CeruleanGymMistyPostBattleScript:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, CeruleanGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "",
+                "CeruleanGymReceiveTM11:",
+                "\tld a, TEXT_CERULEANGYM_MISTY_CASCADE_BADGE_INFO",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_MISTY",
+                "\tlb bc, TM_BUBBLEBEAM, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .BagFull",
+                "\tld a, TEXT_CERULEANGYM_MISTY_RECEIVED_TM11",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM11",
+                "\tjr .gymVictory",
+                ".BagFull"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeruleanGym.asm#L38-L59"
+            },
+            {
+              "path": "data/maps/objects/CeruleanGym.asm",
+              "line_start": 17,
+              "line_end": 17,
+              "raw_lines": [
+                "\tobject_event  4,  2, SPRITE_BRUNETTE_GIRL, STAY, DOWN, TEXT_CERULEANGYM_MISTY, OPP_MISTY, 1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeruleanGym.asm#L17"
+            }
+          ],
+          "coordinates": {
+            "x": 4,
+            "y": 2,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader MISTY; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeruleanGym.asm",
+          "line_start": 51,
+          "line_end": 51,
+          "raw_lines": [
+            "\tlb bc, TM_BUBBLEBEAM, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeruleanGym.asm#L51"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM12",
+      "move": "water-gun",
+      "source_item_constant": "TM_WATER_GUN",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 172,
+        "line_end": 172,
+        "raw_lines": [
+          "\tadd_tm WATER_GUN    ; $D4"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L172"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "MtMoon1F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/MtMoon1F.asm",
+              "line_start": 42,
+              "line_end": 42,
+              "raw_lines": [
+                "\tobject_event  5, 32, SPRITE_POKE_BALL, STAY, NONE, TEXT_MTMOON1F_TM_WATER_GUN, TM_WATER_GUN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/MtMoon1F.asm#L42"
+            },
+            {
+              "path": "scripts/MtMoon1F.asm",
+              "line_start": 30,
+              "line_end": 30,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,            TEXT_MTMOON1F_TM_WATER_GUN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/MtMoon1F.asm#L30"
+            }
+          ],
+          "coordinates": {
+            "x": 5,
+            "y": 32,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM13",
+      "move": "ice-beam",
+      "source_item_constant": "TM_ICE_BEAM",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 173,
+        "line_end": 173,
+        "raw_lines": [
+          "\tadd_tm ICE_BEAM     ; $D5"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L173"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeladonMartRoof",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 113,
+              "line_end": 126,
+              "raw_lines": [
+                "\tret",
+                ".gaveFreshWater",
+                "\tCheckEvent EVENT_GOT_TM13",
+                "\tjr nz, .alreadyGaveDrink",
+                "\tld hl, CeladonMartRoofLittleGirlYayFreshWaterText",
+                "\tcall PrintText",
+                "\tcall RemoveItemByIDBank12",
+                "\tlb bc, TM_ICE_BEAM, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bagFull",
+                "\tld hl, CeladonMartRoofLittleGirlReceivedTM13Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_TM13",
+                "\tret"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L113-L126"
+            },
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 212,
+              "line_end": 212,
+              "raw_lines": [
+                "\tdw_const CeladonMartRoofLittleGirlText,       TEXT_CELADONMARTROOF_LITTLE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L212"
+            },
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 222,
+              "line_end": 236,
+              "raw_lines": [
+                "CeladonMartRoofLittleGirlText:",
+                "\ttext_asm",
+                "\tcall CeladonMartRoofScript_GetDrinksInBag",
+                "\tld a, [wFilteredBagItemsCount]",
+                "\tand a",
+                "\tjr z, .noDrinksInBag",
+                "\tld a, 1",
+                "\tld [wDoNotWaitForButtonPressAfterDisplayingText], a",
+                "\tld hl, .GiveHerADrinkText",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem]",
+                "\tand a",
+                "\tjr nz, .done",
+                "\tcall CeladonMartRoofScript_GiveDrinkToGirl"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L222-L236"
+            },
+            {
+              "path": "data/maps/objects/CeladonMartRoof.asm",
+              "line_start": 19,
+              "line_end": 19,
+              "raw_lines": [
+                "\tobject_event  5,  5, SPRITE_LITTLE_GIRL, WALK, ANY_DIR, TEXT_CELADONMARTROOF_LITTLE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMartRoof.asm#L19"
+            }
+          ],
+          "coordinates": {
+            "x": 5,
+            "y": 5,
+            "basis": "object_event initial position; NPC walks"
+          },
+          "conditions": "give girl FRESH_WATER; bag capacity matters; drink is removed before GiveItem",
+          "repeatability": "one-time event per drink reward"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeladonMartRoof.asm",
+          "line_start": 120,
+          "line_end": 120,
+          "raw_lines": [
+            "\tlb bc, TM_ICE_BEAM, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L120"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM14",
+      "move": "blizzard",
+      "source_item_constant": "TM_BLIZZARD",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 174,
+        "line_end": 174,
+        "raw_lines": [
+          "\tadd_tm BLIZZARD     ; $D6"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L174"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "PokemonMansionB1F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/PokemonMansionB1F.asm",
+              "line_start": 24,
+              "line_end": 24,
+              "raw_lines": [
+                "\tobject_event 19, 25, SPRITE_POKE_BALL, STAY, NONE, TEXT_POKEMONMANSIONB1F_TM_BLIZZARD, TM_BLIZZARD"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/PokemonMansionB1F.asm#L24"
+            },
+            {
+              "path": "scripts/PokemonMansionB1F.asm",
+              "line_start": 68,
+              "line_end": 68,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                 TEXT_POKEMONMANSIONB1F_TM_BLIZZARD"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/PokemonMansionB1F.asm#L68"
+            }
+          ],
+          "coordinates": {
+            "x": 19,
+            "y": 25,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM15",
+      "move": "hyper-beam",
+      "source_item_constant": "TM_HYPER_BEAM",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 175,
+        "line_end": 175,
+        "raw_lines": [
+          "\tadd_tm HYPER_BEAM   ; $D7"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L175"
+      },
+      "locations": [
+        {
+          "method": "game_corner_prize",
+          "map_id_raw": "GameCornerPrizeRoom",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/events/prizes.asm",
+              "line_start": 57,
+              "line_end": 66,
+              "raw_lines": [
+                "PrizeMenuTMsEntries:",
+                "\tdb TM_DRAGON_RAGE",
+                "\tdb TM_HYPER_BEAM",
+                "\tdb TM_SUBSTITUTE",
+                "\tdb \"@\"",
+                "",
+                "PrizeMenuTMsCost:",
+                "\tbcd2 3300",
+                "\tbcd2 5500",
+                "\tbcd2 7700"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/events/prizes.asm#L57-L66"
+            },
+            {
+              "path": "scripts/GameCornerPrizeRoom.asm",
+              "line_start": 10,
+              "line_end": 10,
+              "raw_lines": [
+                "\tdw_const GameCornerPRizeRoomPrizeVendorText, TEXT_GAMECORNERPRIZEROOM_PRIZE_VENDOR_3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/GameCornerPrizeRoom.asm#L10"
+            },
+            {
+              "path": "data/maps/objects/GameCornerPrizeRoom.asm",
+              "line_start": 15,
+              "line_end": 15,
+              "raw_lines": [
+                "\tbg_event  6,  2, TEXT_GAMECORNERPRIZEROOM_PRIZE_VENDOR_3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/GameCornerPrizeRoom.asm#L15"
+            },
+            {
+              "path": "engine/events/prize_menu.asm",
+              "line_start": 1,
+              "line_end": 7,
+              "raw_lines": [
+                "CeladonPrizeMenu::",
+                "\tld b, COIN_CASE",
+                "\tcall IsItemInBag",
+                "\tjr nz, .havingCoinCase",
+                "\tld hl, RequireCoinCaseText",
+                "\tjp PrintText",
+                ".havingCoinCase"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/events/prize_menu.asm#L1-L7"
+            },
+            {
+              "path": "engine/events/prize_menu.asm",
+              "line_start": 181,
+              "line_end": 221,
+              "raw_lines": [
+                "HandlePrizeChoice:",
+                "\tld a, [wCurrentMenuItem]",
+                "\tld [wWhichPrize], a",
+                "\tld d, 0",
+                "\tld e, a",
+                "\tld hl, wPrize1",
+                "\tadd hl, de",
+                "\tld a, [hl]",
+                "\tld [wNamedObjectIndex], a",
+                "\tld a, [wWhichPrizeWindow]",
+                "\tcp 2 ; is prize a TM?",
+                "\tjr nz, .getMonName",
+                "\tcall GetItemName",
+                "\tjr .givePrize",
+                ".getMonName",
+                "\tcall GetMonName",
+                ".givePrize",
+                "\tld hl, SoYouWantPrizeText",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem] ; yes/no answer (Y=0, N=1)",
+                "\tand a",
+                "\tjr nz, .printOhFineThen",
+                "\tcall LoadCoinsToSubtract",
+                "\tcall HasEnoughCoins",
+                "\tjr c, .notEnoughCoins",
+                "\tld a, [wWhichPrizeWindow]",
+                "\tcp 2 ; is prize a TM?",
+                "\tjr nz, .giveMon",
+                "\tld a, [wNamedObjectIndex]",
+                "\tld b, a",
+                "\tld a, 1",
+                "\tld c, a",
+                "\tcall GiveItem",
+                "\tjr nc, .bagFull",
+                "\tjr .subtractCoins",
+                ".giveMon",
+                "\tld a, [wNamedObjectIndex]",
+                "\tld [wCurPartySpecies], a",
+                "\tpush af",
+                "\tcall GetPrizeMonLevel"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/events/prize_menu.asm#L181-L221"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 2,
+            "basis": "bg_event map tiles"
+          },
+          "conditions": "Coin Case, enough coins, and bag space",
+          "coin_cost": 5500,
+          "repeatability": "repeatable prize exchange"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM16",
+      "move": "pay-day",
+      "source_item_constant": "TM_PAY_DAY",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 176,
+        "line_end": 176,
+        "raw_lines": [
+          "\tadd_tm PAY_DAY      ; $D8"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L176"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "Route12",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/Route12.asm",
+              "line_start": 35,
+              "line_end": 35,
+              "raw_lines": [
+                "\tobject_event 14, 35, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE12_TM_PAY_DAY, TM_PAY_DAY"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route12.asm#L35"
+            },
+            {
+              "path": "scripts/Route12.asm",
+              "line_start": 74,
+              "line_end": 74,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,               TEXT_ROUTE12_TM_PAY_DAY"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route12.asm#L74"
+            }
+          ],
+          "coordinates": {
+            "x": 14,
+            "y": 35,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM17",
+      "move": "submission",
+      "source_item_constant": "TM_SUBMISSION",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 177,
+        "line_end": 177,
+        "raw_lines": [
+          "\tadd_tm SUBMISSION   ; $D9"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L177"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "VictoryRoad2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/VictoryRoad2F.asm",
+              "line_start": 37,
+              "line_end": 37,
+              "raw_lines": [
+                "\tobject_event 27,  5, SPRITE_POKE_BALL, STAY, NONE, TEXT_VICTORYROAD2F_TM_SUBMISSION, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/VictoryRoad2F.asm#L37"
+            },
+            {
+              "path": "scripts/VictoryRoad2F.asm",
+              "line_start": 79,
+              "line_end": 79,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                TEXT_VICTORYROAD2F_TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/VictoryRoad2F.asm#L79"
+            }
+          ],
+          "coordinates": {
+            "x": 27,
+            "y": 5,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM18",
+      "move": "counter",
+      "source_item_constant": "TM_COUNTER",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 178,
+        "line_end": 178,
+        "raw_lines": [
+          "\tadd_tm COUNTER      ; $DA"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L178"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeladonMart3F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeladonMart3F.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const CeladonMart3FClerkText,            TEXT_CELADONMART3F_CLERK"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart3F.asm#L6"
+            },
+            {
+              "path": "scripts/CeladonMart3F.asm",
+              "line_start": 18,
+              "line_end": 38,
+              "raw_lines": [
+                "\tdw_const CeladonMart3FFightingGameText,     TEXT_CELADONMART3F_FIGHTING_GAME",
+                "\tdw_const CeladonMart3FCurrentFloorSignText, TEXT_CELADONMART3F_CURRENT_FLOOR_SIGN",
+                "\tdw_const CeladonMart3FPokemonPosterText,    TEXT_CELADONMART3F_POKEMON_POSTER1",
+                "\tdw_const CeladonMart3FPokemonPosterText,    TEXT_CELADONMART3F_POKEMON_POSTER2",
+                "\tdw_const CeladonMart3FPokemonPosterText,    TEXT_CELADONMART3F_POKEMON_POSTER3",
+                "",
+                "CeladonMart3FClerkText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM18",
+                "\tjr nz, .got_item",
+                "\tld hl, .TM18PreReceiveText",
+                "\tcall PrintText",
+                "\tlb bc, TM_COUNTER, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tSetEvent EVENT_GOT_TM18",
+                "\tld hl, .ReceivedTM18Text",
+                "\tjr .done",
+                ".bag_full",
+                "\tld hl, .TM18NoRoomText",
+                "\tjr .done"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart3F.asm#L18-L38"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart3F.asm",
+              "line_start": 31,
+              "line_end": 31,
+              "raw_lines": [
+                "\tobject_event 16,  5, SPRITE_CLERK, STAY, NONE, TEXT_CELADONMART3F_CLERK"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart3F.asm#L31"
+            }
+          ],
+          "coordinates": {
+            "x": 16,
+            "y": 5,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to the clerk; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeladonMart3F.asm",
+          "line_start": 30,
+          "line_end": 30,
+          "raw_lines": [
+            "\tlb bc, TM_COUNTER, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart3F.asm#L30"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM19",
+      "move": "seismic-toss",
+      "source_item_constant": "TM_SEISMIC_TOSS",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 179,
+        "line_end": 179,
+        "raw_lines": [
+          "\tadd_tm SEISMIC_TOSS ; $DB"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L179"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "Route25",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/Route25.asm",
+              "line_start": 32,
+              "line_end": 32,
+              "raw_lines": [
+                "\tobject_event 22,  2, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE25_TM_SEISMIC_TOSS, TM_SEISMIC_TOSS"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route25.asm#L32"
+            },
+            {
+              "path": "scripts/Route25.asm",
+              "line_start": 55,
+              "line_end": 55,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,           TEXT_ROUTE25_TM_SEISMIC_TOSS"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route25.asm#L55"
+            }
+          ],
+          "coordinates": {
+            "x": 22,
+            "y": 2,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM20",
+      "move": "rage",
+      "source_item_constant": "TM_RAGE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 180,
+        "line_end": 180,
+        "raw_lines": [
+          "\tadd_tm RAGE         ; $DC"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L180"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "Route15",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/Route15.asm",
+              "line_start": 37,
+              "line_end": 37,
+              "raw_lines": [
+                "\tobject_event 18,  5, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE15_TM_RAGE, TM_RAGE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route15.asm#L37"
+            },
+            {
+              "path": "scripts/Route15.asm",
+              "line_start": 28,
+              "line_end": 28,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,           TEXT_ROUTE15_TM_RAGE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route15.asm#L28"
+            }
+          ],
+          "coordinates": {
+            "x": 18,
+            "y": 5,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM21",
+      "move": "mega-drain",
+      "source_item_constant": "TM_MEGA_DRAIN",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 181,
+        "line_end": 181,
+        "raw_lines": [
+          "\tadd_tm MEGA_DRAIN   ; $DD"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L181"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeladonGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeladonGym.asm",
+              "line_start": 38,
+              "line_end": 59,
+              "raw_lines": [
+                "",
+                "CeladonGymErikaPostBattleScript:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, CeladonGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "",
+                "CeladonGymReceiveTM21:",
+                "\tld a, TEXT_CELADONGYM_RAINBOWBADGE_INFO",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_ERIKA",
+                "\tlb bc, TM_MEGA_DRAIN, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .BagFull",
+                "\tld a, TEXT_CELADONGYM_RECEIVED_TM21",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM21",
+                "\tjr .gymVictory",
+                ".BagFull"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonGym.asm#L38-L59"
+            },
+            {
+              "path": "data/maps/objects/CeladonGym.asm",
+              "line_start": 21,
+              "line_end": 21,
+              "raw_lines": [
+                "\tobject_event  4,  3, SPRITE_SILPH_WORKER_F, STAY, DOWN, TEXT_CELADONGYM_ERIKA, OPP_ERIKA, 1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonGym.asm#L21"
+            }
+          ],
+          "coordinates": {
+            "x": 4,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader ERIKA; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeladonGym.asm",
+          "line_start": 51,
+          "line_end": 51,
+          "raw_lines": [
+            "\tlb bc, TM_MEGA_DRAIN, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonGym.asm#L51"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM22",
+      "move": "solar-beam",
+      "source_item_constant": "TM_SOLARBEAM",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 182,
+        "line_end": 182,
+        "raw_lines": [
+          "\tadd_tm SOLARBEAM    ; $DE"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L182"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "PokemonMansionB1F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/PokemonMansionB1F.asm",
+              "line_start": 25,
+              "line_end": 25,
+              "raw_lines": [
+                "\tobject_event  5,  4, SPRITE_POKE_BALL, STAY, NONE, TEXT_POKEMONMANSIONB1F_TM_SOLARBEAM, TM_SOLARBEAM"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/PokemonMansionB1F.asm#L25"
+            },
+            {
+              "path": "scripts/PokemonMansionB1F.asm",
+              "line_start": 69,
+              "line_end": 69,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                 TEXT_POKEMONMANSIONB1F_TM_SOLARBEAM"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/PokemonMansionB1F.asm#L69"
+            }
+          ],
+          "coordinates": {
+            "x": 5,
+            "y": 4,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM23",
+      "move": "dragon-rage",
+      "source_item_constant": "TM_DRAGON_RAGE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 183,
+        "line_end": 183,
+        "raw_lines": [
+          "\tadd_tm DRAGON_RAGE  ; $DF"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L183"
+      },
+      "locations": [
+        {
+          "method": "game_corner_prize",
+          "map_id_raw": "GameCornerPrizeRoom",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/events/prizes.asm",
+              "line_start": 57,
+              "line_end": 66,
+              "raw_lines": [
+                "PrizeMenuTMsEntries:",
+                "\tdb TM_DRAGON_RAGE",
+                "\tdb TM_HYPER_BEAM",
+                "\tdb TM_SUBSTITUTE",
+                "\tdb \"@\"",
+                "",
+                "PrizeMenuTMsCost:",
+                "\tbcd2 3300",
+                "\tbcd2 5500",
+                "\tbcd2 7700"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/events/prizes.asm#L57-L66"
+            },
+            {
+              "path": "scripts/GameCornerPrizeRoom.asm",
+              "line_start": 10,
+              "line_end": 10,
+              "raw_lines": [
+                "\tdw_const GameCornerPRizeRoomPrizeVendorText, TEXT_GAMECORNERPRIZEROOM_PRIZE_VENDOR_3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/GameCornerPrizeRoom.asm#L10"
+            },
+            {
+              "path": "data/maps/objects/GameCornerPrizeRoom.asm",
+              "line_start": 15,
+              "line_end": 15,
+              "raw_lines": [
+                "\tbg_event  6,  2, TEXT_GAMECORNERPRIZEROOM_PRIZE_VENDOR_3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/GameCornerPrizeRoom.asm#L15"
+            },
+            {
+              "path": "engine/events/prize_menu.asm",
+              "line_start": 1,
+              "line_end": 7,
+              "raw_lines": [
+                "CeladonPrizeMenu::",
+                "\tld b, COIN_CASE",
+                "\tcall IsItemInBag",
+                "\tjr nz, .havingCoinCase",
+                "\tld hl, RequireCoinCaseText",
+                "\tjp PrintText",
+                ".havingCoinCase"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/events/prize_menu.asm#L1-L7"
+            },
+            {
+              "path": "engine/events/prize_menu.asm",
+              "line_start": 181,
+              "line_end": 221,
+              "raw_lines": [
+                "HandlePrizeChoice:",
+                "\tld a, [wCurrentMenuItem]",
+                "\tld [wWhichPrize], a",
+                "\tld d, 0",
+                "\tld e, a",
+                "\tld hl, wPrize1",
+                "\tadd hl, de",
+                "\tld a, [hl]",
+                "\tld [wNamedObjectIndex], a",
+                "\tld a, [wWhichPrizeWindow]",
+                "\tcp 2 ; is prize a TM?",
+                "\tjr nz, .getMonName",
+                "\tcall GetItemName",
+                "\tjr .givePrize",
+                ".getMonName",
+                "\tcall GetMonName",
+                ".givePrize",
+                "\tld hl, SoYouWantPrizeText",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem] ; yes/no answer (Y=0, N=1)",
+                "\tand a",
+                "\tjr nz, .printOhFineThen",
+                "\tcall LoadCoinsToSubtract",
+                "\tcall HasEnoughCoins",
+                "\tjr c, .notEnoughCoins",
+                "\tld a, [wWhichPrizeWindow]",
+                "\tcp 2 ; is prize a TM?",
+                "\tjr nz, .giveMon",
+                "\tld a, [wNamedObjectIndex]",
+                "\tld b, a",
+                "\tld a, 1",
+                "\tld c, a",
+                "\tcall GiveItem",
+                "\tjr nc, .bagFull",
+                "\tjr .subtractCoins",
+                ".giveMon",
+                "\tld a, [wNamedObjectIndex]",
+                "\tld [wCurPartySpecies], a",
+                "\tpush af",
+                "\tcall GetPrizeMonLevel"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/events/prize_menu.asm#L181-L221"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 2,
+            "basis": "bg_event map tiles"
+          },
+          "conditions": "Coin Case, enough coins, and bag space",
+          "coin_cost": 3300,
+          "repeatability": "repeatable prize exchange"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM24",
+      "move": "thunderbolt",
+      "source_item_constant": "TM_THUNDERBOLT",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 184,
+        "line_end": 184,
+        "raw_lines": [
+          "\tadd_tm THUNDERBOLT  ; $E0"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L184"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "VermilionGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/VermilionGym.asm",
+              "line_start": 57,
+              "line_end": 78,
+              "raw_lines": [
+                "",
+                "VermilionGymLTSurgeAfterBattleScript:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, VermilionGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "",
+                "VermilionGymLTSurgeReceiveTM24Script:",
+                "\tld a, TEXT_VERMILIONGYM_LT_SURGE_THUNDER_BADGE_INFO",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_LT_SURGE",
+                "\tlb bc, TM_THUNDERBOLT, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld a, TEXT_VERMILIONGYM_LT_SURGE_RECEIVED_TM24",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM24",
+                "\tjr .gym_victory",
+                ".bag_full"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/VermilionGym.asm#L57-L78"
+            },
+            {
+              "path": "data/maps/objects/VermilionGym.asm",
+              "line_start": 18,
+              "line_end": 18,
+              "raw_lines": [
+                "\tobject_event  5,  1, SPRITE_ROCKER, STAY, DOWN, TEXT_VERMILIONGYM_LT_SURGE, OPP_LT_SURGE, 1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/VermilionGym.asm#L18"
+            }
+          ],
+          "coordinates": {
+            "x": 5,
+            "y": 1,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader LT_SURGE; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/VermilionGym.asm",
+          "line_start": 70,
+          "line_end": 70,
+          "raw_lines": [
+            "\tlb bc, TM_THUNDERBOLT, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/VermilionGym.asm#L70"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM25",
+      "move": "thunder",
+      "source_item_constant": "TM_THUNDER",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 185,
+        "line_end": 185,
+        "raw_lines": [
+          "\tadd_tm THUNDER      ; $E1"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L185"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "PowerPlant",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/PowerPlant.asm",
+              "line_start": 40,
+              "line_end": 40,
+              "raw_lines": [
+                "\tobject_event 26, 32, SPRITE_POKE_BALL, STAY, NONE, TEXT_POWERPLANT_TM_THUNDER, TM_THUNDER"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/PowerPlant.asm#L40"
+            },
+            {
+              "path": "scripts/PowerPlant.asm",
+              "line_start": 30,
+              "line_end": 30,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,           TEXT_POWERPLANT_TM_THUNDER"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/PowerPlant.asm#L30"
+            }
+          ],
+          "coordinates": {
+            "x": 26,
+            "y": 32,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM26",
+      "move": "earthquake",
+      "source_item_constant": "TM_EARTHQUAKE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 186,
+        "line_end": 186,
+        "raw_lines": [
+          "\tadd_tm EARTHQUAKE   ; $E2"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L186"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SilphCo10F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SilphCo10F.asm",
+              "line_start": 26,
+              "line_end": 26,
+              "raw_lines": [
+                "\tobject_event  2, 12, SPRITE_POKE_BALL, STAY, NONE, TEXT_SILPHCO10F_TM_EARTHQUAKE, TM_EARTHQUAKE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SilphCo10F.asm#L26"
+            },
+            {
+              "path": "scripts/SilphCo10F.asm",
+              "line_start": 48,
+              "line_end": 48,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,             TEXT_SILPHCO10F_TM_EARTHQUAKE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SilphCo10F.asm#L48"
+            }
+          ],
+          "coordinates": {
+            "x": 2,
+            "y": 12,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM27",
+      "move": "fissure",
+      "source_item_constant": "TM_FISSURE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 187,
+        "line_end": 187,
+        "raw_lines": [
+          "\tadd_tm FISSURE      ; $E3"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L187"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "ViridianGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/ViridianGym.asm",
+              "line_start": 130,
+              "line_end": 151,
+              "raw_lines": [
+                "",
+                "ViridianGymGiovanniPostBattle:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, ViridianGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "; fallthrough",
+                "ViridianGymReceiveTM27:",
+                "\tld a, TEXT_VIRIDIANGYM_GIOVANNI_EARTH_BADGE_INFO",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_VIRIDIAN_GYM_GIOVANNI",
+                "\tlb bc, TM_FISSURE, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld a, TEXT_VIRIDIANGYM_GIOVANNI_RECEIVED_TM27",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM27",
+                "\tjr .gym_victory",
+                ".bag_full"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/ViridianGym.asm#L130-L151"
+            },
+            {
+              "path": "data/maps/objects/ViridianGym.asm",
+              "line_start": 24,
+              "line_end": 24,
+              "raw_lines": [
+                "\tobject_event  2,  1, SPRITE_GIOVANNI, STAY, DOWN, TEXT_VIRIDIANGYM_GIOVANNI, OPP_GIOVANNI, 3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/ViridianGym.asm#L24"
+            }
+          ],
+          "coordinates": {
+            "x": 2,
+            "y": 1,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader GIOVANNI; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/ViridianGym.asm",
+          "line_start": 143,
+          "line_end": 143,
+          "raw_lines": [
+            "\tlb bc, TM_FISSURE, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/ViridianGym.asm#L143"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM28",
+      "move": "dig",
+      "source_item_constant": "TM_DIG",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 188,
+        "line_end": 188,
+        "raw_lines": [
+          "\tadd_tm DIG          ; $E4"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L188"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeruleanCity",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeruleanCity.asm",
+              "line_start": 238,
+              "line_end": 238,
+              "raw_lines": [
+                "\tdw_const CeruleanCityRocketText,        TEXT_CERULEANCITY_ROCKET"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeruleanCity.asm#L238"
+            },
+            {
+              "path": "scripts/CeruleanCity.asm",
+              "line_start": 286,
+              "line_end": 316,
+              "raw_lines": [
+                "CeruleanCityRocketText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_BEAT_CERULEAN_ROCKET_THIEF",
+                "\tjr nz, .beatRocketThief",
+                "\tld hl, .Text",
+                "\tcall PrintText",
+                "\tld hl, wStatusFlags3",
+                "\tset BIT_TALKED_TO_TRAINER, [hl]",
+                "\tset BIT_PRINT_END_BATTLE_TEXT, [hl]",
+                "\tld hl, .IGiveUpText",
+                "\tld de, .IGiveUpText",
+                "\tcall SaveEndBattleTextPointers",
+                "\tldh a, [hTextID]",
+                "\tld [wSpriteIndex], a",
+                "\tcall EngageMapTrainer",
+                "\tcall InitBattleEnemyParameters",
+                "\tld a, SCRIPT_CERULEANCITY_ROCKET_DEFEATED",
+                "\tld [wCeruleanCityCurScript], a",
+                "\tjp TextScriptEnd",
+                ".beatRocketThief",
+                "\tld hl, .IllReturnTheTMText",
+                "\tcall PrintText",
+                "\tlb bc, TM_DIG, 1",
+                "\tcall GiveItem",
+                "\tjr c, .Success",
+                "\tld hl, .TM28NoRoomText",
+                "\tcall PrintText",
+                "\tjr .Done",
+                ".Success",
+                "\tld a, $1",
+                "\tld [wDoNotWaitForButtonPressAfterDisplayingText], a"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeruleanCity.asm#L286-L316"
+            },
+            {
+              "path": "data/maps/objects/CeruleanCity.asm",
+              "line_start": 39,
+              "line_end": 39,
+              "raw_lines": [
+                "\tobject_event 30,  8, SPRITE_ROCKET, STAY, NONE, TEXT_CERULEANCITY_ROCKET, OPP_ROCKET, 5"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeruleanCity.asm#L39"
+            }
+          ],
+          "coordinates": {
+            "x": 30,
+            "y": 8,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Defeat Rocket and interact; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeruleanCity.asm",
+          "line_start": 308,
+          "line_end": 308,
+          "raw_lines": [
+            "\tlb bc, TM_DIG, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeruleanCity.asm#L308"
+        },
+        {
+          "path": "scripts/CeruleanTrashedHouse.asm",
+          "line_start": 13,
+          "line_end": 13,
+          "raw_lines": [
+            "\tld b, TM_DIG"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeruleanTrashedHouse.asm#L13"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM29",
+      "move": "psychic",
+      "source_item_constant": "TM_PSYCHIC_M",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 189,
+        "line_end": 189,
+        "raw_lines": [
+          "\tadd_tm PSYCHIC_M    ; $E5"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L189"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "MrPsychicsHouse",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/MrPsychicsHouse.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const MrPsychicsHouseMrPsychicText, TEXT_MRPSYCHICSHOUSE_MR_PSYCHIC"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/MrPsychicsHouse.asm#L6"
+            },
+            {
+              "path": "scripts/MrPsychicsHouse.asm",
+              "line_start": 2,
+              "line_end": 22,
+              "raw_lines": [
+                "\tjp EnableAutoTextBoxDrawing",
+                "",
+                "MrPsychicsHouse_TextPointers:",
+                "\tdef_text_pointers",
+                "\tdw_const MrPsychicsHouseMrPsychicText, TEXT_MRPSYCHICSHOUSE_MR_PSYCHIC",
+                "",
+                "MrPsychicsHouseMrPsychicText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM29",
+                "\tjr nz, .got_item",
+                "\tld hl, .YouWantedThisText",
+                "\tcall PrintText",
+                "\tlb bc, TM_PSYCHIC_M, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, .ReceivedTM29Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_TM29",
+                "\tjr .done",
+                ".bag_full",
+                "\tld hl, .TM29NoRoomText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/MrPsychicsHouse.asm#L2-L22"
+            },
+            {
+              "path": "data/maps/objects/MrPsychicsHouse.asm",
+              "line_start": 14,
+              "line_end": 14,
+              "raw_lines": [
+                "\tobject_event  5,  3, SPRITE_FISHING_GURU, STAY, LEFT, TEXT_MRPSYCHICSHOUSE_MR_PSYCHIC"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/MrPsychicsHouse.asm#L14"
+            }
+          ],
+          "coordinates": {
+            "x": 5,
+            "y": 3,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to Mr. Psychic; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/MrPsychicsHouse.asm",
+          "line_start": 14,
+          "line_end": 14,
+          "raw_lines": [
+            "\tlb bc, TM_PSYCHIC_M, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/MrPsychicsHouse.asm#L14"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM30",
+      "move": "teleport",
+      "source_item_constant": "TM_TELEPORT",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 190,
+        "line_end": 190,
+        "raw_lines": [
+          "\tadd_tm TELEPORT     ; $E6"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L190"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "Route9",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/Route9.asm",
+              "line_start": 31,
+              "line_end": 31,
+              "raw_lines": [
+                "\tobject_event 10, 15, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE9_TM_TELEPORT, TM_TELEPORT"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route9.asm#L31"
+            },
+            {
+              "path": "scripts/Route9.asm",
+              "line_start": 27,
+              "line_end": 27,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,          TEXT_ROUTE9_TM_TELEPORT"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route9.asm#L27"
+            }
+          ],
+          "coordinates": {
+            "x": 10,
+            "y": 15,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM31",
+      "move": "mimic",
+      "source_item_constant": "TM_MIMIC",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 191,
+        "line_end": 191,
+        "raw_lines": [
+          "\tadd_tm MIMIC        ; $E7"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L191"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CopycatsHouse2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CopycatsHouse2F.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const CopycatsHouse2FCopycatText,      TEXT_COPYCATSHOUSE2F_COPYCAT"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CopycatsHouse2F.asm#L6"
+            },
+            {
+              "path": "scripts/CopycatsHouse2F.asm",
+              "line_start": 14,
+              "line_end": 35,
+              "raw_lines": [
+                "CopycatsHouse2FCopycatText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM31",
+                "\tjr nz, .got_item",
+                "\tld a, TRUE",
+                "\tld [wDoNotWaitForButtonPressAfterDisplayingText], a",
+                "\tld hl, .DoYouLikePokemonText",
+                "\tcall PrintText",
+                "\tld b, POKE_DOLL",
+                "\tcall IsItemInBag",
+                "\tjr z, .done",
+                "\tld hl, .TM31PreReceiveText",
+                "\tcall PrintText",
+                "\tlb bc, TM_MIMIC, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, .ReceivedTM31Text",
+                "\tcall PrintText",
+                "\tld a, POKE_DOLL",
+                "\tldh [hItemToRemoveID], a",
+                "\tfarcall RemoveItemByID",
+                "\tSetEvent EVENT_GOT_TM31"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CopycatsHouse2F.asm#L14-L35"
+            },
+            {
+              "path": "data/maps/objects/CopycatsHouse2F.asm",
+              "line_start": 19,
+              "line_end": 19,
+              "raw_lines": [
+                "\tobject_event  4,  3, SPRITE_BRUNETTE_GIRL, WALK, ANY_DIR, TEXT_COPYCATSHOUSE2F_COPYCAT"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CopycatsHouse2F.asm#L19"
+            }
+          ],
+          "coordinates": {
+            "x": 4,
+            "y": 3,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Give the Copycat a POKE_DOLL; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CopycatsHouse2F.asm",
+          "line_start": 27,
+          "line_end": 27,
+          "raw_lines": [
+            "\tlb bc, TM_MIMIC, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CopycatsHouse2F.asm#L27"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM32",
+      "move": "double-team",
+      "source_item_constant": "TM_DOUBLE_TEAM",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 192,
+        "line_end": 192,
+        "raw_lines": [
+          "\tadd_tm DOUBLE_TEAM  ; $E8"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L192"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SafariZoneWest",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SafariZoneWest.asm",
+              "line_start": 28,
+              "line_end": 28,
+              "raw_lines": [
+                "\tobject_event  9,  7, SPRITE_POKE_BALL, STAY, NONE, TEXT_SAFARIZONEWEST_TM_DOUBLE_TEAM, TM_DOUBLE_TEAM"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SafariZoneWest.asm#L28"
+            },
+            {
+              "path": "scripts/SafariZoneWest.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                         TEXT_SAFARIZONEWEST_TM_DOUBLE_TEAM"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SafariZoneWest.asm#L7"
+            }
+          ],
+          "coordinates": {
+            "x": 9,
+            "y": 7,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM33",
+      "move": "reflect",
+      "source_item_constant": "TM_REFLECT",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 193,
+        "line_end": 193,
+        "raw_lines": [
+          "\tadd_tm REFLECT      ; $E9"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L193"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "PowerPlant",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/PowerPlant.asm",
+              "line_start": 41,
+              "line_end": 41,
+              "raw_lines": [
+                "\tobject_event 20, 32, SPRITE_POKE_BALL, STAY, NONE, TEXT_POWERPLANT_TM_REFLECT, TM_REFLECT"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/PowerPlant.asm#L41"
+            },
+            {
+              "path": "scripts/PowerPlant.asm",
+              "line_start": 31,
+              "line_end": 31,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,           TEXT_POWERPLANT_TM_REFLECT"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/PowerPlant.asm#L31"
+            }
+          ],
+          "coordinates": {
+            "x": 20,
+            "y": 32,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM34",
+      "move": "bide",
+      "source_item_constant": "TM_BIDE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 194,
+        "line_end": 194,
+        "raw_lines": [
+          "\tadd_tm BIDE         ; $EA"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L194"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "PewterGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/PewterGym.asm",
+              "line_start": 38,
+              "line_end": 59,
+              "raw_lines": [
+                "",
+                "PewterGymBrockPostBattle:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, PewterGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "; fallthrough",
+                "PewterGymScriptReceiveTM34:",
+                "\tld a, TEXT_PEWTERGYM_BROCK_WAIT_TAKE_THIS",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_BROCK",
+                "\tlb bc, TM_BIDE, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .BagFull",
+                "\tld a, TEXT_PEWTERGYM_RECEIVED_TM34",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM34",
+                "\tjr .gymVictory",
+                ".BagFull"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/PewterGym.asm#L38-L59"
+            },
+            {
+              "path": "data/maps/objects/PewterGym.asm",
+              "line_start": 16,
+              "line_end": 16,
+              "raw_lines": [
+                "\tobject_event  4,  1, SPRITE_SUPER_NERD, STAY, DOWN, TEXT_PEWTERGYM_BROCK, OPP_BROCK, 1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/PewterGym.asm#L16"
+            }
+          ],
+          "coordinates": {
+            "x": 4,
+            "y": 1,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader BROCK; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/PewterGym.asm",
+          "line_start": 51,
+          "line_end": 51,
+          "raw_lines": [
+            "\tlb bc, TM_BIDE, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/PewterGym.asm#L51"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM35",
+      "move": "metronome",
+      "source_item_constant": "TM_METRONOME",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 195,
+        "line_end": 195,
+        "raw_lines": [
+          "\tadd_tm METRONOME    ; $EB"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L195"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CinnabarLabMetronomeRoom",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CinnabarLabMetronomeRoom.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const CinnabarLabMetronomeRoomScientist1Text, TEXT_CINNABARLABMETRONOMEROOM_SCIENTIST1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CinnabarLabMetronomeRoom.asm#L6"
+            },
+            {
+              "path": "scripts/CinnabarLabMetronomeRoom.asm",
+              "line_start": 6,
+              "line_end": 26,
+              "raw_lines": [
+                "\tdw_const CinnabarLabMetronomeRoomScientist1Text, TEXT_CINNABARLABMETRONOMEROOM_SCIENTIST1",
+                "\tdw_const CinnabarLabMetronomeRoomScientist2Text, TEXT_CINNABARLABMETRONOMEROOM_SCIENTIST2",
+                "\tdw_const CinnabarLabMetronomeRoomPCText,         TEXT_CINNABARLABMETRONOMEROOM_PC_KEYBOARD",
+                "\tdw_const CinnabarLabMetronomeRoomPCText,         TEXT_CINNABARLABMETRONOMEROOM_PC_MONITOR",
+                "\tdw_const CinnabarLabMetronomeRoomAmberPipeText,  TEXT_CINNABARLABMETRONOMEROOM_AMBER_PIPE",
+                "",
+                "CinnabarLabMetronomeRoomScientist1Text:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM35",
+                "\tjr nz, .got_item",
+                "\tld hl, .Text",
+                "\tcall PrintText",
+                "\tlb bc, TM_METRONOME, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, .ReceivedTM35Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_TM35",
+                "\tjr .done",
+                ".bag_full",
+                "\tld hl, .TM35NoRoomText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CinnabarLabMetronomeRoom.asm#L6-L26"
+            },
+            {
+              "path": "data/maps/objects/CinnabarLabMetronomeRoom.asm",
+              "line_start": 18,
+              "line_end": 18,
+              "raw_lines": [
+                "\tobject_event  7,  2, SPRITE_SCIENTIST, STAY, DOWN, TEXT_CINNABARLABMETRONOMEROOM_SCIENTIST1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CinnabarLabMetronomeRoom.asm#L18"
+            }
+          ],
+          "coordinates": {
+            "x": 7,
+            "y": 2,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to scientist; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CinnabarLabMetronomeRoom.asm",
+          "line_start": 18,
+          "line_end": 18,
+          "raw_lines": [
+            "\tlb bc, TM_METRONOME, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CinnabarLabMetronomeRoom.asm#L18"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM36",
+      "move": "self-destruct",
+      "source_item_constant": "TM_SELFDESTRUCT",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 196,
+        "line_end": 196,
+        "raw_lines": [
+          "\tadd_tm SELFDESTRUCT ; $EC"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L196"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "SilphCo2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/SilphCo2F.asm",
+              "line_start": 97,
+              "line_end": 97,
+              "raw_lines": [
+                "\tdw_const SilphCo2FSilphWorkerFText, TEXT_SILPHCO2F_SILPH_WORKER_F"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SilphCo2F.asm#L97"
+            },
+            {
+              "path": "scripts/SilphCo2F.asm",
+              "line_start": 109,
+              "line_end": 129,
+              "raw_lines": [
+                "SilphCo2TrainerHeader2:",
+                "\ttrainer EVENT_BEAT_SILPH_CO_2F_TRAINER_2, 3, SilphCo2FRocket1BattleText, SilphCo2FRocket1EndBattleText, SilphCo2FRocket1AfterBattleText",
+                "SilphCo2TrainerHeader3:",
+                "\ttrainer EVENT_BEAT_SILPH_CO_2F_TRAINER_3, 3, SilphCo2FRocket2BattleText, SilphCo2FRocket2EndBattleText, SilphCo2FRocket2AfterBattleText",
+                "\tdb -1 ; end",
+                "",
+                "SilphCo2FSilphWorkerFText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM36",
+                "\tjr nz, .already_have_tm",
+                "\tld hl, .PleaseTakeThisText",
+                "\tcall PrintText",
+                "\tlb bc, TM_SELFDESTRUCT, 1",
+                "\tcall GiveItem",
+                "\tld hl, .TM36NoRoomText",
+                "\tjr nc, .print_text",
+                "\tSetEvent EVENT_GOT_TM36",
+                "\tld hl, .ReceivedTM36Text",
+                "\tjr .print_text",
+                ".already_have_tm",
+                "\tld hl, .TM36ExplanationText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SilphCo2F.asm#L109-L129"
+            },
+            {
+              "path": "data/maps/objects/SilphCo2F.asm",
+              "line_start": 23,
+              "line_end": 23,
+              "raw_lines": [
+                "\tobject_event 10,  1, SPRITE_SILPH_WORKER_F, STAY, UP, TEXT_SILPHCO2F_SILPH_WORKER_F"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SilphCo2F.asm#L23"
+            }
+          ],
+          "coordinates": {
+            "x": 10,
+            "y": 1,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to Silph worker; bag must have room; map access conditions not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/SilphCo2F.asm",
+          "line_start": 121,
+          "line_end": 121,
+          "raw_lines": [
+            "\tlb bc, TM_SELFDESTRUCT, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SilphCo2F.asm#L121"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM37",
+      "move": "egg-bomb",
+      "source_item_constant": "TM_EGG_BOMB",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 197,
+        "line_end": 197,
+        "raw_lines": [
+          "\tadd_tm EGG_BOMB     ; $ED"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L197"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SafariZoneEast",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SafariZoneEast.asm",
+              "line_start": 26,
+              "line_end": 26,
+              "raw_lines": [
+                "\tobject_event 15, 12, SPRITE_POKE_BALL, STAY, NONE, TEXT_SAFARIZONEEAST_TM_EGG_BOMB, TM_EGG_BOMB"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SafariZoneEast.asm#L26"
+            },
+            {
+              "path": "scripts/SafariZoneEast.asm",
+              "line_start": 9,
+              "line_end": 9,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                  TEXT_SAFARIZONEEAST_TM_EGG_BOMB"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SafariZoneEast.asm#L9"
+            }
+          ],
+          "coordinates": {
+            "x": 15,
+            "y": 12,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        },
+        {
+          "method": "shop",
+          "map_id_raw": "CeladonMart2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/items/marts.asm",
+              "line_start": 25,
+              "line_end": 26,
+              "raw_lines": [
+                "CeladonMart2FClerk2Text::",
+                "\tscript_mart TM_DOUBLE_TEAM, TM_REFLECT, TM_RAZOR_WIND, TM_HORN_DRILL, TM_EGG_BOMB, TM_MEGA_PUNCH, TM_MEGA_KICK, TM_TAKE_DOWN, TM_SUBMISSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/items/marts.asm#L25-L26"
+            },
+            {
+              "path": "scripts/CeladonMart2F.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const CeladonMart2FClerk2Text,           TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMart2F.asm#L7"
+            },
+            {
+              "path": "data/maps/objects/CeladonMart2F.asm",
+              "line_start": 20,
+              "line_end": 20,
+              "raw_lines": [
+                "\tobject_event  6,  3, SPRITE_CLERK, STAY, DOWN, TEXT_CELADONMART2F_CLERK2"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMart2F.asm#L20"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "purchase; sufficient money and bag space",
+          "repeatability": "repeatable shop inventory"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM38",
+      "move": "fire-blast",
+      "source_item_constant": "TM_FIRE_BLAST",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 198,
+        "line_end": 198,
+        "raw_lines": [
+          "\tadd_tm FIRE_BLAST   ; $EE"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L198"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CinnabarGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CinnabarGym.asm",
+              "line_start": 138,
+              "line_end": 159,
+              "raw_lines": [
+                "",
+                "CinnabarGymBlainePostBattleScript:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, CinnabarGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "; fallthrough",
+                "CinnabarGymReceiveTM38:",
+                "\tld a, TEXT_CINNABARGYM_BLAINE_VOLCANO_BADGE_INFO",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_BLAINE",
+                "\tlb bc, TM_FIRE_BLAST, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .BagFull",
+                "\tld a, TEXT_CINNABARGYM_BLAINE_RECEIVED_TM38",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM38",
+                "\tjr .gymVictory",
+                ".BagFull"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CinnabarGym.asm#L138-L159"
+            },
+            {
+              "path": "data/maps/objects/CinnabarGym.asm",
+              "line_start": 22,
+              "line_end": 22,
+              "raw_lines": [
+                "\tobject_event  3,  3, SPRITE_MIDDLE_AGED_MAN, STAY, DOWN, TEXT_CINNABARGYM_BLAINE, OPP_BLAINE, 1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CinnabarGym.asm#L22"
+            }
+          ],
+          "coordinates": {
+            "x": 3,
+            "y": 3,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader BLAINE; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CinnabarGym.asm",
+          "line_start": 151,
+          "line_end": 151,
+          "raw_lines": [
+            "\tlb bc, TM_FIRE_BLAST, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CinnabarGym.asm#L151"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM39",
+      "move": "swift",
+      "source_item_constant": "TM_SWIFT",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 199,
+        "line_end": 199,
+        "raw_lines": [
+          "\tadd_tm SWIFT        ; $EF"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L199"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "Route12Gate2F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/Route12Gate2F.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const Route12Gate2FBrunetteGirlText,    TEXT_ROUTE12GATE2F_BRUNETTE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route12Gate2F.asm#L6"
+            },
+            {
+              "path": "scripts/Route12Gate2F.asm",
+              "line_start": 4,
+              "line_end": 24,
+              "raw_lines": [
+                "Route12Gate2F_TextPointers:",
+                "\tdef_text_pointers",
+                "\tdw_const Route12Gate2FBrunetteGirlText,    TEXT_ROUTE12GATE2F_BRUNETTE_GIRL",
+                "\tdw_const Route12Gate2FLeftBinocularsText,  TEXT_ROUTE12GATE2F_LEFT_BINOCULARS",
+                "\tdw_const Route12Gate2FRightBinocularsText, TEXT_ROUTE12GATE2F_RIGHT_BINOCULARS",
+                "",
+                "Route12Gate2FBrunetteGirlText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM39, 1",
+                "\tjr c, .got_item",
+                "\tld hl, .YouCanHaveThisText",
+                "\tcall PrintText",
+                "\tlb bc, TM_SWIFT, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, .ReceivedTM39Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_TM39",
+                "\tjr .done",
+                ".bag_full",
+                "\tld hl, .TM39NoRoomText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route12Gate2F.asm#L4-L24"
+            },
+            {
+              "path": "data/maps/objects/Route12Gate2F.asm",
+              "line_start": 15,
+              "line_end": 15,
+              "raw_lines": [
+                "\tobject_event  3,  4, SPRITE_BRUNETTE_GIRL, WALK, UP_DOWN, TEXT_ROUTE12GATE2F_BRUNETTE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route12Gate2F.asm#L15"
+            }
+          ],
+          "coordinates": {
+            "x": 3,
+            "y": 4,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to girl; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/Route12Gate2F.asm",
+          "line_start": 16,
+          "line_end": 16,
+          "raw_lines": [
+            "\tlb bc, TM_SWIFT, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route12Gate2F.asm#L16"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM40",
+      "move": "skull-bash",
+      "source_item_constant": "TM_SKULL_BASH",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 200,
+        "line_end": 200,
+        "raw_lines": [
+          "\tadd_tm SKULL_BASH   ; $F0"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L200"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SafariZoneNorth",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SafariZoneNorth.asm",
+              "line_start": 28,
+              "line_end": 28,
+              "raw_lines": [
+                "\tobject_event 19,  7, SPRITE_POKE_BALL, STAY, NONE, TEXT_SAFARIZONENORTH_TM_SKULL_BASH, TM_SKULL_BASH"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SafariZoneNorth.asm#L28"
+            },
+            {
+              "path": "scripts/SafariZoneNorth.asm",
+              "line_start": 7,
+              "line_end": 7,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                   TEXT_SAFARIZONENORTH_TM_SKULL_BASH"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SafariZoneNorth.asm#L7"
+            }
+          ],
+          "coordinates": {
+            "x": 19,
+            "y": 7,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM41",
+      "move": "soft-boiled",
+      "source_item_constant": "TM_SOFTBOILED",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 201,
+        "line_end": 201,
+        "raw_lines": [
+          "\tadd_tm SOFTBOILED   ; $F1"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L201"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeladonCity",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeladonCity.asm",
+              "line_start": 13,
+              "line_end": 13,
+              "raw_lines": [
+                "\tdw_const CeladonCityGramps3Text,           TEXT_CELADONCITY_GRAMPS3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonCity.asm#L13"
+            },
+            {
+              "path": "scripts/CeladonCity.asm",
+              "line_start": 38,
+              "line_end": 58,
+              "raw_lines": [
+                "\ttext_end",
+                "",
+                "CeladonCityGramps2Text:",
+                "\ttext_far _CeladonCityGramps2Text",
+                "\ttext_end",
+                "",
+                "CeladonCityGramps3Text:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM41",
+                "\tjr nz, .gotTM41",
+                "\tld hl, .Text",
+                "\tcall PrintText",
+                "\tlb bc, TM_SOFTBOILED, 1",
+                "\tcall GiveItem",
+                "\tjr c, .Success",
+                "\tld hl, .TM41NoRoomText",
+                "\tcall PrintText",
+                "\tjr .Done",
+                ".Success",
+                "\tld hl, .ReceivedTM41Text",
+                "\tcall PrintText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonCity.asm#L38-L58"
+            },
+            {
+              "path": "data/maps/objects/CeladonCity.asm",
+              "line_start": 46,
+              "line_end": 46,
+              "raw_lines": [
+                "\tobject_event 22, 16, SPRITE_GRAMPS, STAY, DOWN, TEXT_CELADONCITY_GRAMPS3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonCity.asm#L46"
+            }
+          ],
+          "coordinates": {
+            "x": 22,
+            "y": 16,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to NPC; bag must have room; access route not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeladonCity.asm",
+          "line_start": 50,
+          "line_end": 50,
+          "raw_lines": [
+            "\tlb bc, TM_SOFTBOILED, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonCity.asm#L50"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM42",
+      "move": "dream-eater",
+      "source_item_constant": "TM_DREAM_EATER",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 202,
+        "line_end": 202,
+        "raw_lines": [
+          "\tadd_tm DREAM_EATER  ; $F2"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L202"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "ViridianCity",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/ViridianCity.asm",
+              "line_start": 135,
+              "line_end": 135,
+              "raw_lines": [
+                "\tdw_const ViridianCityFisherText,                         TEXT_VIRIDIANCITY_FISHER"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/ViridianCity.asm#L135"
+            },
+            {
+              "path": "scripts/ViridianCity.asm",
+              "line_start": 228,
+              "line_end": 248,
+              "raw_lines": [
+                "\tjp TextScriptEnd",
+                "",
+                ".PrivatePropertyText:",
+                "\ttext_far _ViridianCityOldManSleepyPrivatePropertyText",
+                "\ttext_end",
+                "",
+                "ViridianCityFisherText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_TM42",
+                "\tjr nz, .got_item",
+                "\tld hl, .YouCanHaveThisText",
+                "\tcall PrintText",
+                "\tlb bc, TM_DREAM_EATER, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, .ReceivedTM42Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_TM42",
+                "\tjr .done",
+                ".bag_full",
+                "\tld hl, .TM42NoRoomText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/ViridianCity.asm#L228-L248"
+            },
+            {
+              "path": "data/maps/objects/ViridianCity.asm",
+              "line_start": 34,
+              "line_end": 34,
+              "raw_lines": [
+                "\tobject_event  6, 23, SPRITE_FISHER, STAY, DOWN, TEXT_VIRIDIANCITY_FISHER"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/ViridianCity.asm#L34"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 23,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to NPC; bag must have room; access route not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/ViridianCity.asm",
+          "line_start": 240,
+          "line_end": 240,
+          "raw_lines": [
+            "\tlb bc, TM_DREAM_EATER, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/ViridianCity.asm#L240"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM43",
+      "move": "sky-attack",
+      "source_item_constant": "TM_SKY_ATTACK",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 203,
+        "line_end": 203,
+        "raw_lines": [
+          "\tadd_tm SKY_ATTACK   ; $F3"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L203"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "VictoryRoad1F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/VictoryRoad1F.asm",
+              "line_start": 23,
+              "line_end": 23,
+              "raw_lines": [
+                "\tobject_event 11,  0, SPRITE_POKE_BALL, STAY, NONE, TEXT_VICTORYROAD1F_TM_SKY_ATTACK, TM_SKY_ATTACK"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/VictoryRoad1F.asm#L23"
+            },
+            {
+              "path": "scripts/VictoryRoad1F.asm",
+              "line_start": 46,
+              "line_end": 46,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                TEXT_VICTORYROAD1F_TM_SKY_ATTACK"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/VictoryRoad1F.asm#L46"
+            }
+          ],
+          "coordinates": {
+            "x": 11,
+            "y": 0,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM44",
+      "move": "rest",
+      "source_item_constant": "TM_REST",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 204,
+        "line_end": 204,
+        "raw_lines": [
+          "\tadd_tm REST         ; $F4"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L204"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "SSAnneB1FRooms",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/SSAnneB1FRooms.asm",
+              "line_start": 41,
+              "line_end": 41,
+              "raw_lines": [
+                "\tobject_event 10,  2, SPRITE_POKE_BALL, STAY, NONE, TEXT_SSANNEB1FROOMS_TM_REST, TM_REST"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SSAnneB1FRooms.asm#L41"
+            },
+            {
+              "path": "scripts/SSAnneB1FRooms.asm",
+              "line_start": 27,
+              "line_end": 27,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,              TEXT_SSANNEB1FROOMS_TM_REST"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SSAnneB1FRooms.asm#L27"
+            }
+          ],
+          "coordinates": {
+            "x": 10,
+            "y": 2,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM45",
+      "move": "thunder-wave",
+      "source_item_constant": "TM_THUNDER_WAVE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 205,
+        "line_end": 205,
+        "raw_lines": [
+          "\tadd_tm THUNDER_WAVE ; $F5"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L205"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "Route24",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/Route24.asm",
+              "line_start": 26,
+              "line_end": 26,
+              "raw_lines": [
+                "\tobject_event 10,  5, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE24_TM_THUNDER_WAVE, TM_THUNDER_WAVE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route24.asm#L26"
+            },
+            {
+              "path": "scripts/Route24.asm",
+              "line_start": 89,
+              "line_end": 89,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,           TEXT_ROUTE24_TM_THUNDER_WAVE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route24.asm#L89"
+            }
+          ],
+          "coordinates": {
+            "x": 10,
+            "y": 5,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM46",
+      "move": "psywave",
+      "source_item_constant": "TM_PSYWAVE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 206,
+        "line_end": 206,
+        "raw_lines": [
+          "\tadd_tm PSYWAVE      ; $F6"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L206"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "SaffronGym",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/SaffronGym.asm",
+              "line_start": 38,
+              "line_end": 59,
+              "raw_lines": [
+                "",
+                "SaffronGymSabrinaPostBattle:",
+                "\tld a, [wIsInBattle]",
+                "\tcp LOST_BATTLE",
+                "\tjp z, SaffronGymResetScripts",
+                "\tld a, PAD_CTRL_PAD",
+                "\tld [wJoyIgnore], a",
+                "",
+                "SaffronGymSabrinaReceiveTM46Script:",
+                "\tld a, TEXT_SAFFRONGYM_SABRINA_MARSH_BADGE_INFO",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_BEAT_SABRINA",
+                "\tlb bc, TM_PSYWAVE, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .BagFull",
+                "\tld a, TEXT_SAFFRONGYM_SABRINA_RECEIVED_TM46",
+                "\tldh [hTextID], a",
+                "\tcall DisplayTextID",
+                "\tSetEvent EVENT_GOT_TM46",
+                "\tjr .gymVictory",
+                ".BagFull"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SaffronGym.asm#L38-L59"
+            },
+            {
+              "path": "data/maps/objects/SaffronGym.asm",
+              "line_start": 52,
+              "line_end": 52,
+              "raw_lines": [
+                "\tobject_event  9,  8, SPRITE_GIRL, STAY, DOWN, TEXT_SAFFRONGYM_SABRINA, OPP_SABRINA, 1"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SaffronGym.asm#L52"
+            }
+          ],
+          "coordinates": {
+            "x": 9,
+            "y": 8,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Defeat gym leader SABRINA; bag must have room; access requirements not audited",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/SaffronGym.asm",
+          "line_start": 51,
+          "line_end": 51,
+          "raw_lines": [
+            "\tlb bc, TM_PSYWAVE, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SaffronGym.asm#L51"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM47",
+      "move": "explosion",
+      "source_item_constant": "TM_EXPLOSION",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 207,
+        "line_end": 207,
+        "raw_lines": [
+          "\tadd_tm EXPLOSION    ; $F7"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L207"
+      },
+      "locations": [
+        {
+          "method": "ground_item",
+          "map_id_raw": "VictoryRoad3F",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/maps/objects/VictoryRoad3F.asm",
+              "line_start": 30,
+              "line_end": 30,
+              "raw_lines": [
+                "\tobject_event  7,  7, SPRITE_POKE_BALL, STAY, NONE, TEXT_VICTORYROAD3F_TM_EXPLOSION, TM_EXPLOSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/VictoryRoad3F.asm#L30"
+            },
+            {
+              "path": "scripts/VictoryRoad3F.asm",
+              "line_start": 85,
+              "line_end": 85,
+              "raw_lines": [
+                "\tdw_const PickUpItemText,                 TEXT_VICTORYROAD3F_TM_EXPLOSION"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/VictoryRoad3F.asm#L85"
+            }
+          ],
+          "coordinates": {
+            "x": 7,
+            "y": 7,
+            "basis": "object_event map tiles"
+          },
+          "repeatability": "one placed item; no repeatability assertion beyond this object",
+          "conditions": "access to object; route requirements not checked"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM48",
+      "move": "rock-slide",
+      "source_item_constant": "TM_ROCK_SLIDE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 208,
+        "line_end": 208,
+        "raw_lines": [
+          "\tadd_tm ROCK_SLIDE   ; $F8"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L208"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeladonMartRoof",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 100,
+              "line_end": 113,
+              "raw_lines": [
+                "\tret",
+                ".gaveSodaPop",
+                "\tCheckEvent EVENT_GOT_TM48",
+                "\tjr nz, .alreadyGaveDrink",
+                "\tld hl, CeladonMartRoofLittleGirlYaySodaPopText",
+                "\tcall PrintText",
+                "\tcall RemoveItemByIDBank12",
+                "\tlb bc, TM_ROCK_SLIDE, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bagFull",
+                "\tld hl, CeladonMartRoofLittleGirlReceivedTM48Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_TM48",
+                "\tret"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L100-L113"
+            },
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 212,
+              "line_end": 212,
+              "raw_lines": [
+                "\tdw_const CeladonMartRoofLittleGirlText,       TEXT_CELADONMARTROOF_LITTLE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L212"
+            },
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 222,
+              "line_end": 236,
+              "raw_lines": [
+                "CeladonMartRoofLittleGirlText:",
+                "\ttext_asm",
+                "\tcall CeladonMartRoofScript_GetDrinksInBag",
+                "\tld a, [wFilteredBagItemsCount]",
+                "\tand a",
+                "\tjr z, .noDrinksInBag",
+                "\tld a, 1",
+                "\tld [wDoNotWaitForButtonPressAfterDisplayingText], a",
+                "\tld hl, .GiveHerADrinkText",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem]",
+                "\tand a",
+                "\tjr nz, .done",
+                "\tcall CeladonMartRoofScript_GiveDrinkToGirl"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L222-L236"
+            },
+            {
+              "path": "data/maps/objects/CeladonMartRoof.asm",
+              "line_start": 19,
+              "line_end": 19,
+              "raw_lines": [
+                "\tobject_event  5,  5, SPRITE_LITTLE_GIRL, WALK, ANY_DIR, TEXT_CELADONMARTROOF_LITTLE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMartRoof.asm#L19"
+            }
+          ],
+          "coordinates": {
+            "x": 5,
+            "y": 5,
+            "basis": "object_event initial position; NPC walks"
+          },
+          "conditions": "give girl SODA_POP; bag capacity matters; drink is removed before GiveItem",
+          "repeatability": "one-time event per drink reward"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeladonMartRoof.asm",
+          "line_start": 107,
+          "line_end": 107,
+          "raw_lines": [
+            "\tlb bc, TM_ROCK_SLIDE, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L107"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM49",
+      "move": "tri-attack",
+      "source_item_constant": "TM_TRI_ATTACK",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 209,
+        "line_end": 209,
+        "raw_lines": [
+          "\tadd_tm TRI_ATTACK   ; $F9"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L209"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "CeladonMartRoof",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 87,
+              "line_end": 100,
+              "raw_lines": [
+                "\tjr z, .gaveSodaPop",
+                "; gave Lemonade",
+                "\tCheckEvent EVENT_GOT_TM49",
+                "\tjr nz, .alreadyGaveDrink",
+                "\tld hl, CeladonMartRoofLittleGirlYayLemonadeText",
+                "\tcall PrintText",
+                "\tcall RemoveItemByIDBank12",
+                "\tlb bc, TM_TRI_ATTACK, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bagFull",
+                "\tld hl, CeladonMartRoofLittleGirlReceivedTM49Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_TM49",
+                "\tret"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L87-L100"
+            },
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 212,
+              "line_end": 212,
+              "raw_lines": [
+                "\tdw_const CeladonMartRoofLittleGirlText,       TEXT_CELADONMARTROOF_LITTLE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L212"
+            },
+            {
+              "path": "scripts/CeladonMartRoof.asm",
+              "line_start": 222,
+              "line_end": 236,
+              "raw_lines": [
+                "CeladonMartRoofLittleGirlText:",
+                "\ttext_asm",
+                "\tcall CeladonMartRoofScript_GetDrinksInBag",
+                "\tld a, [wFilteredBagItemsCount]",
+                "\tand a",
+                "\tjr z, .noDrinksInBag",
+                "\tld a, 1",
+                "\tld [wDoNotWaitForButtonPressAfterDisplayingText], a",
+                "\tld hl, .GiveHerADrinkText",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem]",
+                "\tand a",
+                "\tjr nz, .done",
+                "\tcall CeladonMartRoofScript_GiveDrinkToGirl"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L222-L236"
+            },
+            {
+              "path": "data/maps/objects/CeladonMartRoof.asm",
+              "line_start": 19,
+              "line_end": 19,
+              "raw_lines": [
+                "\tobject_event  5,  5, SPRITE_LITTLE_GIRL, WALK, ANY_DIR, TEXT_CELADONMARTROOF_LITTLE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/CeladonMartRoof.asm#L19"
+            }
+          ],
+          "coordinates": {
+            "x": 5,
+            "y": 5,
+            "basis": "object_event initial position; NPC walks"
+          },
+          "conditions": "give girl LEMONADE; bag capacity matters; drink is removed before GiveItem",
+          "repeatability": "one-time event per drink reward"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/CeladonMartRoof.asm",
+          "line_start": 94,
+          "line_end": 94,
+          "raw_lines": [
+            "\tlb bc, TM_TRI_ATTACK, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/CeladonMartRoof.asm#L94"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "TM50",
+      "move": "substitute",
+      "source_item_constant": "TM_SUBSTITUTE",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 210,
+        "line_end": 210,
+        "raw_lines": [
+          "\tadd_tm SUBSTITUTE   ; $FA"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L210"
+      },
+      "locations": [
+        {
+          "method": "game_corner_prize",
+          "map_id_raw": "GameCornerPrizeRoom",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "data/events/prizes.asm",
+              "line_start": 57,
+              "line_end": 66,
+              "raw_lines": [
+                "PrizeMenuTMsEntries:",
+                "\tdb TM_DRAGON_RAGE",
+                "\tdb TM_HYPER_BEAM",
+                "\tdb TM_SUBSTITUTE",
+                "\tdb \"@\"",
+                "",
+                "PrizeMenuTMsCost:",
+                "\tbcd2 3300",
+                "\tbcd2 5500",
+                "\tbcd2 7700"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/events/prizes.asm#L57-L66"
+            },
+            {
+              "path": "scripts/GameCornerPrizeRoom.asm",
+              "line_start": 10,
+              "line_end": 10,
+              "raw_lines": [
+                "\tdw_const GameCornerPRizeRoomPrizeVendorText, TEXT_GAMECORNERPRIZEROOM_PRIZE_VENDOR_3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/GameCornerPrizeRoom.asm#L10"
+            },
+            {
+              "path": "data/maps/objects/GameCornerPrizeRoom.asm",
+              "line_start": 15,
+              "line_end": 15,
+              "raw_lines": [
+                "\tbg_event  6,  2, TEXT_GAMECORNERPRIZEROOM_PRIZE_VENDOR_3"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/GameCornerPrizeRoom.asm#L15"
+            },
+            {
+              "path": "engine/events/prize_menu.asm",
+              "line_start": 1,
+              "line_end": 7,
+              "raw_lines": [
+                "CeladonPrizeMenu::",
+                "\tld b, COIN_CASE",
+                "\tcall IsItemInBag",
+                "\tjr nz, .havingCoinCase",
+                "\tld hl, RequireCoinCaseText",
+                "\tjp PrintText",
+                ".havingCoinCase"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/events/prize_menu.asm#L1-L7"
+            },
+            {
+              "path": "engine/events/prize_menu.asm",
+              "line_start": 181,
+              "line_end": 221,
+              "raw_lines": [
+                "HandlePrizeChoice:",
+                "\tld a, [wCurrentMenuItem]",
+                "\tld [wWhichPrize], a",
+                "\tld d, 0",
+                "\tld e, a",
+                "\tld hl, wPrize1",
+                "\tadd hl, de",
+                "\tld a, [hl]",
+                "\tld [wNamedObjectIndex], a",
+                "\tld a, [wWhichPrizeWindow]",
+                "\tcp 2 ; is prize a TM?",
+                "\tjr nz, .getMonName",
+                "\tcall GetItemName",
+                "\tjr .givePrize",
+                ".getMonName",
+                "\tcall GetMonName",
+                ".givePrize",
+                "\tld hl, SoYouWantPrizeText",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem] ; yes/no answer (Y=0, N=1)",
+                "\tand a",
+                "\tjr nz, .printOhFineThen",
+                "\tcall LoadCoinsToSubtract",
+                "\tcall HasEnoughCoins",
+                "\tjr c, .notEnoughCoins",
+                "\tld a, [wWhichPrizeWindow]",
+                "\tcp 2 ; is prize a TM?",
+                "\tjr nz, .giveMon",
+                "\tld a, [wNamedObjectIndex]",
+                "\tld b, a",
+                "\tld a, 1",
+                "\tld c, a",
+                "\tcall GiveItem",
+                "\tjr nc, .bagFull",
+                "\tjr .subtractCoins",
+                ".giveMon",
+                "\tld a, [wNamedObjectIndex]",
+                "\tld [wCurPartySpecies], a",
+                "\tpush af",
+                "\tcall GetPrizeMonLevel"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/events/prize_menu.asm#L181-L221"
+            }
+          ],
+          "coordinates": {
+            "x": 6,
+            "y": 2,
+            "basis": "bg_event map tiles"
+          },
+          "conditions": "Coin Case, enough coins, and bag space",
+          "coin_cost": 7700,
+          "repeatability": "repeatable prize exchange"
+        }
+      ],
+      "script_reference_candidates": [],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "HM01",
+      "move": "cut",
+      "source_item_constant": "HM_CUT",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 141,
+        "line_end": 141,
+        "raw_lines": [
+          "\tadd_hm CUT          ; $C4"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L141"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "SSAnneCaptainsRoom",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/SSAnneCaptainsRoom.asm",
+              "line_start": 14,
+              "line_end": 14,
+              "raw_lines": [
+                "\tdw_const SSAnneCaptainsRoomCaptainText,     TEXT_SSANNECAPTAINSROOM_CAPTAIN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SSAnneCaptainsRoom.asm#L14"
+            },
+            {
+              "path": "scripts/SSAnneCaptainsRoom.asm",
+              "line_start": 19,
+              "line_end": 33,
+              "raw_lines": [
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_HM01",
+                "\tjr nz, .got_item",
+                "\tld hl, SSAnneCaptainsRoomRubCaptainsBackText",
+                "\tcall PrintText",
+                "\tld hl, SSAnneCaptainsRoomCaptainIFeelMuchBetterText",
+                "\tcall PrintText",
+                "\tlb bc, HM_CUT, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, SSAnneCaptainsRoomCaptainReceivedHM01Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_HM01",
+                "\tjr .done",
+                ".bag_full"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SSAnneCaptainsRoom.asm#L19-L33"
+            },
+            {
+              "path": "data/maps/objects/SSAnneCaptainsRoom.asm",
+              "line_start": 15,
+              "line_end": 15,
+              "raw_lines": [
+                "\tobject_event  4,  2, SPRITE_CAPTAIN, STAY, UP, TEXT_SSANNECAPTAINSROOM_CAPTAIN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SSAnneCaptainsRoom.asm#L15"
+            }
+          ],
+          "coordinates": {
+            "x": 4,
+            "y": 2,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Captain interaction; back rubbed; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/SSAnneCaptainsRoom.asm",
+          "line_start": 26,
+          "line_end": 26,
+          "raw_lines": [
+            "\tlb bc, HM_CUT, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SSAnneCaptainsRoom.asm#L26"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "HM02",
+      "move": "fly",
+      "source_item_constant": "HM_FLY",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 142,
+        "line_end": 142,
+        "raw_lines": [
+          "\tadd_hm FLY          ; $C5"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L142"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "Route16FlyHouse",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/Route16FlyHouse.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const Route16FlyHouseBrunetteGirlText, TEXT_ROUTE16FLYHOUSE_BRUNETTE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route16FlyHouse.asm#L6"
+            },
+            {
+              "path": "scripts/Route16FlyHouse.asm",
+              "line_start": 4,
+              "line_end": 24,
+              "raw_lines": [
+                "Route16FlyHouse_TextPointers:",
+                "\tdef_text_pointers",
+                "\tdw_const Route16FlyHouseBrunetteGirlText, TEXT_ROUTE16FLYHOUSE_BRUNETTE_GIRL",
+                "\tdw_const Route16FlyHouseFearowText,       TEXT_ROUTE16FLYHOUSE_FEAROW",
+                "",
+                "Route16FlyHouseBrunetteGirlText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_HM02",
+                "\tld hl, .HM02ExplanationText",
+                "\tjr nz, .got_item",
+                "\tld hl, .Text",
+                "\tcall PrintText",
+                "\tlb bc, HM_FLY, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tSetEvent EVENT_GOT_HM02",
+                "\tld hl, .ReceivedHM02Text",
+                "\tjr .got_item",
+                ".bag_full",
+                "\tld hl, .HM02NoRoomText",
+                ".got_item"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route16FlyHouse.asm#L4-L24"
+            },
+            {
+              "path": "data/maps/objects/Route16FlyHouse.asm",
+              "line_start": 15,
+              "line_end": 15,
+              "raw_lines": [
+                "\tobject_event  2,  3, SPRITE_BRUNETTE_GIRL, STAY, RIGHT, TEXT_ROUTE16FLYHOUSE_BRUNETTE_GIRL"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route16FlyHouse.asm#L15"
+            }
+          ],
+          "coordinates": {
+            "x": 2,
+            "y": 3,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to girl; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/Route16FlyHouse.asm",
+          "line_start": 16,
+          "line_end": 16,
+          "raw_lines": [
+            "\tlb bc, HM_FLY, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route16FlyHouse.asm#L16"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "HM03",
+      "move": "surf",
+      "source_item_constant": "HM_SURF",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 143,
+        "line_end": 143,
+        "raw_lines": [
+          "\tadd_hm SURF         ; $C6"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L143"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "SafariZoneSecretHouse",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/SafariZoneSecretHouse.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const SafariZoneSecretHouseFishingGuruText, TEXT_SAFARIZONESECRETHOUSE_FISHING_GURU"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SafariZoneSecretHouse.asm#L6"
+            },
+            {
+              "path": "scripts/SafariZoneSecretHouse.asm",
+              "line_start": 2,
+              "line_end": 22,
+              "raw_lines": [
+                "\tjp EnableAutoTextBoxDrawing",
+                "",
+                "SafariZoneSecretHouse_TextPointers:",
+                "\tdef_text_pointers",
+                "\tdw_const SafariZoneSecretHouseFishingGuruText, TEXT_SAFARIZONESECRETHOUSE_FISHING_GURU",
+                "",
+                "SafariZoneSecretHouseFishingGuruText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_HM03",
+                "\tjr nz, .got_item",
+                "\tld hl, .YouHaveWonText",
+                "\tcall PrintText",
+                "\tlb bc, HM_SURF, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, .ReceivedHM03Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_HM03",
+                "\tjr .done",
+                ".bag_full",
+                "\tld hl, .HM03NoRoomText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SafariZoneSecretHouse.asm#L2-L22"
+            },
+            {
+              "path": "data/maps/objects/SafariZoneSecretHouse.asm",
+              "line_start": 14,
+              "line_end": 14,
+              "raw_lines": [
+                "\tobject_event  3,  3, SPRITE_FISHING_GURU, STAY, DOWN, TEXT_SAFARIZONESECRETHOUSE_FISHING_GURU"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/SafariZoneSecretHouse.asm#L14"
+            }
+          ],
+          "coordinates": {
+            "x": 3,
+            "y": 3,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Talk to NPC in secret house; bag must have room",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/SafariZoneSecretHouse.asm",
+          "line_start": 14,
+          "line_end": 14,
+          "raw_lines": [
+            "\tlb bc, HM_SURF, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/SafariZoneSecretHouse.asm#L14"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "HM04",
+      "move": "strength",
+      "source_item_constant": "HM_STRENGTH",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 144,
+        "line_end": 144,
+        "raw_lines": [
+          "\tadd_hm STRENGTH     ; $C7"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L144"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "WardensHouse",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/WardensHouse.asm",
+              "line_start": 6,
+              "line_end": 6,
+              "raw_lines": [
+                "\tdw_const WardensHouseWardenText,  TEXT_WARDENSHOUSE_WARDEN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/WardensHouse.asm#L6"
+            },
+            {
+              "path": "scripts/WardensHouse.asm",
+              "line_start": 12,
+              "line_end": 50,
+              "raw_lines": [
+                "WardensHouseWardenText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_HM04",
+                "\tjr nz, .got_item",
+                "\tld b, GOLD_TEETH",
+                "\tcall IsItemInBag",
+                "\tjr nz, .have_gold_teeth",
+                "\tCheckEvent EVENT_GAVE_GOLD_TEETH",
+                "\tjr nz, .gave_gold_teeth",
+                "\tld hl, .Gibberish1Text",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem]",
+                "\tand a",
+                "\tld hl, .Gibberish3Text",
+                "\tjr nz, .refused",
+                "\tld hl, .Gibberish2Text",
+                ".refused",
+                "\tcall PrintText",
+                "\tjr .done",
+                ".have_gold_teeth",
+                "\tld hl, .GaveTheGoldTeethText",
+                "\tcall PrintText",
+                "\tld a, GOLD_TEETH",
+                "\tldh [hItemToRemoveID], a",
+                "\tfarcall RemoveItemByID",
+                "\tSetEvent EVENT_GAVE_GOLD_TEETH",
+                ".gave_gold_teeth",
+                "\tld hl, .ThanksText",
+                "\tcall PrintText",
+                "\tlb bc, HM_STRENGTH, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bag_full",
+                "\tld hl, .ReceivedHM04Text",
+                "\tcall PrintText",
+                "\tSetEvent EVENT_GOT_HM04",
+                "\tjr .done",
+                ".got_item",
+                "\tld hl, .HM04ExplanationText"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/WardensHouse.asm#L12-L50"
+            },
+            {
+              "path": "data/maps/objects/WardensHouse.asm",
+              "line_start": 18,
+              "line_end": 18,
+              "raw_lines": [
+                "\tobject_event  2,  3, SPRITE_WARDEN, STAY, NONE, TEXT_WARDENSHOUSE_WARDEN"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/WardensHouse.asm#L18"
+            }
+          ],
+          "coordinates": {
+            "x": 2,
+            "y": 3,
+            "basis": "object_event initial position; NPC may move"
+          },
+          "conditions": "Give Warden GOLD_TEETH; bag must have room; teeth are removed before award",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/WardensHouse.asm",
+          "line_start": 42,
+          "line_end": 42,
+          "raw_lines": [
+            "\tlb bc, HM_STRENGTH, 1"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/WardensHouse.asm#L42"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    },
+    {
+      "code": "HM05",
+      "move": "flash",
+      "source_item_constant": "HM_FLASH",
+      "item_constant_evidence": {
+        "path": "constants/item_constants.asm",
+        "line_start": 145,
+        "line_end": 145,
+        "raw_lines": [
+          "\tadd_hm FLASH        ; $C8"
+        ],
+        "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/constants/item_constants.asm#L145"
+      },
+      "locations": [
+        {
+          "method": "reward_npc",
+          "map_id_raw": "Route2Gate",
+          "versions": [
+            "red",
+            "blue"
+          ],
+          "evidence": [
+            {
+              "path": "scripts/Route2Gate.asm",
+              "line_start": 9,
+              "line_end": 32,
+              "raw_lines": [
+                "Route2GateOaksAideText:",
+                "\ttext_asm",
+                "\tCheckEvent EVENT_GOT_HM05",
+                "\tjr nz, .got_item",
+                "\tld a, 10",
+                "\tldh [hOaksAideRequirement], a",
+                "\tld a, HM_FLASH",
+                "\tldh [hOaksAideRewardItem], a",
+                "\tld [wNamedObjectIndex], a",
+                "\tcall GetItemName",
+                "\tld hl, wNameBuffer",
+                "\tld de, wOaksAideRewardItemName",
+                "\tld bc, ITEM_NAME_LENGTH",
+                "\tcall CopyData",
+                "\tpredef OaksAideScript",
+                "\tldh a, [hOaksAideResult]",
+                "\tcp OAKS_AIDE_GOT_ITEM",
+                "\tjr nz, .no_item",
+                "\tSetEvent EVENT_GOT_HM05",
+                ".got_item",
+                "\tld hl, .FlashExplanationText",
+                "\tcall PrintText",
+                ".no_item",
+                "\tjp TextScriptEnd"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route2Gate.asm#L9-L32"
+            },
+            {
+              "path": "data/maps/objects/Route2Gate.asm",
+              "line_start": 17,
+              "line_end": 17,
+              "raw_lines": [
+                "\tobject_event  1,  4, SPRITE_SCIENTIST, STAY, LEFT, TEXT_ROUTE2GATE_OAKS_AIDE"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/data/maps/objects/Route2Gate.asm#L17"
+            },
+            {
+              "path": "engine/events/oaks_aide.asm",
+              "line_start": 1,
+              "line_end": 30,
+              "raw_lines": [
+                "OaksAideScript:",
+                "\tld hl, OaksAideHiText",
+                "\tcall PrintText",
+                "\tcall YesNoChoice",
+                "\tld a, [wCurrentMenuItem]",
+                "\tand a",
+                "\tjr nz, .choseNo",
+                "\tld hl, wPokedexOwned",
+                "\tld b, wPokedexOwnedEnd - wPokedexOwned",
+                "\tcall CountSetBits",
+                "\tld a, [wNumSetBits]",
+                "\tldh [hOaksAideNumMonsOwned], a",
+                "\tld b, a",
+                "\tldh a, [hOaksAideRequirement]",
+                "\tcp b",
+                "\tjr z, .giveItem",
+                "\tjr nc, .notEnoughOwnedMons",
+                ".giveItem",
+                "\tld hl, OaksAideHereYouGoText",
+                "\tcall PrintText",
+                "\tldh a, [hOaksAideRewardItem]",
+                "\tld b, a",
+                "\tld c, 1",
+                "\tcall GiveItem",
+                "\tjr nc, .bagFull",
+                "\tld hl, OaksAideGotItemText",
+                "\tcall PrintText",
+                "\tld a, OAKS_AIDE_GOT_ITEM",
+                "\tjr .done",
+                ".bagFull"
+              ],
+              "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/engine/events/oaks_aide.asm#L1-L30"
+            }
+          ],
+          "coordinates": {
+            "x": 1,
+            "y": 4,
+            "basis": "object_event map tiles"
+          },
+          "conditions": "Accept reward from aide with at least 10 distinct species owned and bag space",
+          "repeatability": "one-time event"
+        }
+      ],
+      "script_reference_candidates": [
+        {
+          "path": "scripts/Route2Gate.asm",
+          "line_start": 15,
+          "line_end": 15,
+          "raw_lines": [
+            "\tld a, HM_FLASH"
+          ],
+          "url": "https://github.com/pret/pokered/blob/ba9c0568f64ae602fadda577a08c66639f93082a/scripts/Route2Gate.asm#L15"
+        }
+      ],
+      "coverage": "partial; no claim of exhaustive methods"
+    }
+  ]
+}

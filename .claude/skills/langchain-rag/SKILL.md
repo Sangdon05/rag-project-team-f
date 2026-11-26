@@ -5,17 +5,26 @@ description: Use when building or changing the LangChain QA agent chain, system 
 
 # langchain-rag
 
-툴을 쓰는 질의응답 에이전트 체인과 프롬프트를 만든다.
+현재 Solar 질문 CLI와 향후 툴 기반 질의응답 에이전트 체인·프롬프트를 다룬다.
 
-## 구성
+## 현재 Solar handoff (CLI, 에이전트 아님)
 
-- tool-calling 에이전트 1개 + `tool-calling` 스킬의 툴 8개. 별도 라우터 체인은 두지 않는다.
+- `solar_handoff/src/cli.py`가 한 질문을 받아 JSON 트레이스를 출력한다. 과거 `dev_rag`가 아닌 handoff 경로이며 LangChain tool-calling 에이전트와 정형·집계 툴은 미구현이다. `retrieval.py`, `providers.py`, `citations.py` 및 `solar_handoff/config/retrieval.json`이 각각 검색, 모델 호출, 출처와 고정 검색 설정을 담당한다.
+- 질문 원문을 보존하고 선택적 GPT rewrite를 적용한 검색어(미사용 시 원문)를 Solar query API로 임베딩한다. A는 벡터, B는 벡터와 BM25 각각 최대 20개를 RRF(k=60)로 결합해 상위 5개를 선택한다. C는 B의 상위 정확히 5개를 원문 질문 기준 GPT로 재순위화하며 5개 미만이면 실패한다. 답변은 GPT 전용이며 원문 질문과 최종 청크를 사용한다.
+- rewrite의 완료된 응답이 거절 또는 형식 오류인 경우에만 원문으로 fallback한다. 네트워크 등 결과가 불명인 실패는 fallback하지 않고 실패 처리하며 자동 재시도하지 않는다. 유효한 rewrite도 의미 보존은 미검토다.
+- 출처 검사는 답변에 인용된 ID가 선택된 청크에 속하는지와 형식만 확인한다. path·heading·불연속 줄 범위는 메타데이터 표시이며, 실제 문서 위치와 주장에 대한 근거 적합성은 사람이 대조해야 한다.
+- 루트 환경의 `DATABASE_URL`, `UPSTAGE_API_KEY`, `UPSTAGE_EMBEDDING_MODEL`, `UPSTAGE_QUERY_MODEL`을 사용한다. GPT 답변·rewrite·C에는 `OPENAI_CHAT_MODEL`, `OPENAI_API_KEY`가 필요하다. 모델 ID는 환경에서 읽으며 `gpt-` 접두사만 허용하고 그 외 ID는 거부한다. 응답의 실제 모델 ID도 `gpt-`여야 하나 설정 ID와의 정확한 일치는 요구하지 않는다 (alias가 날짜가 붙은 revision으로 응답할 수 있음). 별도 승인된 DB 접근·비용 확인 후에만 실제 호출하며 `--allow-cost`가 필요하다. 자세한 환경과 경계는 `solar_handoff/README.md`를 따른다.
+- 확인된 실제 질문은 Solar + C + rewrite + GPT 1건뿐이다 (`solar_handoff/README.md`의 확인된 실 실행 범위). `pokemon:133#profile`의 이브이 노말 타입은 `solar_handoff/documents/133_이브이.md` 6·10행과 대조됐다. 다른 조합의 성공이나 운영 준비를 뜻하지 않는다.
+
+## 향후 에이전트 구성 (구현 예정)
+
+- tool-calling 에이전트 1개 + `tool-calling` 스킬의 툴 8개를 설계한다. 별도 라우터 체인은 두지 않는다.
 - 권장 흐름: 특정 포켓몬·기술 질문 → `resolve_name` → `get_*` 또는 `search_pokedex(pokemon_id=…)`. 상성 질문 → `type_effectiveness`.
 - 정형 조회에 쓰는 실제 정제 파일과 미확인 처리 기준은 `tool-calling` 스킬을 따른다. `pokedex_extra.json`의 존재를 전제하지 않는다.
 - 상성 툴 결과의 지원 상태·배율과 기술 습득 여부는 `tool-calling` 스킬의 상성 계산 계약에 따라 구분한다.
-- 검색 방식, k, 필터, MMR과 후보 결합·재정렬 설정은 이 스킬 소유다. 코드에 고정하지 않고 config 파일로 둔다.
+- 향후 에이전트의 검색 방식, k, 필터, MMR과 후보 결합·재정렬 설정은 이 스킬 소유다. Solar CLI는 별도 구현으로 config 값을 코드의 기대값과 대조한다.
 
-## 검색 방식 비교 (구현 예정)
+## 향후 에이전트 검색 방식 비교 (구현 예정)
 
 | 실험 | 검색 과정 |
 | --- | --- |
@@ -30,7 +39,7 @@ description: Use when building or changing the LangChain QA agent chain, system 
 - 정형 조회·계산 툴은 그대로 유지한다. 검색 결과만 비교하는 실험과 툴을 포함한 전체 답변 실험은 구분해 기록한다. 검색을 쓰지 않은 질문에 검색 결과를 만들어 넣지 않는다.
 - 설정·검색기·인덱스·청크와 평가 데이터는 아직 구현된 것으로 가정하지 않는다. 부족하면 `blocked`와 선행 조건을 보고한다.
 
-## 시스템 프롬프트 규칙
+## 향후 에이전트 시스템 프롬프트 규칙
 
 1. 툴 결과에 있는 내용으로만 답한다.
 2. 근거 있는 답에 출처(`pokemon_id` / `move_id` / `chunk_id`)를 붙이고, 해당 ID에서 문서 위치와 정제 데이터·계산 근거를 확인할 수 있게 한다. 확인 불가한 근거는 만들어 내지 않는다.
@@ -40,15 +49,15 @@ description: Use when building or changing the LangChain QA agent chain, system 
 
 검색 결과의 청크 ID와 문서·원본 근거 연결은 `chunking` 스킬과 확정된 청크 계약을 따른다.
 
-## 재현성
+## 향후 에이전트 실험 재현성
 
-- LLM `OPENAI_CHAT_MODEL`(= `gpt-6-luna`), temperature 0. 모델명은 환경 변수로 읽고, 실행 기록에 남긴다
+- LLM `OPENAI_CHAT_MODEL`(= `gpt-6-luna`), temperature 0을 목표로 한다. 모델명은 환경 변수로 읽고 실행 기록에 남긴다. 현재 Solar GPT 호출은 temperature를 지정하지 않는다.
 - 비교 시 같은 승인 문서·청크 버전, 질문 집합, 답변 모델·프롬프트, 툴 설정과 최종 k를 고정하고 변경한 검색 조건을 기록한다.
 - 개발셋에서 설정을 정한 뒤 최종 평가 전 설정과 평가셋을 고정한다. 평가 정답은 검색 문서·프롬프트에 넣지 않는다.
 - 실행마다 검색 방식, config 스냅샷 해시, 청크·`index_version`, 답변·임베딩·재정렬 모델 버전과 해당 설정을 기록한다. 해당하지 않는 모델은 명시적으로 제외한다.
 - 질문별 검색·답변 시간과 사용 가능한 토큰·비용 정보를 기록한다. 측정할 수 없는 값은 알 수 없음으로 남긴다.
 
-## 트레이스 로깅 (필수)
+## 향후 에이전트 트레이스 로깅 계약 (구현 예정)
 
 질문마다 JSONL 한 줄. Eval의 실패 분석이 이 로그에 의존한다. 아래는 구현 계약을 정하기 위한 예시이지 실제 실행 결과가 아니다.
 
@@ -61,7 +70,7 @@ description: Use when building or changing the LangChain QA agent chain, system 
 - `method`는 선택된 A/B/C 설정이다. `called: false`는 검색 미호출로 후보와 시간은 `null`이다. `called: true`인데 결과가 없으면 `final: []`로 구별한다.
 - `pre_rerank`와 `final`에는 후보의 청크 ID·순위·사용 가능한 점수와 출처 연결을 기록한다. B와 C의 공통 결합 후보를 추적하고 A에서 해당하지 않는 재정렬 전 목록은 `null`로 표시한다.
 
-## 검증
+## 향후 에이전트 검증 계획
 
 - 질문 유형별 1개 이상 실행: 단일 사실, 기술/습득, 상성, 비교, 집계, 서술형, 범위 밖
 - 세 검색 설정이 같은 청크 집합에서 작동하고 B·C의 후보 생성 조건이 일치하는지 검증한다. 빈 결과, 중복 청크·출처 연결, 재정렬 전후 순위와 설정 변경도 테스트한다.

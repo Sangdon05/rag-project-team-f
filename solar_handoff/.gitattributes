@@ -1,0 +1,5 @@
+/data/** -text whitespace=cr-at-eol
+/documents/** -text whitespace=cr-at-eol
+/document_evidence/** -text whitespace=cr-at-eol
+/chunks/** -text whitespace=cr-at-eol
+/reports/** -text whitespace=cr-at-eol

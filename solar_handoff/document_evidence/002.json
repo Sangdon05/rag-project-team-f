@@ -1,0 +1,1986 @@
+{
+  "schema_version": 1,
+  "document_path": "documents/002_이상해풀.md",
+  "pokemon_id": 2,
+  "document_sha256": "13debffaf616f613591ed0598c8b0be4063270dcbeda4218888182c509b5cbcb",
+  "source_revision": "e58a02d6a952d7e79378cac3df9537adbb6c700a",
+  "calculator": {
+    "path": "scripts/gen1_battle/gen1_battle_rules.py",
+    "sha256": "1acf5b02611945715f77a97eb0e948c5c9815bb6a7b87e449d27f0bcffbfd96d",
+    "version": "red-blue",
+    "attack_and_stab_probes": {
+      "grass": 22,
+      "poison": 40
+    },
+    "defense_probes": {
+      "normal": 1,
+      "fighting": 24,
+      "flying": 17,
+      "poison": 40,
+      "ground": 89,
+      "rock": 88,
+      "bug": 41,
+      "ghost": 122,
+      "fire": 7,
+      "water": 55,
+      "grass": 22,
+      "electric": 9,
+      "psychic": 60,
+      "ice": 8,
+      "dragon": null
+    },
+    "user_id": 2,
+    "target_id": 2,
+    "classification_source_commit": "ba9c0568f64ae602fadda577a08c66639f93082a",
+    "method": "BattleRules.calculate; type_effectiveness, not combined_factor; target_types override for single-type attack chart; actual dual-type target 2 for defense; STAB calculate separately; dragon defense chart-only because no regular-damage dragon move"
+  },
+  "references": [
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/0",
+      "record_id": "pokemon:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/0",
+      "record_id": "pokemon:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/2",
+      "record_id": "pokemon:3",
+      "identity_field": "id",
+      "identity_value": 3,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:evolutions_red_blue",
+      "pointer": "/records/2",
+      "record_id": "pokemon:3",
+      "identity_field": "id",
+      "identity_value": 3,
+      "section": "evolution"
+    },
+    {
+      "source_id": "processed:encounters_red_blue",
+      "pointer": "/pokemon/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "section": "encounter"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/0",
+      "record_id": "type:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/1",
+      "record_id": "type:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/2",
+      "record_id": "type:3",
+      "identity_field": "id",
+      "identity_value": 3,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/3",
+      "record_id": "type:4",
+      "identity_field": "id",
+      "identity_value": 4,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/4",
+      "record_id": "type:5",
+      "identity_field": "id",
+      "identity_value": 5,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/5",
+      "record_id": "type:6",
+      "identity_field": "id",
+      "identity_value": 6,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/6",
+      "record_id": "type:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/7",
+      "record_id": "type:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/8",
+      "record_id": "type:10",
+      "identity_field": "id",
+      "identity_value": 10,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/9",
+      "record_id": "type:11",
+      "identity_field": "id",
+      "identity_value": 11,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/10",
+      "record_id": "type:12",
+      "identity_field": "id",
+      "identity_value": 12,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/11",
+      "record_id": "type:13",
+      "identity_field": "id",
+      "identity_value": 13,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/12",
+      "record_id": "type:14",
+      "identity_field": "id",
+      "identity_value": 14,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/13",
+      "record_id": "type:15",
+      "identity_field": "id",
+      "identity_value": 15,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:types",
+      "pointer": "/14",
+      "record_id": "type:16",
+      "identity_field": "id",
+      "identity_value": 16,
+      "section": "type_calculations"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/0",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "bide",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/1",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "body-slam",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/2",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "cut",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/3",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "double-edge",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/4",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "double-team",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/5",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "growl",
+        "level": 1,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/6",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "growth",
+        "level": 38,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/7",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "leech-seed",
+        "level": 1,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/8",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "leech-seed",
+        "level": 7,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/9",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "mega-drain",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/10",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "mimic",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/11",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "poison-powder",
+        "level": 22,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/12",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "rage",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/13",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "razor-leaf",
+        "level": 30,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/14",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "reflect",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/15",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "rest",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/16",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "sleep-powder",
+        "level": 46,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/17",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "solar-beam",
+        "level": 54,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/18",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "solar-beam",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/19",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "substitute",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/20",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "swords-dance",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/21",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "tackle",
+        "level": 1,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/22",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "take-down",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/23",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "toxic",
+        "level": 0,
+        "method": "machine",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:pokemon",
+      "pointer": "/1/learnset/24",
+      "record_pointer": "/1",
+      "record_id": "pokemon:2",
+      "identity_field": "id",
+      "identity_value": 2,
+      "expected_subrecord": {
+        "move": "vine-whip",
+        "level": 13,
+        "method": "level-up",
+        "version_group": "red-blue"
+      },
+      "section": "learnset"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/116",
+      "record_id": "move:117",
+      "identity_field": "id",
+      "identity_value": 117,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/116",
+      "record_id": "move:117",
+      "identity_field": "id",
+      "identity_value": 117,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/33",
+      "record_id": "move:34",
+      "identity_field": "id",
+      "identity_value": 34,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/33",
+      "record_id": "move:34",
+      "identity_field": "id",
+      "identity_value": 34,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/14",
+      "record_id": "move:15",
+      "identity_field": "id",
+      "identity_value": 15,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/14",
+      "record_id": "move:15",
+      "identity_field": "id",
+      "identity_value": 15,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/37",
+      "record_id": "move:38",
+      "identity_field": "id",
+      "identity_value": 38,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/37",
+      "record_id": "move:38",
+      "identity_field": "id",
+      "identity_value": 38,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/103",
+      "record_id": "move:104",
+      "identity_field": "id",
+      "identity_value": 104,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/103",
+      "record_id": "move:104",
+      "identity_field": "id",
+      "identity_value": 104,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/44",
+      "record_id": "move:45",
+      "identity_field": "id",
+      "identity_value": 45,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/44",
+      "record_id": "move:45",
+      "identity_field": "id",
+      "identity_value": 45,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/73",
+      "record_id": "move:74",
+      "identity_field": "id",
+      "identity_value": 74,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/73",
+      "record_id": "move:74",
+      "identity_field": "id",
+      "identity_value": 74,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/72",
+      "record_id": "move:73",
+      "identity_field": "id",
+      "identity_value": 73,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/72",
+      "record_id": "move:73",
+      "identity_field": "id",
+      "identity_value": 73,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/71",
+      "record_id": "move:72",
+      "identity_field": "id",
+      "identity_value": 72,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/71",
+      "record_id": "move:72",
+      "identity_field": "id",
+      "identity_value": 72,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/101",
+      "record_id": "move:102",
+      "identity_field": "id",
+      "identity_value": 102,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/101",
+      "record_id": "move:102",
+      "identity_field": "id",
+      "identity_value": 102,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/76",
+      "record_id": "move:77",
+      "identity_field": "id",
+      "identity_value": 77,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/76",
+      "record_id": "move:77",
+      "identity_field": "id",
+      "identity_value": 77,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/98",
+      "record_id": "move:99",
+      "identity_field": "id",
+      "identity_value": 99,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/98",
+      "record_id": "move:99",
+      "identity_field": "id",
+      "identity_value": 99,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/74",
+      "record_id": "move:75",
+      "identity_field": "id",
+      "identity_value": 75,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/74",
+      "record_id": "move:75",
+      "identity_field": "id",
+      "identity_value": 75,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/114",
+      "record_id": "move:115",
+      "identity_field": "id",
+      "identity_value": 115,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/114",
+      "record_id": "move:115",
+      "identity_field": "id",
+      "identity_value": 115,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/155",
+      "record_id": "move:156",
+      "identity_field": "id",
+      "identity_value": 156,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/155",
+      "record_id": "move:156",
+      "identity_field": "id",
+      "identity_value": 156,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/78",
+      "record_id": "move:79",
+      "identity_field": "id",
+      "identity_value": 79,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/78",
+      "record_id": "move:79",
+      "identity_field": "id",
+      "identity_value": 79,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/75",
+      "record_id": "move:76",
+      "identity_field": "id",
+      "identity_value": 76,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/75",
+      "record_id": "move:76",
+      "identity_field": "id",
+      "identity_value": 76,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/163",
+      "record_id": "move:164",
+      "identity_field": "id",
+      "identity_value": 164,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/163",
+      "record_id": "move:164",
+      "identity_field": "id",
+      "identity_value": 164,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/13",
+      "record_id": "move:14",
+      "identity_field": "id",
+      "identity_value": 14,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/13",
+      "record_id": "move:14",
+      "identity_field": "id",
+      "identity_value": 14,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/32",
+      "record_id": "move:33",
+      "identity_field": "id",
+      "identity_value": 33,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/32",
+      "record_id": "move:33",
+      "identity_field": "id",
+      "identity_value": 33,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/35",
+      "record_id": "move:36",
+      "identity_field": "id",
+      "identity_value": 36,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/35",
+      "record_id": "move:36",
+      "identity_field": "id",
+      "identity_value": 36,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/91",
+      "record_id": "move:92",
+      "identity_field": "id",
+      "identity_value": 92,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/91",
+      "record_id": "move:92",
+      "identity_field": "id",
+      "identity_value": 92,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "learnset_and_stab"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "calculation"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/50",
+      "record_id": "machine:HM01",
+      "identity_field": "code",
+      "identity_value": "HM01",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/50",
+      "record_id": "machine:HM01",
+      "identity_field": "code",
+      "identity_value": "HM01",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/2",
+      "record_id": "machine:TM03",
+      "identity_field": "code",
+      "identity_value": "TM03",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/2",
+      "record_id": "machine:TM03",
+      "identity_field": "code",
+      "identity_value": "TM03",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/5",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/5",
+      "record_id": "machine:TM06",
+      "identity_field": "code",
+      "identity_value": "TM06",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/7",
+      "record_id": "machine:TM08",
+      "identity_field": "code",
+      "identity_value": "TM08",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/7",
+      "record_id": "machine:TM08",
+      "identity_field": "code",
+      "identity_value": "TM08",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/8",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/8",
+      "record_id": "machine:TM09",
+      "identity_field": "code",
+      "identity_value": "TM09",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/9",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/9",
+      "record_id": "machine:TM10",
+      "identity_field": "code",
+      "identity_value": "TM10",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/19",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/19",
+      "record_id": "machine:TM20",
+      "identity_field": "code",
+      "identity_value": "TM20",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/20",
+      "record_id": "machine:TM21",
+      "identity_field": "code",
+      "identity_value": "TM21",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/20",
+      "record_id": "machine:TM21",
+      "identity_field": "code",
+      "identity_value": "TM21",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/21",
+      "record_id": "machine:TM22",
+      "identity_field": "code",
+      "identity_value": "TM22",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/21",
+      "record_id": "machine:TM22",
+      "identity_field": "code",
+      "identity_value": "TM22",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/30",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/30",
+      "record_id": "machine:TM31",
+      "identity_field": "code",
+      "identity_value": "TM31",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/31",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/31",
+      "record_id": "machine:TM32",
+      "identity_field": "code",
+      "identity_value": "TM32",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/32",
+      "record_id": "machine:TM33",
+      "identity_field": "code",
+      "identity_value": "TM33",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/32",
+      "record_id": "machine:TM33",
+      "identity_field": "code",
+      "identity_value": "TM33",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/33",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/33",
+      "record_id": "machine:TM34",
+      "identity_field": "code",
+      "identity_value": "TM34",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/43",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/43",
+      "record_id": "machine:TM44",
+      "identity_field": "code",
+      "identity_value": "TM44",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:machines_red_blue",
+      "pointer": "/machines/49",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine"
+    },
+    {
+      "source_id": "processed:machine_acquisition_red_blue",
+      "pointer": "/machines/49",
+      "record_id": "machine:TM50",
+      "identity_field": "code",
+      "identity_value": "TM50",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/120",
+      "record_id": "location_name:pokered_map:CeladonGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeladonGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/121",
+      "record_id": "location_name:pokered_map:CeladonMart2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CeladonMart2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/128",
+      "record_id": "location_name:pokered_map:CopycatsHouse2F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:CopycatsHouse2F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/129",
+      "record_id": "location_name:pokered_map:FuchsiaGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:FuchsiaGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/130",
+      "record_id": "location_name:pokered_map:GameCornerPrizeRoom",
+      "identity_field": "id",
+      "identity_value": "pokered_map:GameCornerPrizeRoom",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/134",
+      "record_id": "location_name:pokered_map:PewterGym",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PewterGym",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/135",
+      "record_id": "location_name:pokered_map:PokemonMansionB1F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PokemonMansionB1F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/136",
+      "record_id": "location_name:pokered_map:PowerPlant",
+      "identity_field": "id",
+      "identity_value": "pokered_map:PowerPlant",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/138",
+      "record_id": "location_name:pokered_map:RocketHideoutB3F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:RocketHideoutB3F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/142",
+      "record_id": "location_name:pokered_map:Route15",
+      "identity_field": "id",
+      "identity_value": "pokered_map:Route15",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/149",
+      "record_id": "location_name:pokered_map:SSAnne1FRooms",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SSAnne1FRooms",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/150",
+      "record_id": "location_name:pokered_map:SSAnneB1FRooms",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SSAnneB1FRooms",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/151",
+      "record_id": "location_name:pokered_map:SSAnneCaptainsRoom",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SSAnneCaptainsRoom",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/155",
+      "record_id": "location_name:pokered_map:SafariZoneWest",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SafariZoneWest",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/159",
+      "record_id": "location_name:pokered_map:SilphCo5F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SilphCo5F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:location_names_ko_red_blue",
+      "pointer": "/entries/160",
+      "record_id": "location_name:pokered_map:SilphCo7F",
+      "identity_field": "id",
+      "identity_value": "pokered_map:SilphCo7F",
+      "section": "machine_acquisition"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/normal",
+      "record_id": "type_matchup:grass:normal",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/fighting",
+      "record_id": "type_matchup:grass:fighting",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/flying",
+      "record_id": "type_matchup:grass:flying",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/poison",
+      "record_id": "type_matchup:grass:poison",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/ground",
+      "record_id": "type_matchup:grass:ground",
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/rock",
+      "record_id": "type_matchup:grass:rock",
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/bug",
+      "record_id": "type_matchup:grass:bug",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/ghost",
+      "record_id": "type_matchup:grass:ghost",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/fire",
+      "record_id": "type_matchup:grass:fire",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/water",
+      "record_id": "type_matchup:grass:water",
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/grass",
+      "record_id": "type_matchup:grass:grass",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/electric",
+      "record_id": "type_matchup:grass:electric",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/psychic",
+      "record_id": "type_matchup:grass:psychic",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/ice",
+      "record_id": "type_matchup:grass:ice",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/dragon",
+      "record_id": "type_matchup:grass:dragon",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/normal",
+      "record_id": "type_matchup:poison:normal",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/fighting",
+      "record_id": "type_matchup:poison:fighting",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/flying",
+      "record_id": "type_matchup:poison:flying",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/poison",
+      "record_id": "type_matchup:poison:poison",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/ground",
+      "record_id": "type_matchup:poison:ground",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/rock",
+      "record_id": "type_matchup:poison:rock",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/bug",
+      "record_id": "type_matchup:poison:bug",
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/ghost",
+      "record_id": "type_matchup:poison:ghost",
+      "identity_value": 0.5,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/fire",
+      "record_id": "type_matchup:poison:fire",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/water",
+      "record_id": "type_matchup:poison:water",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/grass",
+      "record_id": "type_matchup:poison:grass",
+      "identity_value": 2,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/electric",
+      "record_id": "type_matchup:poison:electric",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/psychic",
+      "record_id": "type_matchup:poison:psychic",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/ice",
+      "record_id": "type_matchup:poison:ice",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/dragon",
+      "record_id": "type_matchup:poison:dragon",
+      "identity_value": 1,
+      "section": "attack"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/normal/grass",
+      "record_id": "type_matchup:normal:grass",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/normal/poison",
+      "record_id": "type_matchup:normal:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fighting/grass",
+      "record_id": "type_matchup:fighting:grass",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fighting/poison",
+      "record_id": "type_matchup:fighting:poison",
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/flying/grass",
+      "record_id": "type_matchup:flying:grass",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/flying/poison",
+      "record_id": "type_matchup:flying:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/grass",
+      "record_id": "type_matchup:poison:grass",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/poison/poison",
+      "record_id": "type_matchup:poison:poison",
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ground/grass",
+      "record_id": "type_matchup:ground:grass",
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ground/poison",
+      "record_id": "type_matchup:ground:poison",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/grass",
+      "record_id": "type_matchup:rock:grass",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/rock/poison",
+      "record_id": "type_matchup:rock:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/bug/grass",
+      "record_id": "type_matchup:bug:grass",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/bug/poison",
+      "record_id": "type_matchup:bug:poison",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ghost/grass",
+      "record_id": "type_matchup:ghost:grass",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ghost/poison",
+      "record_id": "type_matchup:ghost:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fire/grass",
+      "record_id": "type_matchup:fire:grass",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/fire/poison",
+      "record_id": "type_matchup:fire:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/grass",
+      "record_id": "type_matchup:water:grass",
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/water/poison",
+      "record_id": "type_matchup:water:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/grass",
+      "record_id": "type_matchup:grass:grass",
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/grass/poison",
+      "record_id": "type_matchup:grass:poison",
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/electric/grass",
+      "record_id": "type_matchup:electric:grass",
+      "identity_value": 0.5,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/electric/poison",
+      "record_id": "type_matchup:electric:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/psychic/grass",
+      "record_id": "type_matchup:psychic:grass",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/psychic/poison",
+      "record_id": "type_matchup:psychic:poison",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ice/grass",
+      "record_id": "type_matchup:ice:grass",
+      "identity_value": 2,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/ice/poison",
+      "record_id": "type_matchup:ice:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/dragon/grass",
+      "record_id": "type_matchup:dragon:grass",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:type_chart",
+      "pointer": "/dragon/poison",
+      "record_id": "type_matchup:dragon:poison",
+      "identity_value": 1,
+      "section": "defense"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/0",
+      "record_id": "move:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/0",
+      "record_id": "move:1",
+      "identity_field": "id",
+      "identity_value": 1,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/23",
+      "record_id": "move:24",
+      "identity_field": "id",
+      "identity_value": 24,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/23",
+      "record_id": "move:24",
+      "identity_field": "id",
+      "identity_value": 24,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/16",
+      "record_id": "move:17",
+      "identity_field": "id",
+      "identity_value": 17,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/16",
+      "record_id": "move:17",
+      "identity_field": "id",
+      "identity_value": 17,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/39",
+      "record_id": "move:40",
+      "identity_field": "id",
+      "identity_value": 40,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/88",
+      "record_id": "move:89",
+      "identity_field": "id",
+      "identity_value": 89,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/88",
+      "record_id": "move:89",
+      "identity_field": "id",
+      "identity_value": 89,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/87",
+      "record_id": "move:88",
+      "identity_field": "id",
+      "identity_value": 88,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/40",
+      "record_id": "move:41",
+      "identity_field": "id",
+      "identity_value": 41,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/40",
+      "record_id": "move:41",
+      "identity_field": "id",
+      "identity_value": 41,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/121",
+      "record_id": "move:122",
+      "identity_field": "id",
+      "identity_value": 122,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/121",
+      "record_id": "move:122",
+      "identity_field": "id",
+      "identity_value": 122,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/6",
+      "record_id": "move:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/6",
+      "record_id": "move:7",
+      "identity_field": "id",
+      "identity_value": 7,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/54",
+      "record_id": "move:55",
+      "identity_field": "id",
+      "identity_value": 55,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/21",
+      "record_id": "move:22",
+      "identity_field": "id",
+      "identity_value": 22,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/8",
+      "record_id": "move:9",
+      "identity_field": "id",
+      "identity_value": 9,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/8",
+      "record_id": "move:9",
+      "identity_field": "id",
+      "identity_value": 9,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/59",
+      "record_id": "move:60",
+      "identity_field": "id",
+      "identity_value": 60,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/59",
+      "record_id": "move:60",
+      "identity_field": "id",
+      "identity_value": 60,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:moves",
+      "pointer": "/7",
+      "record_id": "move:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "defense_probe"
+    },
+    {
+      "source_id": "processed:red_blue_move_damage_classification",
+      "pointer": "/moves/7",
+      "record_id": "move:8",
+      "identity_field": "id",
+      "identity_value": 8,
+      "section": "defense_probe"
+    }
+  ]
+}

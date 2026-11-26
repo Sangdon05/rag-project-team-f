@@ -8,6 +8,12 @@ description: Use when writing or changing runtime tools the RAG agent calls (sig
 LLM이 선택해 호출할 런타임 툴을 작성한다.
 질문 유형별 처리 경로는 별도 라우터 없이 툴 docstring(description)으로 정한다.
 
+## 현재 Solar handoff와의 경계
+
+- `solar_handoff/src/cli.py`는 Solar 검색·답변 CLI이며 LangChain tool-calling 에이전트나 아래 8개 툴의 구현이 아니다. 집계·정렬·정확 조회를 벡터 검색으로 대체하지 않는다.
+- 현재 검색·출처 경로는 `solar_handoff/src/{retrieval,providers,citations}.py`, 설정은 `solar_handoff/config/retrieval.json`이다. A/B/C, rewrite, GPT 전용 답변 및 출처 검증의 실제 계약과 실 실행 한계는 `langchain-rag` 스킬의 Solar handoff 섹션을 따른다.
+- 아래의 데이터 로더·툴 목록과 검증은 향후 설계다. Solar CLI에 `search_pokedex`, `src/pokedex/store.py` 또는 정형 툴이 존재한다고 가정하지 않는다.
+
 ## 툴 목록 (1차 설계, 구현 예정)
 
 | 툴 | 데이터 소스 | 용도 |
@@ -21,7 +27,7 @@ LLM이 선택해 호출할 런타임 툴을 작성한다.
 | `compare_pokemon(ids, fields)` | pokemon.json | 비교 |
 | `search_pokedex(query, k, entity, pokemon_id, section, types)` | 설정된 검색 인덱스 | 서술형·설명형 질문에서 관련 청크 검색 |
 
-- `search_pokedex`는 런타임에서 선택한 A(벡터), B(BM25+벡터), C(B+재정렬) 설정을 따른다. 후보 결합·재정렬과 비교 조건은 `langchain-rag` 스킬을 따른다. 구현·인덱스는 예정이며 존재한다고 가정하지 않는다.
+- 향후 `search_pokedex`는 선택한 A(벡터), B(BM25+벡터), C(B+재정렬) 설정을 따른다. 해당 툴과 에이전트 연결은 예정이며, 별도 Solar CLI 구현과 혼동하지 않는다.
 - 정렬·집계·정확 조회는 정규화 데이터로 푼다. 검색 방식 설정을 질문별 별도 라우터로 만들지 않는다.
 - `get_pokemon`은 `pokemon.json`의 Red·Blue 기준 타입·종족치와, 필요한 경우 포켓몬 ID로 연결한 진화·획득 기록을 쓴다. 획득 기록은 Red와 Blue를 구분한다. 별도 보강 파일 `pokedex_extra.json`의 존재를 전제하지 않는다.
 - `get_learnset`은 `version_group`이 `red-blue`인 습득 기록을 기준으로 한다. 기술 타입은 `moves.json`의 Red·Blue 값, 머신 번호는 같은 버전의 `machines_red_blue.json` 매핑에서 확인한다. 하나의 기술에 레벨업과 머신 기록이 있으면 두 방법을 유지한다.

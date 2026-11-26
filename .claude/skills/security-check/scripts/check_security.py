@@ -5,7 +5,7 @@
     uv run python .claude/skills/security-check/scripts/check_security.py [--base origin/main] [--strict]
 
 검사 대상
-- 작업 트리: 커밋될 수 있는 파일 전체 (tracked + ignore되지 않은 untracked)
+- 인덱스와 작업 트리: 각각의 파일 내용 독립 검사
 - 브랜치 기록: base..HEAD 커밋에서 추가된 줄·파일 (지운 비밀도 push되면 남는다)
 - 변경분: base 이후 추가된 줄 (코드 패턴)
 
@@ -13,7 +13,7 @@ ERROR: 비밀 노출, 커밋 금지 파일, .gitignore 누락. 반드시 고친�
 WARN : 위험할 수 있는 코드·설정. 고치거나 PR 본문에 사유를 남긴다.
 --strict 는 WARN도 실패로 처리한다.
 
-비밀 값은 출력하지 않는다 (앞 4자만 표시).
+비밀 값과 Git 오류 출력은 표시하지 않는다.
 """
 
 from __future__ import annotations
@@ -33,9 +33,52 @@ errors: list[str] = []
 warns: list[str] = []
 
 
-def git(*args: str) -> list[str]:
-    out = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
-    return out.stdout.splitlines()
+class ScanFailure(Exception):
+    pass
+
+
+def git_bytes(*args: str, no_match_ok: bool = False) -> bytes:
+    out = subprocess.run(["git", "-c", "core.quotePath=false", *args], cwd=ROOT, capture_output=True)
+    if out.returncode != 0 and not (no_match_ok and out.returncode == 1):
+        raise ScanFailure("Git 명령 실패")
+    return out.stdout
+
+
+def git(*args: str, no_match_ok: bool = False) -> list[str]:
+    # Git의 레코드 구분은 LF뿐이다. U+2028 등은 diff 내용으로 보존한다.
+    text = git_bytes(*args, no_match_ok=no_match_ok).decode("utf-8", errors="replace")
+    return text.removesuffix("\n").split("\n") if text else []
+
+
+def git_paths(*args: str) -> list[str]:
+    raw = git_bytes(*args)
+    if not raw:
+        return []
+    if not raw.endswith(b"\0"):
+        raise ScanFailure("Git 경로 형식 오류")
+    try:
+        paths = raw.decode("utf-8").split("\0")[:-1]
+    except UnicodeDecodeError:
+        raise ScanFailure("UTF-8이 아닌 Git 경로") from None
+    # 인용되는 diff 헤더를 잘못 해석하지 않도록 지원하지 않는 이름은 실패 처리한다.
+    for path in paths:
+        validate_path(path)
+    return paths
+
+
+def validate_path(path: str) -> None:
+    if (not path or path.startswith("/") or re.match(r"^[A-Za-z]:", path)
+            or any(part in ("", ".", "..") for part in path.split("/"))
+            or any(c.isspace() or c in '\\"' or ord(c) < 32 or ord(c) == 127 for c in path)):
+        raise ScanFailure("지원하지 않는 Git 경로")
+
+
+def git_files(*args: str) -> list[str]:
+    return git_paths("ls-files", "-z", *args)
+
+
+def allowed(line: str, marker: str) -> bool:
+    return marker in line and bool(line.split(marker, 1)[1].strip())
 
 
 def match_any(path: str, globs: list[str]) -> bool:
@@ -43,7 +86,7 @@ def match_any(path: str, globs: list[str]) -> bool:
 
 
 def mask(value: str) -> str:
-    return value[:4] + "***" if len(value) > 4 else "***"
+    return "***"
 
 
 def read_text(rel: str) -> str | None:
@@ -58,28 +101,85 @@ def read_text(rel: str) -> str | None:
 
 # 대상 수집 ------------------------------------------------------------------
 def tree_files() -> list[str]:
-    files = set(git("ls-files")) | set(git("ls-files", "--others", "--exclude-standard"))
+    files = set(git_files()) | set(git_files("--others", "--exclude-standard"))
     return sorted(f for f in files if f and (ROOT / f).is_file())
 
 
-def merge_base(base: str) -> str | None:
-    mb = git("merge-base", base, "HEAD")
-    return mb[0] if mb else None
+def index_blobs() -> dict[str, bytes]:
+    """Read and validate every stage-0 index blob, independently of the tree."""
+    raw = git_bytes("ls-files", "--stage", "-z")
+    if raw and not raw.endswith(b"\0"):
+        raise ScanFailure("인덱스 형식 오류")
+    blobs = {}
+    for record in raw.split(b"\0")[:-1]:
+        try:
+            meta, path_bytes = record.split(b"\t", 1)
+            mode, oid, stage = meta.decode("ascii").split(" ")
+            path = path_bytes.decode("utf-8")
+        except (ValueError, UnicodeDecodeError):
+            raise ScanFailure("인덱스 형식 오류") from None
+        validate_path(path)
+        if (mode not in ("100644", "100755", "120000") or stage != "0"
+                or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", oid) or path in blobs):
+            raise ScanFailure("지원하지 않는 인덱스 항목")
+        blobs[path] = git_bytes("cat-file", "blob", oid)
+    return blobs
+
+
+def text_blob(data: bytes) -> str | None:
+    if b"\0" in data[:8192]:
+        return None
+    return data.decode("utf-8", errors="replace")
+
+
+def merge_base(base: str) -> str:
+    mb = git("merge-base", "--", base, "HEAD")
+    if len(mb) != 1 or not re.fullmatch(r"[0-9a-fA-F]{40}|[0-9a-fA-F]{64}", mb[0]):
+        raise ScanFailure("merge-base 확인 실패")
+    return mb[0]
 
 
 def added_lines(diff: list[str]) -> list[tuple[str, int, str]]:
     """unified diff(-U0) → [(path, new_lineno, text)]"""
-    out, path, ln = [], None, 0
+    out, path, ln, in_hunk = [], None, 0, False
     for line in diff:
-        if line.startswith("+++ "):
-            path = line[6:] if line.startswith("+++ b/") else None
-        elif line.startswith("@@"):
+        if line.startswith("diff --git "):
+            path, in_hunk = None, False
+        elif not in_hunk and line.startswith("+++ "):
+            if line == "+++ /dev/null":
+                path = None
+            elif line.startswith("+++ b/"):
+                path = line[6:]
+            else:
+                raise ScanFailure("diff 경로 형식 오류")
+        elif line.startswith("@@ "):
             m = re.search(r"\+(\d+)", line)
-            ln = int(m.group(1)) if m else 0
-        elif line.startswith("+") and path:
+            if not m:
+                raise ScanFailure("diff 형식 오류")
+            ln, in_hunk = int(m.group(1)), True
+        elif in_hunk and line.startswith("+"):
+            if path is None:
+                raise ScanFailure("diff 경로 누락")
             out.append((path, ln, line[1:]))
             ln += 1
+        elif in_hunk and line.startswith(" "):
+            ln += 1
     return out
+
+
+def history_changes(mb: str) -> tuple[list[tuple[str, str, int, str]], set[str]]:
+    lines, paths = [], set()
+    for record in git("rev-list", "--parents", f"{mb}..HEAD", "--"):
+        commit, *parents = record.split()
+        if not parents:
+            raise ScanFailure("부모 없는 커밋")
+        for parent in parents:
+            git_paths("diff", "--name-only", "--no-renames", "-z", parent, commit, "--")
+            paths.update(git_paths("diff", "--name-only", "--diff-filter=A", "--no-renames", "-z", parent, commit, "--"))
+            diff = git("diff", "-U0", "--no-color", "--no-ext-diff", "--no-textconv", "--no-renames",
+                       "--src-prefix=a/", "--dst-prefix=b/", parent, commit, "--")
+            lines.extend((commit, path, ln, text) for path, ln, text in added_lines(diff))
+    return lines, paths
 
 
 # 1. 비밀 ------------------------------------------------------------------
@@ -116,31 +216,39 @@ def check_secrets_tree(files: list[str], rules: dict) -> set[tuple[str, str]]:
         text = read_text(f)
         if text is None:
             continue
-        for i, line in enumerate(text.splitlines(), 1):
-            if marker in line:
-                continue
+        for i, line in enumerate(text.split("\n"), 1):
             for rid, val, level in find_secrets(line, rules):
+                if level == "WARN" and allowed(line, marker):
+                    continue
                 found.add((rid, val))
                 report(level, f"[secret:{rid}] {f}:{i}: {mask(val)}")
     return found
 
 
-def check_secrets_history(mb: str | None, rules: dict, in_tree: set[tuple[str, str]]) -> None:
-    if not mb:
-        return
-    diff = git("log", "-p", "-U0", "--no-color", "--format=", f"{mb}..HEAD")
-    marker = rules["allow_marker"]
-    seen = set()
-    for path, _, text in added_lines(diff):
-        if marker in text:
+def check_secrets_index(blobs: dict[str, bytes], rules: dict) -> set[tuple[str, str]]:
+    found = set()
+    for path, data in blobs.items():
+        text = text_blob(data)
+        if text is None:
             continue
+        for ln, line in enumerate(text.split("\n"), 1):
+            for rid, val, level in find_secrets(line, rules):
+                if level == "WARN" and allowed(line, rules["allow_marker"]):
+                    continue
+                found.add((rid, val))
+                report(level, f"[secret:{rid}] 인덱스 {path}:{ln}: {mask(val)}")
+    return found
+
+
+def check_secrets_history(lines: list[tuple[str, str, int, str]], rules: dict) -> None:
+    seen = set()
+    for commit, path, _, text in lines:
         for rid, val, level in find_secrets(text, rules):
-            if level != "ERROR" or (rid, val) in in_tree or (rid, val) in seen:
+            if level != "ERROR" or (rid, val) in seen:
                 continue
             seen.add((rid, val))
-            commits = git("log", "--format=%h", "-S", val, f"{mb}..HEAD")
-            errors.append(f"[secret:{rid}] 브랜치 기록 {path} (커밋 {', '.join(commits) or '?'}): "
-                          f"{mask(val)} — 트리에서는 지워졌지만 push되면 남는다. 키를 폐기하고 기록을 다시 쓴다")
+            errors.append(f"[secret:{rid}] 브랜치 기록 {path} (커밋 {commit[:12]}): "
+                          f"{mask(val)} — push되면 기록에 남는다. 키를 폐기하고 기록을 다시 쓴다")
 
 
 # 2. 커밋 금지 파일 ------------------------------------------------------------
@@ -152,21 +260,20 @@ def forbidden(path: str, rules: dict) -> str | None:
     return None
 
 
-def check_paths(files: list[str], mb: str | None, rules: dict) -> None:
+def check_paths(files: list[str], historical_paths: set[str], rules: dict) -> None:
     for f in files:
         why = forbidden(f, rules)
         if why:
             errors.append(f"[file] {f}: 커밋 금지 ({why})")
-    if mb:
-        current = set(files)
-        for f in set(git("log", "--format=", "--name-only", "--diff-filter=A", f"{mb}..HEAD")):
-            if f and f not in current and (why := forbidden(f, rules)):
-                errors.append(f"[file] 브랜치 기록 {f}: 커밋된 적 있음 ({why}) — 기록을 다시 쓴다")
+    current = set(files)
+    for f in sorted(historical_paths):
+        if f not in current and (why := forbidden(f, rules)):
+            errors.append(f"[file] 브랜치 기록 {f}: 커밋된 적 있음 ({why}) — 기록을 다시 쓴다")
 
 
 def check_gitignore(rules: dict) -> None:
     for probe in rules["gitignore_probes"]:
-        out = git("check-ignore", "-v", "--no-index", probe["path"])
+        out = git("check-ignore", "-v", "--no-index", "--", probe["path"], no_match_ok=True)
         src = out[0].split(":", 1)[0] if out else ""
         # 개인용 .git/info/exclude, 전역 excludes는 팀원에게 적용되지 않으므로 .gitignore만 인정
         ignored = bool(out) and src.endswith(".gitignore") and not out[0].split("\t")[0].split(":")[-1].startswith("!")
@@ -177,23 +284,40 @@ def check_gitignore(rules: dict) -> None:
 
 
 # 3. 변경분: 코드·설정·크기·의존성 ------------------------------------------------
-def check_changes(mb: str | None, rules: dict) -> set[str]:
+def has_db_target(text: str, pattern: str) -> bool:
+    for match in re.finditer(pattern, text):
+        if not match.group().endswith("://"):
+            return True
+        authority = re.match(r"[^\s/'\"?#(){}<>]+", text[match.end():])
+        if authority and authority.group().rsplit("@", 1)[-1].split(":", 1)[0]:
+            return True
+    return False
+
+
+def check_changes(mb: str, rules: dict, blobs: dict[str, bytes]) -> set[str]:
     marker = rules["allow_marker"]
-    diff = git("diff", "-U0", "--no-color", mb) if mb else []
+    git_paths("diff", "--name-only", "--no-renames", "-z", mb, "--")
+    diff = git("diff", "-U0", "--no-color", "--no-ext-diff", "--no-textconv", "--no-renames",
+               "--src-prefix=a/", "--dst-prefix=b/", mb, "--")
     lines = added_lines(diff)
-    untracked = git("ls-files", "--others", "--exclude-standard")
+    git_paths("diff", "--cached", "--name-only", "--no-renames", "-z", mb, "--")
+    staged_diff = git("diff", "--cached", "-U0", "--no-color", "--no-ext-diff", "--no-textconv", "--no-renames",
+                      "--src-prefix=a/", "--dst-prefix=b/", mb, "--")
+    lines.extend(added_lines(staged_diff))
+    untracked = git_files("--others", "--exclude-standard")
     for f in untracked:
         text = read_text(f)
         if text is not None:
-            lines += [(f, i, t) for i, t in enumerate(text.splitlines(), 1)]
-    changed = {p for p, _, _ in lines} | set(git("diff", "--name-only", mb) if mb else []) | set(untracked)
+            lines += [(f, i, t) for i, t in enumerate(text.split("\n"), 1)]
+    changed = ({p for p, _, _ in lines} | set(git_paths("diff", "--name-only", "--no-renames", "-z", mb, "--"))
+               | set(git_paths("diff", "--cached", "--name-only", "--no-renames", "-z", mb, "--")) | set(untracked))
 
-    for path, ln, text in lines:
-        if marker in text:
+    for path, ln, text in dict.fromkeys(lines):
+        if allowed(text, marker):
             continue
         if match_any(path, rules["code_globs"]) and not match_any(path, rules["code_skip"]):
             for p in rules["code_patterns"]:
-                if re.search(p["regex"], text):
+                if (has_db_target(text, p["regex"]) if p["id"] == "hardcoded-db" else re.search(p["regex"], text)):
                     warns.append(f"[code:{p['id']}] {path}:{ln}: {p['why']}")
         cc = rules["claude_config"]
         if match_any(path, cc["globs"]):
@@ -204,16 +328,22 @@ def check_changes(mb: str | None, rules: dict) -> set[str]:
     limit = rules["max_file_mb"] * 1024 * 1024
     for f in sorted(changed):
         p = ROOT / f
-        if p.is_file() and p.stat().st_size > limit:
-            warns.append(f"[size] {f}: {p.stat().st_size // 1024 // 1024}MB > {rules['max_file_mb']}MB "
+        sizes = [len(blobs[f])] if f in blobs else []
+        if p.is_file():
+            sizes.append(p.stat().st_size)
+        if sizes and max(sizes) > limit:
+            warns.append(f"[size] {f}: {max(sizes) // 1024 // 1024}MB > {rules['max_file_mb']}MB "
                          f"— 생성물이면 커밋하지 않고 스크립트로 재생성")
-        if f.endswith(".ipynb") and p.is_file():
-            try:
-                nb = json.loads(p.read_text(encoding="utf-8"))
-                if any(c.get("outputs") for c in nb.get("cells", [])):
-                    warns.append(f"[notebook] {f}: 출력이 남아 있음 (환경 변수·응답 원문 노출 위험) — 출력 지우고 커밋")
-            except (json.JSONDecodeError, UnicodeDecodeError):
-                pass
+        if f.endswith(".ipynb"):
+            versions = ([blobs[f]] if f in blobs else []) + ([p.read_bytes()] if p.is_file() else [])
+            for version in versions:
+                try:
+                    nb = json.loads(version.decode("utf-8"))
+                    if any(c.get("outputs") for c in nb.get("cells", [])):
+                        warns.append(f"[notebook] {f}: 출력이 남아 있음 (환경 변수·응답 원문 노출 위험) — 출력 지우고 커밋")
+                        break
+                except (json.JSONDecodeError, UnicodeDecodeError):
+                    pass
 
     if "pyproject.toml" in changed and "uv.lock" not in changed:
         warns.append("[deps] pyproject.toml만 바뀌고 uv.lock은 그대로 — uv add/remove로 관리한다")
@@ -231,24 +361,36 @@ def main() -> int:
 
     rules = json.loads(RULES.read_text(encoding="utf-8"))
     mb = merge_base(args.base)
-    if not mb:
-        warns.append(f"[base] {args.base}와 merge-base 없음 — 브랜치 기록·변경분 검사 생략 (git fetch 확인)")
     files = tree_files()
+    blobs = index_blobs()
+    history_lines, historical_paths = history_changes(mb)
 
-    in_tree = check_secrets_tree(files, rules)
-    check_secrets_history(mb, rules, in_tree)
-    check_paths(files, mb, rules)
+    check_secrets_tree(files, rules)
+    check_secrets_index(blobs, rules)
+    check_secrets_history(history_lines, rules)
+    check_paths(sorted(set(files) | set(blobs)), historical_paths, rules)
     check_gitignore(rules)
-    changed = check_changes(mb, rules)
+    changed = check_changes(mb, rules, blobs)
 
-    print(f"security-check: 트리 {len(files)}개, 변경 {len(changed)}개 (base={args.base})")
+    def safe_print(text: str) -> None:
+        # 진단 태그의 'secret:'은 비밀 할당문이 아니다.
+        text = text.replace("[secret:", "[s_ecret:")
+        for _, value, _ in sorted(find_secrets(text, rules), key=lambda hit: -len(hit[1])):
+            text = text.replace(value, mask(value))
+        print(text.replace("[s_ecret:", "[secret:"))
+
+    safe_print(f"security-check: 트리 {len(files)}개, 인덱스 {len(blobs)}개, 변경 {len(changed)}개 (base={args.base})")
     for e in errors:
-        print("ERROR", e)
+        safe_print("ERROR " + e)
     for w in warns:
-        print("WARN ", w)
+        safe_print("WARN  " + w)
     print(f"결과: ERROR {len(errors)}, WARN {len(warns)}")
     return 1 if errors or (args.strict and warns) else 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except (ScanFailure, OSError):
+        print("ERROR [git] 경로 또는 Git 명령을 확인하지 못해 보안 검사를 중단함", file=sys.stderr)
+        sys.exit(1)
