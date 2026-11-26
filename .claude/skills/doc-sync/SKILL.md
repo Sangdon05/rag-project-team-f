@@ -22,7 +22,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 ## 원칙
 
 1. **사실마다 원본 문서는 하나다.** 다른 문서는 값을 복사하지 않고 링크한다. 복사가 필요한 값(모델명, 포트, Python 버전 등)은 `doc-map.json`의 `mirrors`에 등록해 검사로 묶는다.
-2. **모든 문서는 허브에서 도달할 수 있어야 한다.** `AGENTS.md` 또는 `README.md`에서 파일 링크를 따라가 닿지 않는 문서는 아무도 갱신하지 않는다. 새 문서를 만들면 허브나 상위 README에 링크한다.
+2. **모든 문서는 허브에서 도달할 수 있어야 한다.** `AGENTS.md` 또는 `README.md`에서 파일 링크를 따라가 닿지 않는 문서는 아무도 갱신하지 않는다. 새 문서를 만들면 허브나 상위 README에 링크한다. 예외: 스펙·계획 폴더(`doc-map.json`의 `orphan_exclude`)는 인덱스 파일을 두지 않고 spec-plan 검사가 관리한다.
 3. **새 의존 관계는 지도에 먼저 등록한다.** 문서 A가 B의 내용을 설명하게 되면 `doc-map.json`의 `coupling`에 규칙을 추가한다.
 4. **검사가 통과해야 완료다.** 하위 에이전트의 보고, PR 생성 모두 이 검사를 거친다.
 
@@ -45,6 +45,7 @@ description: Use before reporting a task done or opening a PR, and whenever skil
 | 커밋 금지 파일·필수 무시 규칙 | `.gitignore` | security-check `rules.json` (`forbidden_paths`, `gitignore_probes`) |
 | 4계층·FSD 공통 원칙 | layered-architecture·fsd-architecture 스킬 (서비스 규칙을 담지 않음) | 서비스 적용 문서(api-architecture), layer-check 고정 규칙 |
 | API 규칙(R번호)·완료 게이트·주입값(프로파일, smoke, 실행 정보) | api-invariants 스킬 | api-architecture·api-implementation 스킬, api-* 에이전트, AGENTS.md 개발 루프 |
+| 스펙·계획 문서 상태·연결 | 각 문서 frontmatter (`docs/specs/`, `docs/plans/`, `docs/archives/`) | 없음. 목록 파일을 두지 않고 폴더와 `workdocs.py list`로 본다 ([spec-plan](../spec-plan/SKILL.md)) |
 | 답변 생성기 계약 (API ↔ RAG) | `docs/references/api-rag-integration.md` | api-architecture·api-implementation 스킬 |
 
 ## 언제 실행하는가

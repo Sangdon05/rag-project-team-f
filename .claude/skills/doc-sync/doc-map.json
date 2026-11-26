@@ -58,12 +58,13 @@
 
   "hubs": ["AGENTS.md", "README.md"],
   "orphan_scope": ["docs/*.md", ".claude/*.md"],
+  "orphan_exclude": ["docs/specs/*.md", "docs/plans/*.md", "docs/archives/*.md"],
 
   "registries": {
     "skills_readme": "docs/references/skills/README.md",
     "agents_readme": "docs/references/agents/README.md",
     "agents_hub": "AGENTS.md",
-    "orchestrator_skills": ["doc-sync"]
+    "orchestrator_skills": ["doc-sync", "spec-plan"]
   },
 
   "mirrors": [
@@ -164,6 +165,9 @@
     {"when": [".claude/skills/api-invariants/scripts/*"],
      "review": [".claude/skills/api-invariants/SKILL.md"],
      "why": "smoke 항목 표"},
+    {"when": [".claude/skills/spec-plan/templates/*", ".claude/skills/spec-plan/scripts/*", ".claude/skills/spec-plan/references/*"],
+     "review": [".claude/skills/spec-plan/SKILL.md", ".claude/skills/spec-plan/references/completion-criteria.md"],
+     "why": "스펙·계획 표 머리글, 상태·필드, 검사 항목은 템플릿·스크립트와 스킬 설명이 같아야 한다"},
     {"when": [".claude/skills/doc-sync/doc-map.json"],
      "review": [".claude/skills/doc-sync/SKILL.md"],
      "why": "규칙 변경 시 스킬 설명"}
