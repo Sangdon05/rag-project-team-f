@@ -72,6 +72,8 @@ python -B -m solar_handoff.src.export verify --bundle "저장소_밖_비공개_�
 
 ## 질문 실행
 
+대화 API용 진입점은 [`src/conversation.py`](src/conversation.py)의 `create_service()`입니다. 전체 대화 이력을 답변 생성에 전달합니다. 기본 B 검색의 상위5개 청크를 보존하고 같은 문서의 형제 청크를 최대50개·직렬화된 UTF-8 96,000바이트까지 통째로 추가합니다. CLI A/B/C의 후보 생성·상위5개 비교는 변경하지 않는 별도 대화 컨텍스트 확장입니다. 실제 전달 근거에서 인용한 청크만 번호 출처로 반환하며, 검증한 질의 임베딩 모델과 인덱스의 문서 모델을 답변 메타데이터로 제공합니다. `SOLAR_RETRIEVAL_METHOD`로 A/B/C를 선택하고 `SOLAR_REWRITE`는 기본 `false`입니다. HTTP 원문 조회는 기존 documents 슬라이스를 사용합니다. 요청·응답과 오류 경계는 [API–RAG 연결 가이드](../docs/references/api-rag-integration.md)를 따릅니다.
+
 저장소 루트에서 CLI 옵션을 확인한다.
 
 ```sh

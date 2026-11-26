@@ -151,7 +151,13 @@ class GeneratorWiringTest(unittest.TestCase):
 
     def test_unknown_backend_fails_at_startup(self):
         with self.assertRaises(RuntimeError):
-            create_app(self.settings("rag"))
+            create_app(self.settings("unknown"))
+
+    def test_rag_backend_starts_without_constructing_database_or_provider(self):
+        with mock.patch("solar_handoff.src.conversation.create_service") as factory:
+            app = create_app(self.settings("rag"))
+        factory.assert_not_called()
+        self.assertIsNotNone(app)
 
 
 if __name__ == "__main__":

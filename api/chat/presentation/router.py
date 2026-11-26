@@ -15,6 +15,7 @@ router = APIRouter(prefix="/api/v1", tags=["chat"])
 @router.post(
     "/chat",
     response_model=SuccessResponse[ChatData],
+    response_model_exclude_none=True,
     responses={
         400: {"model": ErrorResponse},
         405: {"model": ErrorResponse},
