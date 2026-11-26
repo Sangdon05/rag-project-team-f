@@ -52,6 +52,9 @@ uv run python -m unittest discover -s tests            # 테스트
 | `UPSTAGE_EMBEDDING_MODEL` / `UPSTAGE_QUERY_MODEL` | Solar 문서 / 질문 임베딩 모델 ID |
 | `POSTGRES_*`, `DATABASE_URL` | DB 접속 정보 (docker compose와 앱, Solar 전달본에서 사용). Solar 작업 전 실제 대상·권한 확인 |
 | `PGVECTOR_COLLECTION` | 기존 방식에서 사용할 벡터 컬렉션(인덱스 버전). 필수 |
+| `ANSWER_BACKEND` | API 답변 생성기 `mock`(기본) \| `llm` |
+| `API_CORS_ORIGINS` | API가 허용할 프론트 origin, 쉼표 구분 (비우면 CORS 없음) |
+| `API_MAX_MESSAGES` | API 요청당 메시지 수 상한 (기본 20) |
 
 ### 규칙
 

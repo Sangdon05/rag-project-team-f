@@ -35,6 +35,8 @@ docker compose ps            # STATUS가 healthy인지 확인
 | pydantic | 툴 인자 스키마 |
 | python-dotenv | `.env` 로딩 |
 | ipykernel | 노트북 커널 |
+| fastapi, uvicorn | API 서비스(`api/`)와 실행 서버 |
+| httpx (dev) | API 테스트 클라이언트 |
 
 추가·삭제는 `uv add` / `uv remove`로만 한다. `pip install`을 쓰지 않는다 (`uv.lock`과 어긋난다).
 
@@ -51,6 +53,9 @@ docker compose ps            # STATUS가 healthy인지 확인
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` / `POSTGRES_HOST` / `POSTGRES_PORT` | docker compose와 앱이 함께 사용 |
 | `DATABASE_URL` | 기존 SQLAlchemy와 Solar 전달본의 PostgreSQL 접속. Solar 작업 전 실제 대상과 권한을 확인 |
 | `PGVECTOR_COLLECTION` | 기존 컬렉션 방식에서 필수. 사용할 컬렉션 = index_version. 미지정 시 기본 컬렉션 `langchain`에 섞인다 |
+| `ANSWER_BACKEND` | API(`api/`) 답변 생성기. `mock`(기본, LLM 호출 없음) \| `llm`(검색 없이 LLM). 그 밖의 값이면 앱 시작 실패 |
+| `API_CORS_ORIGINS` | API가 허용할 프론트 origin, 쉼표 구분. 비우면 CORS 미들웨어를 붙이지 않는다. `*` 금지 |
+| `API_MAX_MESSAGES` | API 요청당 메시지 수 상한. 기본 `20`, 1 이상 정수가 아니면 앱 시작 실패 |
 
 코드는 모델명과 접속 정보를 하드코딩하지 않고 환경 변수로 읽는다. 기존 진입점의 `load_dotenv()`와 달리 Solar 코드는 `.env`를 자동으로 읽지 않는다. Solar 환경 전달과 DB·비용 승인 경계는 [Solar 전달본](../../solar_handoff/README.md#환경과-안전-경계)을 따른다.
 
