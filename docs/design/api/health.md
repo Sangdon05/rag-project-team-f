@@ -39,7 +39,7 @@
 | `api/shared/settings.py` | `Settings`(frozen dataclass) + `Settings.from_env()` | presentation, 조립 파일 (domain 금지) |
 | `api/error_handlers.py` | `register_exception_handlers(app)` (0.4) | 조립 파일 |
 | `api/container.py` | `wire_dependencies(app, settings)`: 슬라이스별 구현체 선택·생성, `provide_*` 연결 | — |
-| `api/main.py` | `create_app(settings=None)`: `load_dotenv` → `Settings.from_env()` → CORS → 예외 핸들러 → `wire_dependencies` → 라우터 등록. 모듈 수준 `app = create_app()` | — |
+| `api/main.py` | `create_app(settings=None)`: settings가 없을 때만 `load_dotenv` → `Settings.from_env()` (settings를 넘기면 `.env`를 읽지 않는다) → CORS → 예외 핸들러 → `wire_dependencies` → 라우터 등록. 모듈 수준 `app = create_app()` | — |
 
 기반 예외 (`api/shared/exceptions.py`):
 
@@ -61,6 +61,7 @@
 | `StarletteHTTPException` 그 밖의 코드 | 해당 코드 | `HTTP_ERROR` | 고정 문구 |
 | `Exception` (처리 못 한 예외) | 500 | `INTERNAL_ERROR` | `서버 내부 오류가 발생했습니다.` 원문은 `logger.exception`으로만 남긴다 |
 
+- 처리 못 한 예외의 500 응답에도 CORS 헤더가 붙어야 프론트가 `error_code`를 읽는다. Starlette의 `Exception` 핸들러는 CORS 미들웨어 바깥에서 돌므로, CORS 안쪽에 예외를 잡아 같은 500 응답을 만드는 HTTP 미들웨어를 둔다(오케스트레이터 결정, PR ③ 리뷰 지적).
 - 핸들러는 `fastapi.exceptions.RequestValidationError`와 `starlette.exceptions.HTTPException`에 등록한다(FastAPI `HTTPException`이 아니라 Starlette 쪽이어야 라우팅 404·405를 받는다).
 - 내장 `ValueError`·`LookupError`를 핸들러에 등록하지 않는다(layer-check `[넓은예외]`).
 - domain·application·presentation은 `HTTPException`을 만들지 않는다(R6).
