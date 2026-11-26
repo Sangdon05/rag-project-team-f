@@ -6,7 +6,7 @@ status: in_progress
 owner: orchestrator
 spec: 2026-11-26-rag-citation-reliability
 created: 2026-11-26
-updated: 2026-11-26
+updated: 2026-11-27
 approved_by: 오케스트레이터
 approved_at: 2026-11-26
 completed_at:
@@ -29,7 +29,7 @@ base_commit: 3945d46
 | --- | --- | --- | --- | --- | --- | --- |
 | T-1 | 인용 거부 처리, 일반 주장·근거 응답, 정형 렌더링과 회귀 테스트·계약 문서 반영 | rag-developer | - | `solar_handoff/src/`, `tests/`, `solar_handoff/README.md`, `.claude/skills/langchain-rag/SKILL.md`, `.claude/skills/rag-eval/references/records.md`, `docs/references/api-rag-integration.md`, `docs/references/skills/README.md` | AC-1, AC-2, AC-3, AC-4 | done |
 | T-2 | 비노출 및 저장소 검사 독립 확인 | security-reviewer | T-1 | - | AC-6 | done |
-| T-3 | 문서 검사와 로컬 API 오프라인·기동 검증 | 오케스트레이터 | T-1 | - | AC-5 | blocked |
+| T-3 | 문서 검사와 로컬 API 오프라인·기동 검증 | 오케스트레이터 | T-1 | - | AC-5 | done |
 | T-4 | 잠긴 입력으로 공식 RAG 평가 | eval | T-2, T-3 | `results/` | AC-7 | blocked |
 
 - 담당: `.claude/agents/`에 있는 에이전트 이름, 또는 `오케스트레이터`·`디렉터`·`팀원`·`사용자`.
@@ -120,6 +120,7 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | 2026-11-26 | T-1 | 구현 및 후속 수정 독립 재검증 | Solar 61개, 정형 도구 8개, API chat 48개 통과. 루프백 Uvicorn 모의 정상·인용 거부·정형 요청 200, 인용 거부 경고 1건. 테스트용 DSN의 인증 필드를 제거한 뒤 전체 security-check ERROR 0, WARN 0 |
 | 2026-11-26 | T-3 | 로컬 RAG API에 반영 및 기동 확인, 브랜치 문서 게이트 미통과 | 기존 Uvicorn만 재시작(검증 PID 48236). `/health`, 문서 `039`, 기존 프론트, CORS 사전 요청 200. 유료 호출 미실행. doc-sync `--strict`는 보호된 기존 연동 WARN 1건 |
 | 2026-11-26 | T-2 | 독립 보안 검토 완료 | `security-reviewer`: 수정 필요 발견 없음, 집중 mock 테스트 25개 통과. 오케스트레이터 전체 security-check `--base origin/main`: ERROR 0, WARN 0 |
+| 2026-11-27 | T-3 | 사용자가 `AGENTS.md` 담당 표를 갱신해 문서 경고를 해소했다. | `check_docs.py --strict` 종료 0, ERROR 0, WARN 0. Solar 61개, 정형 도구 8개, API chat 48개 재검증 통과. |
 
 ## 8. 결정 기록
 
@@ -137,8 +138,8 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | AC-1 | pass | Solar 테스트 61개 및 루프백 200 안전 안내·고정 사유 로그 확인, 공급자·DB 502 유지 | 오케스트레이터 |
 | AC-2 | pass | 같은 테스트의 선택 청크 enum, 번호·중복, 임베딩 메타데이터, A/B/C 및 단일 질문 CLI 회귀 통과 | 오케스트레이터 |
 | AC-3 | pass | 정형 도구 테스트 8개와 HTTP 모의 팀·기술 출력, 선택 1회·답변과 임베딩 호출 0회 검증 | 오케스트레이터 |
-| AC-4 | pass | 보호 경로 tracked diff 0, 새 파일 0, API chat 테스트 48개 통과 | 오케스트레이터 |
-| AC-5 | fail | doc-sync `--strict` 종료 1: ERROR 0, 보호된 `AGENTS.md` 기존 연동 WARN 1 | 오케스트레이터 |
+| AC-4 | pass | 구현 기준 `83e911d` 보호 경로 차이 0, 새 파일 0, API chat 테스트 48개 통과. 이후 사용자가 담당 표만 수정했다. | 오케스트레이터 |
+| AC-5 | pass | 담당 표 갱신 후 doc-sync `--strict` 종료 0, ERROR 0, WARN 0. | 오케스트레이터 |
 | AC-6 | pass | 전체 security-check 종료 0, ERROR 0, WARN 0. 독립 검토에서 인용 허용 목록·로그 비노출·200/502 분리 확인 | 오케스트레이터 |
 | AC-7 | | | |
 

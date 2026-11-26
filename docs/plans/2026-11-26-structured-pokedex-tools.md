@@ -6,7 +6,7 @@ status: in_progress
 owner: orchestrator
 spec: 2026-11-26-structured-pokedex-tools
 created: 2026-11-26
-updated: 2026-11-26
+updated: 2026-11-27
 approved_by: 오케스트레이터
 approved_at: 2026-11-26
 completed_at:
@@ -28,7 +28,7 @@ base_commit: 3945d46
 | ID | 작업 | 담당 | 선행 | 산출물 | 완료 기준 | 상태 |
 | --- | --- | --- | --- | --- | --- | --- |
 | T-1 | 정형 도구 및 대화 호출과 회귀 테스트 구현 | rag-developer | - | `src/pokedex/`, `solar_handoff/src/conversation.py`, `solar_handoff/src/providers.py`, `tests/test_pokedex_structured_tools.py`, `tests/test_solar_conversation.py`, `tests/test_solar_tool_provider.py` | AC-1, AC-2, AC-3, AC-4, AC-5 | done |
-| T-2 | 구현·출처 표시·검증 범위 문서 동기화 | rag-developer | T-1 | `solar_handoff/README.md`, `.claude/agents/rag-developer.md`, `.claude/skills/tool-calling/SKILL.md`, `.claude/skills/langchain-rag/SKILL.md`, `docs/references/api-rag-integration.md`, `docs/references/agents/README.md`, `docs/references/skills/README.md`, `AGENTS.md`, `.claude/skills/rag-eval/references/records.md`, `.claude/skills/api-architecture/SKILL.md`, `.claude/skills/api-implementation/SKILL.md` | AC-6 | blocked |
+| T-2 | 구현·출처 표시·검증 범위 문서 동기화 | rag-developer | T-1 | `solar_handoff/README.md`, `.claude/agents/rag-developer.md`, `.claude/skills/tool-calling/SKILL.md`, `.claude/skills/langchain-rag/SKILL.md`, `docs/references/api-rag-integration.md`, `docs/references/agents/README.md`, `docs/references/skills/README.md`, `AGENTS.md`, `.claude/skills/rag-eval/references/records.md`, `.claude/skills/api-architecture/SKILL.md`, `.claude/skills/api-implementation/SKILL.md` | AC-6 | done |
 | T-3 | 독립 보안 점검 | security-reviewer | T-1 | - | AC-7 | done |
 | T-4 | 잠긴 평가 입력으로 RAG 평가 게이트 확인 | eval | T-2 | `results/` | AC-8 | blocked |
 
@@ -125,6 +125,7 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | 2026-11-26 | T-2 재검토 | 평가·API 연동 3건 반영. 보호된 `AGENTS.md`에는 쓰기가 허용되지 않아 중단하고 원본을 유지했다. | `git diff --exit-code HEAD -- AGENTS.md` 종료 0. `check_docs.py --strict` ERROR 0, WARN 1(담당표 연동), 종료 1. |
 | 2026-11-26 | T-3 | 독립 `security-reviewer`가 읽기 전용으로 검사하고 오케스트레이터가 같은 명령을 재실행했다. | `check_security.py --base origin/main` 트리 758개·인덱스 749개·변경 22개, ERROR 0, WARN 0, 종료 0. |
 | 2026-11-26 | T-4 | 실 모델 호출·DB 연결 및 공식 평가는 미실행. 개발·최종 평가 입력과 잠금 파일 부재를 파일 존재 여부로만 확인했다. | `eval/dev.json`, `eval/test.json`, `eval/LOCK.json` 없음. 평가셋 열람·변경 없음. |
+| 2026-11-27 | T-2 | 사용자가 `AGENTS.md`의 rag-developer 담당 표를 갱신했다. | `check_docs.py --strict` 종료 0, ERROR 0, WARN 0. |
 
 ## 8. 결정 기록
 
@@ -148,7 +149,7 @@ next: 디렉터가 정한 다음 단계 (스펙 변경이 필요할 때만 사�
 | AC-3 | pass | 같은 테스트와 상성 계산 회귀에서 변화기·별도 피해·미확정과 일반 배율을 분리함. | 오케스트레이터 |
 | AC-4 | pass | `test_solar*.py` 50개, 어댑터 6개 통과. 인메모리 HTTP 3건에서 응답 계약과 정형 임베딩 필드 생략을 확인함. | 오케스트레이터 |
 | AC-5 | pass | 지정 보호 경로의 `git diff --exit-code HEAD` 종료 0, 추가 파일 0개. 오프라인 검증으로 DB 쓰기와 임베딩 실행 없음. | 오케스트레이터 |
-| AC-6 | fail | `check_docs.py --strict` ERROR 0, WARN 1. 보호된 `AGENTS.md`를 변경하지 않아 담당표 연동 경고가 남음. | 오케스트레이터 |
+| AC-6 | pass | 사용자의 담당 표 갱신 후 `check_docs.py --strict` ERROR 0, WARN 0, 종료 0. | 오케스트레이터 |
 | AC-7 | pass | `check_security.py --base origin/main`, 읽기 전용 에이전트 검사와 재실행 모두 ERROR 0, WARN 0. | 오케스트레이터 |
 | AC-8 | | | |
 

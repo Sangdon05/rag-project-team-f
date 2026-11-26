@@ -35,7 +35,7 @@
 | 에이전트                                         | 맡기는 일                                                    | 스킬                               |
 | ------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------- |
 | [data-engineer](.claude/agents/data-engineer.md) | 정규화·Markdown, 청킹, 임베딩, 인덱스 sync                   | data-normalize, chunking, vectordb |
-| [rag-developer](.claude/agents/rag-developer.md) | 런타임 툴·체인, 검색 방식 설정, 프롬프트, 트레이스          | tool-calling, langchain-rag        |
+| [rag-developer](.claude/agents/rag-developer.md)         | Solar 대화와 팀·기술 정형 도구, RAG 체인, 검색 방식 설정, 프롬프트, 트레이스 | tool-calling, langchain-rag                                                                                            |
 | [security-reviewer](.claude/agents/security-reviewer.md) | PR 전 보안 점검 실행·분류 보고 (읽기 전용)          | security-check                     |
 | [eval](.claude/agents/eval.md)                   | 평가 실행·기록·실패 분석·비교 보고서, 평가셋 의견서          | rag-eval                           |
 | [question-designer](.claude/agents/question-designer.md) | 질문 전용 패킷으로 페르소나별 질문 후보·조건 확인사항 제안 | question-design |
