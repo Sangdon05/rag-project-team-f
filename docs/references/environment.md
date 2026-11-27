@@ -62,6 +62,7 @@ Compose는 빈 PGDATA의 최초 기동에만 기본 DB(`POSTGRES_DB`, 기본값 
 | `API_CORS_ORIGINS` | API가 허용할 프론트 origin, 쉼표 구분. 비우면 CORS 미들웨어를 붙이지 않는다. `*` 금지 |
 | `API_MAX_MESSAGES` | API 요청당 메시지 수 상한. 기본 `20`, 1 이상 정수가 아니면 앱 시작 실패 |
 | `API_DOCUMENTS_DIR` | API documents 슬라이스가 읽는 원문 Markdown 폴더. 기본 `solar_handoff/documents`, 파일은 `<폴더>/<도감번호 3자리>_*.md`(예: `001_이상해씨.md`), 상대 경로는 서버 작업 디렉터리 기준. 시작 시 검사하지 않고 폴더가 없으면 요청 시 502 `DOCUMENT_SOURCE_FAILED` |
+| `FRONTEND_API_BASE_URL` | 프론트(`frontend/`)가 호출할 API origin. `http(s)://호스트[:포트]`만 허용(경로·쿼리·계정 정보 금지), 비우면 `http://127.0.0.1:8000`. 정적 프론트는 `.env`를 읽지 못하므로 정적 서버 시작 전에 `uv run --env-file .env python scripts/frontend/write_runtime_config.py`로 `frontend/runtime-config.mjs`(git 무시)를 만든다. 브라우저에 공개되는 값이다 |
 
 코드는 모델명과 접속 정보를 하드코딩하지 않고 환경 변수로 읽는다. 기존 진입점의 `load_dotenv()`와 달리 Solar 코드는 `.env`를 자동으로 읽지 않는다. Solar 환경 전달과 DB·비용 승인 경계는 [Solar 전달본](../../solar_handoff/README.md#환경과-안전-경계)을 따른다.
 

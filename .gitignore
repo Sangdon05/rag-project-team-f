@@ -13,6 +13,7 @@ __pycache__/
 
 # 생성물
 runs/
+frontend/runtime-config.mjs
 eval/results/
 
 # OS / 에디터
