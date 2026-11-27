@@ -34,7 +34,13 @@ uv run python -m http.server 8772 --bind 127.0.0.1
 
 ## API 연결
 
-[neo-config.mjs](neo-config.mjs)의 `TEAM_API.baseUrl` 기본값은 `http://127.0.0.1:8000`입니다. 팀 서버 주소가 다르면 이 공개 URL을 변경하고, API 서버의 `API_CORS_ORIGINS`에 실제 프론트 origin을 설정합니다. 호스트 이름과 포트까지 같아야 합니다.
+[neo-config.mjs](neo-config.mjs)의 `TEAM_API.baseUrl`은 환경 변수 `FRONTEND_API_BASE_URL`에서 정합니다. 정적 프론트는 `.env`를 읽지 못하므로 정적 서버를 띄우기 전에 아래 명령으로 `frontend/runtime-config.mjs`(git 무시)를 만듭니다. 값이 비어 있거나 파일이 없으면 기본값 `http://127.0.0.1:8000`을 씁니다.
+
+```sh
+uv run --env-file .env python scripts/frontend/write_runtime_config.py
+```
+
+값은 `http(s)://호스트[:포트]` origin만 허용하며 브라우저에 그대로 공개됩니다. 프론트와 API의 origin이 다르면 API 서버의 `API_CORS_ORIGINS`에 실제 프론트 origin을 설정합니다. 호스트 이름과 포트까지 같아야 합니다. nginx 등으로 프론트와 API를 같은 origin에서 제공하면 CORS 설정은 필요 없습니다.
 
 | 기능 | 메서드·경로 | 요청 |
 | --- | --- | --- |

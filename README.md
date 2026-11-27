@@ -59,6 +59,7 @@ uv run python -m unittest discover -s tests            # 테스트
 | `API_CORS_ORIGINS` | API가 허용할 프론트 origin, 쉼표 구분 (비우면 CORS 없음) |
 | `API_MAX_MESSAGES` | API 요청당 메시지 수 상한 (기본 20) |
 | `API_DOCUMENTS_DIR` | API 문서 조회가 읽는 원문 Markdown 폴더 (기본 `solar_handoff/documents`, 파일은 `<폴더>/<도감번호 3자리>_*.md`) |
+| `FRONTEND_API_BASE_URL` | 프론트가 호출할 API origin (비우면 `http://127.0.0.1:8000`). `scripts/frontend/write_runtime_config.py`가 `frontend/runtime-config.mjs`로 만든다 |
 
 ### 규칙
 
