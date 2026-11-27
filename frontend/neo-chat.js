@@ -1,7 +1,7 @@
 /** NEO-RETRO free conversation with a transparent chat overlay. */
 import { TEAM_API } from './neo-config.mjs?v=20261126-team-api1';
 import { createTeamApiClient } from './neo-team-client.mjs?v=20261126-embedding1';
-import { createConversationStore, buildApiMessages } from './neo-conversation.mjs?v=20261126-embedding1';
+import { createConversationStore, buildApiMessages, createMessageId } from './neo-conversation.mjs?v=20261127-msgid1';
 import { renderEmbeddingStatus } from './neo-embedding.mjs';
 import { renderCitedAnswer, renderMarkdown, createOverlayScroll } from './neo-chat-render.mjs';
 import { MATE_PROFILES, getMateProfile } from './mate-content.mjs';
@@ -163,7 +163,7 @@ async function loadSuggestions(id, selection) {
   }
 }
 function newRecord(role, content, p) {
-  return { conversation_id: `kanto-${p.id}`, persona_id: p.id, mate_id: guideOf(p.id).mateId, message_id: crypto.randomUUID(), role, content, created_at: new Date().toISOString(), mode: null, sources: [], request_status: 'pending' };
+  return { conversation_id: `kanto-${p.id}`, persona_id: p.id, mate_id: guideOf(p.id).mateId, message_id: createMessageId(), role, content, created_at: new Date().toISOString(), mode: null, sources: [], request_status: 'pending' };
 }
 function renderThread(animateId = null) {
   const p = profile(); if (!p || state.choosing) return;
