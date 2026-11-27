@@ -6,6 +6,18 @@ const STATUSES = new Set(["pending", "completed", "failed"]);
 const MODES = new Set(["mock", "llm", "rag"]);
 const clone = value => structuredClone(value);
 
+/** Message ID (UUID v4). crypto.randomUUID exists only in secure contexts (HTTPS, localhost),
+ * so plain-HTTP deployments fall back to crypto.getRandomValues, which is available everywhere. */
+export function createMessageId(cryptoImpl = globalThis.crypto) {
+  if (typeof cryptoImpl?.randomUUID === "function") return cryptoImpl.randomUUID();
+  if (typeof cryptoImpl?.getRandomValues !== "function") throw new Error("A random number source is required.");
+  const bytes = cryptoImpl.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
 function requirePersona(personaId) {
   if (!PERSONAS.has(personaId)) throw new TypeError("Unknown conversation persona.");
   return personaId;

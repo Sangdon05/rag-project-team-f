@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  buildApiMessages, createConversationStore, sortConversation, stripAnswerCitations, validateApiMessages,
+  buildApiMessages, createConversationStore, createMessageId, sortConversation, stripAnswerCitations, validateApiMessages,
 } from "../frontend/neo-conversation.mjs";
 
 const record = (index, role, extra = {}) => ({
@@ -149,4 +149,14 @@ test("storage fails explicitly when IndexedDB is unavailable; invalid records ne
   await assert.rejects(store.save(record(1, "user", { created_at: "yesterday" })), /created_at/);
   await store.close();
   await assert.rejects(store.load("P1"), /closed/);
+});
+
+test("message IDs work without crypto.randomUUID (plain-HTTP deployments are not secure contexts)", () => {
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+  const insecure = { getRandomValues: array => globalThis.crypto.getRandomValues(array) };
+  const ids = new Set(Array.from({ length: 50 }, () => createMessageId(insecure)));
+  assert.equal(ids.size, 50);
+  for (const id of ids) assert.match(id, uuid);
+  assert.equal(createMessageId({ randomUUID: () => "native-id" }), "native-id");
+  assert.throws(() => createMessageId({}), /random number source/);
 });
